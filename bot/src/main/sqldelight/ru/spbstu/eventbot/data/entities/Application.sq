@@ -1,0 +1,11 @@
+CREATE TABLE Application (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+user_id INTEGER NOT NULL,
+course_id INTEGER NOT NULL,
+FOREIGN KEY (user_id) REFERENCES User (id),
+FOREIGN KEY (course_id) REFERENCES Course (id)
+);
+
+insert:
+INSERT INTO Application(user_id, course_id)
+VALUES (?, ?);
