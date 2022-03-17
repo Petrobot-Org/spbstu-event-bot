@@ -12,11 +12,16 @@ import ru.spbstu.eventbot.domain.repository.UserRepository
 import ru.spbstu.eventbot.domain.usecases.RegisterUserUseCase
 import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 import ru.spbstu.eventbot.telegram.Bot
+import java.sql.SQLException
 
 val mainModule = module {
     single<SqlDriver> {
         JdbcSqliteDriver("jdbc:sqlite:main.sqlite").also {
-            // AppDatabase.Schema.create(it)
+            try {
+                AppDatabase.Schema.create(it)
+            } catch (e: SQLException) {
+                println("Schema has already been created")
+            }
         }
     }
     single { AppDatabase(get()) }
