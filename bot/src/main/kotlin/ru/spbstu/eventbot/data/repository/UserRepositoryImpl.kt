@@ -11,7 +11,7 @@ class UserRepositoryImpl(private val database: AppDatabase) : UserRepository {
         }).executeAsOne()
     }
 
-    override fun insert(chatId: Long, name: String, email: String, group: String) {
+    override fun insert(chatId: Long, email: String, name: String, group: String) {
         database.userQueries.insert(chatId, email, name, group)
     }
 }
