@@ -12,6 +12,7 @@ object Strings {
     const val RequestYesNo = "Напишите да или нет"
     const val RegisteredSuccessfully = "Успешная регистрация"
     const val DontKnowWhatToDo = "Не знаю, что с этим делать"
+    const val UnknownCommand = "Неизвестная команда"
     val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
     val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
 

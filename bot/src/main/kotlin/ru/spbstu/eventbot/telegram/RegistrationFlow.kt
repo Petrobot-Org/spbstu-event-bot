@@ -3,6 +3,13 @@ package ru.spbstu.eventbot.telegram
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import ru.spbstu.eventbot.domain.usecases.RegisterUserUseCase
 
+fun TextHandlerEnvironment.startRegistration(
+    setNewState: (ChatState) -> Unit
+) {
+    setNewState(ChatState.Registration(RegistrationRequest.Name))
+    sendReply(Strings.RequestName)
+}
+
 fun TextHandlerEnvironment.handleRegistration(
     state: ChatState.Registration,
     setNewState: (ChatState) -> Unit,
