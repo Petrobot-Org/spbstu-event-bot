@@ -28,7 +28,6 @@ class Bot : KoinComponent {
                 }
                 text("see current courses") {
                     val query: List<Course> = courseUseCase.findAll()
-                    bot.sendMessage(ChatId.fromId(message.chat.id), text = "hello!")
                     val text: StringBuilder = java.lang.StringBuilder("Courses:\n")
                     for (elem in query) {
                         text.append(elem.id)

@@ -6,3 +6,12 @@ name TEXT NOT NULL
 selectAll:
 SELECT *
 FROM Course;
+
+findById:
+SELECT *
+FROM Course
+WHERE id = ?;
+
+insert:
+INSERT INTO Course(id, name)
+VALUES (?, ?);
