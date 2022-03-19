@@ -1,12 +1,14 @@
 package ru.spbstu.eventbot.domain.usecases
 
 import ru.spbstu.eventbot.domain.repository.UserRepository
+import java.sql.SQLException
 
 class RegisterUserUseCase(
     private val userRepository: UserRepository
 ) {
     sealed interface Result {
         object OK : Result
+        object Error : Result
         object InvalidArguments : Result
     }
 
@@ -14,8 +16,12 @@ class RegisterUserUseCase(
         if (!isNameValid(name) || !isEmailValid(email) || !isGroupValid(group)) {
             return Result.InvalidArguments
         }
-        userRepository.insert(chatId, email, name, group)
-        return Result.OK
+        return try {
+            userRepository.insert(chatId, email, name, group)
+            Result.OK
+        } catch (e: SQLException) {
+            Result.Error
+        }
     }
 
     fun isNameValid(text: String): Boolean {

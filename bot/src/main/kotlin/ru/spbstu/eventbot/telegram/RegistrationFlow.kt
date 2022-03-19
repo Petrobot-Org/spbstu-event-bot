@@ -40,6 +40,7 @@ fun TextHandlerEnvironment.handleRegistration(
                             sendReply(Strings.RegisteredSuccessfully)
                             return
                         }
+                        RegisterUserUseCase.Result.Error,
                         RegisterUserUseCase.Result.InvalidArguments -> {
                             sendReply(Strings.RegistrationErrorRetry)
                             ChatState.Registration(RegistrationRequest.Name)
