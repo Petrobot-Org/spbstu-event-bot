@@ -2,3 +2,7 @@ CREATE TABLE Course (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL
 );
+
+createNew:
+INSERT INTO Course(name)
+VALUES (?);
