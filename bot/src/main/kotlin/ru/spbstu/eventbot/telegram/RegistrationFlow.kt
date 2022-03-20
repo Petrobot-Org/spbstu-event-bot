@@ -38,35 +38,42 @@ fun TextHandlerEnvironment.handleRegistration(
             state.copy(group = text)
         }
         RegistrationRequest.Confirm -> {
-            when (text.lowercase()) {
-                in Strings.PositiveAnswers -> {
-                    val result = registerUser(message.chat.id, state.name!!, state.email!!, state.group!!)
-                    when (result) {
-                        RegisterUserUseCase.Result.OK -> {
-                            setNewState(ChatState.Empty)
-                            sendReply(Strings.RegisteredSuccessfully)
-                            return
-                        }
-                        RegisterUserUseCase.Result.Error,
-                        RegisterUserUseCase.Result.InvalidArguments -> {
-                            sendReply(Strings.RegistrationErrorRetry)
-                            ChatState.Registration(RegistrationRequest.Name)
-                        }
-                    }
-                }
-                in Strings.NegativeAnswers -> {
-                    sendReply(Strings.RegistrationRetry)
-                    ChatState.Registration(RegistrationRequest.Name)
-                }
-                else -> {
-                    sendReply(Strings.RequestYesNo)
-                    return
-                }
-            }
+            handleConfirmation(registerUser, state, setNewState)
+            return
         }
     }
     val request = requestInfo(newState)
     setNewState(newState.copy(request = request))
+}
+
+private fun TextHandlerEnvironment.handleConfirmation(
+    registerUser: RegisterUserUseCase,
+    state: ChatState.Registration,
+    setNewState: (ChatState) -> Unit
+) {
+    when (text.lowercase()) {
+        in Strings.PositiveAnswers -> {
+            val result = registerUser(message.chat.id, state.name!!, state.email!!, state.group!!)
+            when (result) {
+                RegisterUserUseCase.Result.OK -> {
+                    setNewState(ChatState.Empty)
+                    sendReply(Strings.RegisteredSuccessfully)
+                }
+                RegisterUserUseCase.Result.Error,
+                RegisterUserUseCase.Result.InvalidArguments -> {
+                    sendReply(Strings.RegistrationErrorRetry)
+                    startRegistration(setNewState)
+                }
+            }
+        }
+        in Strings.NegativeAnswers -> {
+            sendReply(Strings.RegistrationRetry)
+            startRegistration(setNewState)
+        }
+        else -> {
+            sendReply(Strings.RequestYesNo)
+        }
+    }
 }
 
 private fun TextHandlerEnvironment.requestInfo(
