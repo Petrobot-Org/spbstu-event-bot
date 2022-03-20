@@ -1,8 +1,9 @@
 CREATE TABLE Course (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL
--- client_id INTEGER NOT NULL
--- FOREIGN KEY (client_id) REFERENCES Client (id)
+client_id INTEGER NOT NULL
+exripy_date DATE NOT NULL
+FOREIGN KEY (client_id) REFERENCES Client (id)
 );
 
 findByName:
