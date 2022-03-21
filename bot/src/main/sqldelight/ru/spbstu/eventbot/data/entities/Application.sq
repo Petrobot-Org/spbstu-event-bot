@@ -1,13 +1,13 @@
 CREATE TABLE Application (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-userId INTEGER NOT NULL,
-courseId INTEGER NOT NULL,
-FOREIGN KEY (userId) REFERENCES User (id),
-FOREIGN KEY (courseId) REFERENCES Course (id)
+user_id INTEGER NOT NULL,
+course_id INTEGER NOT NULL,
+FOREIGN KEY (user_id) REFERENCES User (id),
+FOREIGN KEY (course_id) REFERENCES Course (id)
 );
 
 insert:
-INSERT INTO Application(userId, courseId)
+INSERT INTO Application(user_id, course_id)
 VALUES (?, ?);
 
 -- количество
@@ -19,6 +19,6 @@ WHERE courseId = ?;
 
 -- id студента сами как то разберитесь =)
 getInfoAboutStudents:
-SELECT userId
+SELECT user_id
 FROM  Application
-WHERE  courseId =?;
+WHERE  course_id = ?;

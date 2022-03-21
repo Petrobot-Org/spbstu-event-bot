@@ -1,7 +1,12 @@
 CREATE TABLE Course (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-name TEXT NOT NULL
+name TEXT NOT NULL,
+id_client INTEGER NOT NULL
 );
+
+createNew:
+INSERT INTO Course(name, id_client)
+VALUES (? , ?);
 
 createNew:
 INSERT INTO Course(name)
