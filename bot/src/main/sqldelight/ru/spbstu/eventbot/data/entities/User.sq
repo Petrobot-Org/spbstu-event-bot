@@ -1,9 +1,9 @@
 CREATE TABLE User (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-chat_id INTEGER NOT NULL,
+chatId INTEGER NOT NULL,
 email TEXT NOT NULL,
 name TEXT NOT NULL,
-group_number TEXT NOT NULL
+groupNumber TEXT NOT NULL
 );
 
 selectAll:
@@ -13,4 +13,4 @@ FROM User;
 findByChatId:
 SELECT *
 FROM User
-WHERE chat_id = ?;
+WHERE chatId = ?;

@@ -1,24 +1,24 @@
 CREATE TABLE Application (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-user_id INTEGER NOT NULL,
-course_id INTEGER NOT NULL,
-FOREIGN KEY (user_id) REFERENCES User (id),
-FOREIGN KEY (course_id) REFERENCES Course (id)
+userId INTEGER NOT NULL,
+courseId INTEGER NOT NULL,
+FOREIGN KEY (userId) REFERENCES User (id),
+FOREIGN KEY (courseId) REFERENCES Course (id)
 );
 
 insert:
-INSERT INTO Application(user_id, course_id)
+INSERT INTO Application(userId, courseId)
 VALUES (?, ?);
 
 -- количество
 getCount:
 SELECT Count(0)
 FROM Application
-WHERE course_id = ?;
+WHERE courseId = ?;
 
 
 -- id студента сами как то разберитесь =)
 getInfoAboutStudents:
-SELECT user_id
+SELECT userId
 FROM  Application
-WHERE  course_id =?;
+WHERE  courseId =?;
