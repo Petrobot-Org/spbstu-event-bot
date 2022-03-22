@@ -5,5 +5,5 @@ data class User(
     val chatId: Long,
     val email: String,
     val name: String,
-    val groupNumber: String
+    val group: String
 )

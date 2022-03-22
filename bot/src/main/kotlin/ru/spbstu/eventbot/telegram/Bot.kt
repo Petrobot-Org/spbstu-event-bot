@@ -2,28 +2,51 @@ package ru.spbstu.eventbot.telegram
 
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
+import com.github.kotlintelegrambot.dispatcher.command
+import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.text
+import com.github.kotlintelegrambot.entities.Chat
 import com.github.kotlintelegrambot.entities.ChatId
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.spbstu.eventbot.domain.usecases.RegisterUserUseCase
 import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 
 class Bot : KoinComponent {
     private val submitApplication: SubmitApplicationUseCase by inject()
+    private val registerUser: RegisterUserUseCase by inject()
+
+    private val states = mutableMapOf<Long, ChatState>()
 
     fun start(telegramToken: String) {
         val bot = bot {
             token = telegramToken
             dispatch {
-                text("chatid") {
-                    bot.sendMessage(ChatId.fromId(message.chat.id), text = message.chat.id.toString())
-                }
-                text("apply") {
-                    submitApplication(message.chat.id, 1)
-                    bot.sendMessage(ChatId.fromId(message.chat.id), text = "Success")
+                text {
+                    val state = states[message.chat.id] ?: ChatState.Empty
+                    val setNewState = { newState: ChatState -> states[message.chat.id] = newState }
+                    if (text.startsWith("/")) {
+                        handleCommand(state, setNewState)
+                    } else {
+                        handleText(state, setNewState)
+                    }
                 }
             }
         }
         bot.startPolling()
+    }
+
+    private fun TextHandlerEnvironment.handleCommand(state: ChatState, setNewState: (ChatState) -> Unit) {
+        when (text) {
+            "/register" -> startRegistration(setNewState)
+            else -> sendReply(Strings.UnknownCommand)
+        }
+    }
+
+    private fun TextHandlerEnvironment.handleText(state: ChatState, setNewState: (ChatState) -> Unit) {
+        when (state) {
+            ChatState.Empty -> sendReply(Strings.DontKnowWhatToDo)
+            is ChatState.Registration -> handleRegistration(state, setNewState, registerUser)
+        }
     }
 }

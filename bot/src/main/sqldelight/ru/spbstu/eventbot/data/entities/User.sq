@@ -1,6 +1,6 @@
 CREATE TABLE User (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-chat_id INTEGER NOT NULL,
+chat_id INTEGER NOT NULL UNIQUE,
 email TEXT NOT NULL,
 name TEXT NOT NULL,
 group_number TEXT NOT NULL
@@ -14,3 +14,7 @@ findByChatId:
 SELECT *
 FROM User
 WHERE chat_id = ?;
+
+insert:
+INSERT OR REPLACE INTO User
+VALUES (NULL, :chatId, :email, :name, :group);
