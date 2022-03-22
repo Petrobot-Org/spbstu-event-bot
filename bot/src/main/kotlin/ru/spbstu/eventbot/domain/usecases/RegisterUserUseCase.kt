@@ -1,10 +1,10 @@
 package ru.spbstu.eventbot.domain.usecases
 
-import ru.spbstu.eventbot.domain.repository.UserRepository
+import ru.spbstu.eventbot.domain.repository.StudentRepository
 import java.sql.SQLException
 
 class RegisterUserUseCase(
-    private val userRepository: UserRepository
+    private val userRepository: StudentRepository
 ) {
     sealed interface Result {
         object OK : Result
