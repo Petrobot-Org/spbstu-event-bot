@@ -1,13 +1,13 @@
 package ru.spbstu.eventbot.data.repository
 
 import ru.spbstu.eventbot.data.source.AppDatabase
-import ru.spbstu.eventbot.domain.entities.User
-import ru.spbstu.eventbot.domain.repository.UserRepository
+import ru.spbstu.eventbot.domain.entities.Student
+import ru.spbstu.eventbot.domain.repository.StudentRepository
 
-class UserRepositoryImpl(private val database: AppDatabase) : UserRepository {
-    override fun findByChatId(chatId: Long): User {
+class UserRepositoryImpl(private val database: AppDatabase) : StudentRepository {
+    override fun findByChatId(chatId: Long): Student {
         return database.userQueries.findByChatId(chatId, mapper = { id, chatId, email, name, groupNumber ->
-            User(id, chatId, email, name, groupNumber)
+            Student(id, chatId, email, name, groupNumber)
         }).executeAsOne()
     }
 

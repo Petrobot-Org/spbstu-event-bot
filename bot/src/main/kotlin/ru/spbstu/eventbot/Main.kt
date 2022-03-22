@@ -8,7 +8,7 @@ import ru.spbstu.eventbot.data.repository.ApplicationRepositoryImpl
 import ru.spbstu.eventbot.data.repository.UserRepositoryImpl
 import ru.spbstu.eventbot.data.source.AppDatabase
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
-import ru.spbstu.eventbot.domain.repository.UserRepository
+import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.RegisterUserUseCase
 import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 import ru.spbstu.eventbot.telegram.Bot
@@ -25,7 +25,7 @@ val mainModule = module {
         }
     }
     single { AppDatabase(get()) }
-    single<UserRepository> { UserRepositoryImpl(get()) }
+    single<StudentRepository> { UserRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
 //    single { SubmitApplicationUseCase(get(), get()) }
     single { RegisterUserUseCase(get()) }

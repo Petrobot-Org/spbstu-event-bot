@@ -1,6 +1,6 @@
 package ru.spbstu.eventbot.domain.entities
 
-data class User(
+data class Student(
     val id: Long,
     val chatId: Long,
     val email: String,

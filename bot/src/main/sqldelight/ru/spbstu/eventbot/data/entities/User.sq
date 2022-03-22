@@ -1,4 +1,4 @@
-CREATE TABLE User (
+CREATE TABLE Student (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 chat_id INTEGER NOT NULL UNIQUE,
 email TEXT NOT NULL,
@@ -8,13 +8,13 @@ group_number TEXT NOT NULL
 
 selectAll:
 SELECT *
-FROM User;
+FROM Student;
 
 findByChatId:
 SELECT *
-FROM User
+FROM Student
 WHERE chat_id = ?;
 
 insert:
-INSERT OR REPLACE INTO User
+INSERT OR REPLACE INTO Student
 VALUES (NULL, :chatId, :email, :name, :group);

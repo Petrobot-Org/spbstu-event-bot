@@ -2,7 +2,7 @@ package ru.spbstu.eventbot.data.repository
 
 import ru.spbstu.eventbot.data.source.AppDatabase
 import ru.spbstu.eventbot.domain.entities.Client
-import ru.spbstu.eventbot.domain.entities.User
+import ru.spbstu.eventbot.domain.entities.Student
 import ru.spbstu.eventbot.domain.repository.ClientRepository
 
 //class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository {
