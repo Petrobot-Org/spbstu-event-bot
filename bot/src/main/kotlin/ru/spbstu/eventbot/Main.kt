@@ -27,7 +27,7 @@ val mainModule = module {
     single { AppDatabase(get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
-    single { SubmitApplicationUseCase(get(), get()) }
+//    single { SubmitApplicationUseCase(get(), get()) }
     single { RegisterUserUseCase(get()) }
 }
 
