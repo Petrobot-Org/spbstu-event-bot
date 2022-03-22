@@ -15,13 +15,19 @@ class Bot : KoinComponent {
         val bot = bot {
             token = telegramToken
             dispatch {
-                text("chatid") {
-                    bot.sendMessage(ChatId.fromId(message.chat.id), text = message.chat.id.toString())
+                text ("student")
+                {
+                    ////вывод списка всех актуальных курсов
+                    text("chatid") {
+                        bot.sendMessage(ChatId.fromId(message.chat.id), text = message.chat.id.toString())
+                    }
+                    text("apply") {
+                        submitApplication(message.chat.id, "Dell laboratory")
+                        bot.sendMessage(ChatId.fromId(message.chat.id), text = "Success")
+                    }
                 }
-                text("apply") {
-                    submitApplication(message.chat.id, 1)
-                    bot.sendMessage(ChatId.fromId(message.chat.id), text = "Success")
-                }
+                text ("client")
+                {}
             }
         }
         bot.startPolling()
