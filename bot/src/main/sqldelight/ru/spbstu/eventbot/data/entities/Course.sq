@@ -7,7 +7,3 @@ id_client INTEGER NOT NULL
 createNew:
 INSERT INTO Course(name, id_client)
 VALUES (? , ?);
-
-createNew:
-INSERT INTO Course(name)
-VALUES (?);

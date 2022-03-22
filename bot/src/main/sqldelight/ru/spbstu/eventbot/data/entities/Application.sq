@@ -14,7 +14,7 @@ VALUES (?, ?);
 getCount:
 SELECT Count(0)
 FROM Application
-WHERE courseId = ?;
+WHERE course_id = ?;
 
 
 -- id студента сами как то разберитесь =)
