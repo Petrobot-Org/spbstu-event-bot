@@ -1,0 +1,10 @@
+CREATE TABLE Client (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+id_project INTEGER NOT NULL,
+email TEXT NOT NULL,
+full_name TEXT NOT NULL
+);
+
+
+
+
