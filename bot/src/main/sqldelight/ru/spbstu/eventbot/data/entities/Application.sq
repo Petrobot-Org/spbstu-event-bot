@@ -9,3 +9,16 @@ FOREIGN KEY (course_id) REFERENCES Course (id)
 insert:
 INSERT INTO Application(user_id, course_id)
 VALUES (?, ?);
+
+-- количество
+getCount:
+SELECT Count(0)
+FROM Application
+WHERE course_id = ?;
+
+
+-- id студента сами как то разберитесь =)
+getInfoAboutStudents:
+SELECT user_id
+FROM  Application
+WHERE  course_id = ?;
