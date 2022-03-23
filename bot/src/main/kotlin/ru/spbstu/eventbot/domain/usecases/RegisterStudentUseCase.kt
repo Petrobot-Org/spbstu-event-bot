@@ -1,7 +1,6 @@
 package ru.spbstu.eventbot.domain.usecases
 
 import ru.spbstu.eventbot.domain.repository.StudentRepository
-import java.sql.SQLException
 
 class RegisterStudentUseCase(
     private val studentRepository: StudentRepository,
@@ -23,7 +22,7 @@ class RegisterStudentUseCase(
         return try {
             studentRepository.insert(chatId, email, fullName, group)
             Result.OK
-        } catch (e: SQLException) {
+        } catch (e: Exception) {
             Result.Error
         }
     }
