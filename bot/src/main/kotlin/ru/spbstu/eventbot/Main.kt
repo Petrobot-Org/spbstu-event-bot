@@ -5,10 +5,10 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import ru.spbstu.eventbot.data.adapter.DateAdapter
+import ru.spbstu.eventbot.data.entities.Course
 import ru.spbstu.eventbot.data.repository.ApplicationRepositoryImpl
 import ru.spbstu.eventbot.data.repository.StudentRepositoryImpl
 import ru.spbstu.eventbot.data.source.AppDatabase
-import ru.spbstu.eventbot.data.entities.Course
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
