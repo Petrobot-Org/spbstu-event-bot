@@ -10,4 +10,4 @@ insertUsingChatId:
 INSERT INTO Application(student_id, course_id)
 SELECT id, :courseId
 FROM Student
-WHERE chat_id = :chat_id;
+WHERE chat_id = :chatId;
