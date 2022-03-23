@@ -8,5 +8,5 @@ data class Course(
     val description: String,
     val clientId: Long,
     val expiryDate: GregorianCalendar,
-    val published: Boolean
+    val resultsSent: Boolean
 )

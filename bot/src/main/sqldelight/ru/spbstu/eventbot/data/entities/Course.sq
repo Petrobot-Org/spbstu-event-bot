@@ -6,6 +6,6 @@ CREATE TABLE Course (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     expiry_date INTEGER AS GregorianCalendar,
-    published INTEGER AS Boolean,
+    results_sent INTEGER AS Boolean,
     FOREIGN KEY (client_id) REFERENCES Client (id)
 );
