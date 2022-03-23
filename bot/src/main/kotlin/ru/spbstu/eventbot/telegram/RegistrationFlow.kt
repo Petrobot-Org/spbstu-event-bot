@@ -6,7 +6,7 @@ import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 fun TextHandlerEnvironment.startRegistration(
     setNewState: (ChatState) -> Unit
 ) {
-    setNewState(ChatState.Registration(RegistrationRequest.Name))
+    setNewState(ChatState.Registration(RegistrationRequest.FullName))
     sendReply(Strings.RequestName)
 }
 
@@ -16,12 +16,12 @@ fun TextHandlerEnvironment.handleRegistration(
     registerStudent: RegisterStudentUseCase
 ) {
     val newState = when (state.request) {
-        RegistrationRequest.Name -> {
-            if (!registerStudent.isNameValid(text)) {
+        RegistrationRequest.FullName -> {
+            if (!registerStudent.isFullNameValid(text)) {
                 sendReply(Strings.InvalidName)
                 return
             }
-            state.copy(name = text)
+            state.copy(fullName = text)
         }
         RegistrationRequest.Email -> {
             if (!registerStudent.isEmailValid(text)) {
@@ -53,7 +53,7 @@ private fun TextHandlerEnvironment.handleConfirmation(
 ) {
     when (text.lowercase()) {
         in Strings.PositiveAnswers -> {
-            val result = registerStudent(message.chat.id, state.name!!, state.email!!, state.group!!)
+            val result = registerStudent(message.chat.id, state.fullName!!, state.email!!, state.group!!)
             when (result) {
                 RegisterStudentUseCase.Result.OK -> {
                     setNewState(ChatState.Empty)
@@ -80,9 +80,9 @@ private fun TextHandlerEnvironment.requestInfo(
     state: ChatState.Registration
 ): RegistrationRequest {
     return when {
-        state.name == null -> {
+        state.fullName == null -> {
             sendReply(Strings.RequestName)
-            RegistrationRequest.Name
+            RegistrationRequest.FullName
         }
         state.email == null -> {
             sendReply(Strings.RequestEmail)
@@ -95,7 +95,7 @@ private fun TextHandlerEnvironment.requestInfo(
         else -> {
             sendReply(
                 Strings.registrationConfirmation(
-                    name = state.name,
+                    name = state.fullName,
                     email = state.email,
                     group = state.group
                 )
