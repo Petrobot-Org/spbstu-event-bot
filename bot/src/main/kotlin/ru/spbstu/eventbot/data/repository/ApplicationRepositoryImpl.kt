@@ -5,7 +5,7 @@ import ru.spbstu.eventbot.domain.entities.Application
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 
 class ApplicationRepositoryImpl(private val database: AppDatabase) : ApplicationRepository {
-    override fun insert(application: Application) {
-         database.applicationQueries.insert(application.userId, application.courseId)
+    override fun insert(chatId: Long, courseId: Long) {
+         database.applicationQueries.insertUsingChatId(chatId, courseId)
     }
 }

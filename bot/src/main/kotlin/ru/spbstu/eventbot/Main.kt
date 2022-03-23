@@ -11,7 +11,7 @@ import ru.spbstu.eventbot.data.source.AppDatabase
 import ru.spbstu.eventbot.data.entities.Course
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
-import ru.spbstu.eventbot.domain.usecases.RegisterUserUseCase
+import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 import ru.spbstu.eventbot.telegram.Bot
 import java.sql.SQLException
 
@@ -29,7 +29,7 @@ val mainModule = module {
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
 //    single { SubmitApplicationUseCase(get(), get()) }
-    single { RegisterUserUseCase(get()) }
+    single { RegisterStudentUseCase(get()) }
 }
 
 fun main(args: Array<String>) {

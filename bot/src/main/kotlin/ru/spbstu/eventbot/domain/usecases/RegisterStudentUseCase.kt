@@ -3,8 +3,8 @@ package ru.spbstu.eventbot.domain.usecases
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import java.sql.SQLException
 
-class RegisterUserUseCase(
-    private val userRepository: StudentRepository
+class RegisterStudentUseCase(
+    private val studentRepository: StudentRepository
 ) {
     sealed interface Result {
         object OK : Result
@@ -17,7 +17,7 @@ class RegisterUserUseCase(
             return Result.InvalidArguments
         }
         return try {
-            userRepository.insert(chatId, email, name, group)
+            studentRepository.insert(chatId, email, name, group)
             Result.OK
         } catch (e: SQLException) {
             Result.Error

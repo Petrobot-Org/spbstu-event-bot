@@ -1,24 +1,13 @@
 CREATE TABLE Application (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-user_id INTEGER NOT NULL,
-course_id INTEGER NOT NULL,
-FOREIGN KEY (user_id) REFERENCES Student (id),
-FOREIGN KEY (course_id) REFERENCES Course (id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL,
+    course_id INTEGER NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES Student (id),
+    FOREIGN KEY (course_id) REFERENCES Course (id)
 );
 
-insert:
-INSERT INTO Application(user_id, course_id)
-VALUES (?, ?);
-
--- количество
-getCount:
-SELECT Count(0)
-FROM Application
-WHERE course_id = ?;
-
-
--- id студента сами как то разберитесь =)
-getInfoAboutStudents:
-SELECT user_id
-FROM  Application
-WHERE  course_id = ?;
+insertUsingChatId:
+INSERT INTO Application(student_id, course_id)
+SELECT id, :courseId
+FROM Student
+WHERE chat_id = :chat_id;

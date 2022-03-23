@@ -2,19 +2,16 @@ package ru.spbstu.eventbot.telegram
 
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
-import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.text
-import com.github.kotlintelegrambot.entities.Chat
-import com.github.kotlintelegrambot.entities.ChatId
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ru.spbstu.eventbot.domain.usecases.RegisterUserUseCase
+import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 
 class Bot : KoinComponent {
     private val submitApplication: SubmitApplicationUseCase by inject()
-    private val registerUser: RegisterUserUseCase by inject()
+    private val registerStudent: RegisterStudentUseCase by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
@@ -46,7 +43,7 @@ class Bot : KoinComponent {
     private fun TextHandlerEnvironment.handleText(state: ChatState, setNewState: (ChatState) -> Unit) {
         when (state) {
             ChatState.Empty -> sendReply(Strings.DontKnowWhatToDo)
-            is ChatState.Registration -> handleRegistration(state, setNewState, registerUser)
+            is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
         }
     }
 }

@@ -1,20 +1,11 @@
 CREATE TABLE Student (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-chat_id INTEGER NOT NULL UNIQUE,
-email TEXT NOT NULL,
-name TEXT NOT NULL,
-group_number TEXT NOT NULL
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    chat_id INTEGER NOT NULL UNIQUE,
+    email TEXT NOT NULL,
+    full_name TEXT NOT NULL,
+    group_number TEXT NOT NULL
 );
 
-selectAll:
-SELECT *
-FROM Student;
-
-findByChatId:
-SELECT *
-FROM Student
-WHERE chat_id = ?;
-
 insert:
-INSERT OR REPLACE INTO Student
-VALUES (NULL, :chatId, :email, :name, :group);
+INSERT OR REPLACE INTO Student(chat_id, email, full_name, group_number)
+VALUES (:chatId, :email, :fullName, :group);
