@@ -4,7 +4,9 @@ import java.util.*
 
 data class Course(
     val id: Long,
-    val name: String,
+    val title: String,
+    val description: String,
     val clientId: Long,
-    val expiryDate: GregorianCalendar?
-    )
+    val expiryDate: GregorianCalendar,
+    val resultsSent: Boolean
+)

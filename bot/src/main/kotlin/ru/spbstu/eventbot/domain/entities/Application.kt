@@ -2,6 +2,6 @@ package ru.spbstu.eventbot.domain.entities
 
 data class Application(
     val id: Long?,
-    val userId: Long,
+    val studentId: Long,
     val courseId: Long
 )

@@ -1,14 +1,11 @@
 package ru.spbstu.eventbot.data.adapter
 
-///import app.cash.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.ColumnAdapter
-import java.util.GregorianCalendar
+import java.util.*
 
-typealias Date = GregorianCalendar
-
-class DateAdapter constructor() : ColumnAdapter<Date, Long> {
-    override fun encode(value: Date) = value.timeInMillis
-    override fun decode(databaseValue: Long) = Date.getInstance().apply {
+class DateAdapter : ColumnAdapter<GregorianCalendar, Long> {
+    override fun encode(value: GregorianCalendar) = value.timeInMillis
+    override fun decode(databaseValue: Long) = GregorianCalendar.getInstance().apply {
         timeInMillis = databaseValue
-    } as Date
+    } as GregorianCalendar
 }

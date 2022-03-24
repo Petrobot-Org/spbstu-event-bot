@@ -4,6 +4,6 @@ data class Student(
     val id: Long,
     val chatId: Long,
     val email: String,
-    val name: String,
+    val fullName: String,
     val group: String
 )
