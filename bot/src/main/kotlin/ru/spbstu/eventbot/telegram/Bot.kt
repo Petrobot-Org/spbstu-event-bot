@@ -36,6 +36,8 @@ class Bot : KoinComponent {
     private fun TextHandlerEnvironment.handleCommand(state: ChatState, setNewState: (ChatState) -> Unit) {
         when (text) {
             "/register" -> startRegistration(setNewState)
+            "/help" -> writeHelp()
+            "/start" -> writeStart()
             else -> sendReply(Strings.UnknownCommand)
         }
     }
