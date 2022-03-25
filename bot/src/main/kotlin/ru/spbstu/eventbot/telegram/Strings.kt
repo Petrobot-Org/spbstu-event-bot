@@ -16,6 +16,9 @@ object Strings {
     val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
     val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
 
+    const val HelpCommands = "I help you!"
+    const val HelpStart = "I help you for start work with me!"
+
     fun registrationConfirmation(name: String, email: String, group: String) =
         "Имя: $name\nПочта: $email\nГруппа: $group\nВерно?"
 }
