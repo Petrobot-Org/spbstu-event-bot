@@ -6,8 +6,6 @@ CREATE TABLE Application (
     FOREIGN KEY (course_id) REFERENCES Course (id)
 );
 
-insertUsingChatId:
+insert:
 INSERT INTO Application(student_id, course_id)
-SELECT id, :courseId
-FROM Student
-WHERE chat_id = :chatId;
+VALUES (:studentId, :courseId);
