@@ -53,7 +53,7 @@ class Bot : KoinComponent {
         require(tokens.size == 2)
         val command = tokens[0]
         val arg = tokens[1]
-        when(command) {
+        when (command) {
             "details" -> courseDetails(arg.toLong(), getCourseById)
             "apply" -> TODO("Handle submit application callback")
         }
