@@ -6,12 +6,14 @@ import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.text
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 
 class Bot : KoinComponent {
     private val submitApplication: SubmitApplicationUseCase by inject()
     private val registerStudent: RegisterStudentUseCase by inject()
+    private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
@@ -38,6 +40,7 @@ class Bot : KoinComponent {
             "/register" -> startRegistration(setNewState)
             "/help" -> writeHelp()
             "/start" -> writeStart()
+            "/courses" -> displayCourses(getAvailableCourses)
             else -> sendReply(Strings.UnknownCommand)
         }
     }
