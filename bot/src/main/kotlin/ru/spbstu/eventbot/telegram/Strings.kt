@@ -1,5 +1,7 @@
 package ru.spbstu.eventbot.telegram
 
+import ru.spbstu.eventbot.domain.entities.Course
+
 object Strings {
     const val InvalidName = "Некорректное имя. Попробуйте снова."
     const val InvalidEmail = "Некорректная почта. Попробуйте снова."
@@ -14,6 +16,8 @@ object Strings {
     const val DontKnowWhatToDo = "Не знаю, что с этим делать"
     const val UnknownCommand = "Неизвестная команда"
     const val AvailableCoursesHeader = "Доступные курсы"
+    const val NoSuchCourse = "Этого курса не существует"
+    const val SubmitApplication = "✅ Записаться"
     val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
     val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
 
@@ -22,4 +26,7 @@ object Strings {
 
     fun registrationConfirmation(name: String, email: String, group: String) =
         "Имя: $name\nПочта: $email\nГруппа: $group\nВерно?"
+
+    fun courseDetails(course: Course) =
+        "*${course.title}*\n\n${course.description}"
 }

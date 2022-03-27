@@ -2,11 +2,15 @@ package ru.spbstu.eventbot.telegram
 
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
+import com.github.kotlintelegrambot.dispatcher.callbackQuery
+import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.text
+import com.github.kotlintelegrambot.logging.LogLevel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
+import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 
@@ -14,25 +18,44 @@ class Bot : KoinComponent {
     private val submitApplication: SubmitApplicationUseCase by inject()
     private val registerStudent: RegisterStudentUseCase by inject()
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
+    private val getCourseById: GetCourseByIdUseCase by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
     fun start(telegramToken: String) {
         val bot = bot {
+            logLevel = LogLevel.Error
             token = telegramToken
             dispatch {
+                callbackQuery {
+                    val (state, setState) = state(callbackQuery.message?.chat?.id ?: return@callbackQuery)
+                    handleCallback(state, setState)
+                }
                 text {
-                    val state = states[message.chat.id] ?: ChatState.Empty
-                    val setNewState = { newState: ChatState -> states[message.chat.id] = newState }
+                    val (state, setState) = state(message.chat.id)
                     if (text.startsWith("/")) {
-                        handleCommand(state, setNewState)
+                        handleCommand(state, setState)
                     } else {
-                        handleText(state, setNewState)
+                        handleText(state, setState)
                     }
                 }
             }
         }
         bot.startPolling()
+    }
+
+    private fun state(chatId: Long): Pair<ChatState, (ChatState) -> Unit> {
+        return (states[chatId] ?: ChatState.Empty) to { newState: ChatState -> states[chatId] = newState }
+    }
+
+    private fun CallbackQueryHandlerEnvironment.handleCallback(state: ChatState, setState: (ChatState) -> Unit) {
+        val tokens = callbackQuery.data.split(' ')
+        require(tokens.size == 2)
+        val command = tokens[0]
+        val arg = tokens[1]
+        when(command) {
+            "details" -> courseDetails(arg.toLong(), getCourseById)
+        }
     }
 
     private fun TextHandlerEnvironment.handleCommand(state: ChatState, setNewState: (ChatState) -> Unit) {

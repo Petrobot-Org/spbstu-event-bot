@@ -14,6 +14,7 @@ import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
+import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 import ru.spbstu.eventbot.telegram.Bot
@@ -36,6 +37,7 @@ val mainModule = module {
     single { SubmitApplicationUseCase(get()) }
     single { RegisterStudentUseCase(get()) }
     single { GetAvailableCoursesUseCase(get()) }
+    single { GetCourseByIdUseCase(get()) }
 }
 
 fun main(args: Array<String>) {
