@@ -55,6 +55,7 @@ class Bot : KoinComponent {
         val arg = tokens[1]
         when(command) {
             "details" -> courseDetails(arg.toLong(), getCourseById)
+            "apply" -> TODO("Handle submit application callback")
         }
     }
 
