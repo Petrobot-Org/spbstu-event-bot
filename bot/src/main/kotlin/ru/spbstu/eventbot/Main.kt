@@ -18,9 +18,12 @@ import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 import ru.spbstu.eventbot.telegram.Bot
+import ru.spbstu.eventbot.telegram.UserPermissions
+import java.io.File
 import java.sql.SQLException
 
 val mainModule = module {
+    single { UserPermissions(File("operators.txt")) }
     single<SqlDriver> {
         JdbcSqliteDriver("jdbc:sqlite:main.sqlite").also {
             try {

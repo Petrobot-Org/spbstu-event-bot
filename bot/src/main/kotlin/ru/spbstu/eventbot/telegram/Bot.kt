@@ -19,6 +19,7 @@ class Bot : KoinComponent {
     private val registerStudent: RegisterStudentUseCase by inject()
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
     private val getCourseById: GetCourseByIdUseCase by inject()
+    private val userPermissions: UserPermissions by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
@@ -65,6 +66,7 @@ class Bot : KoinComponent {
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses" -> displayCourses(getAvailableCourses)
+            "/superdangerouscommand" -> requireOperator { sendReply("You're an operator") } // TODO: Remove example
             else -> sendReply(Strings.UnknownCommand)
         }
     }
@@ -73,6 +75,14 @@ class Bot : KoinComponent {
         when (state) {
             ChatState.Empty -> sendReply(Strings.DontKnowWhatToDo)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
+        }
+    }
+
+    private fun TextHandlerEnvironment.requireOperator(action: TextHandlerEnvironment.() -> Unit) {
+        if (userPermissions.isOperator(message.from)) {
+            action()
+        } else {
+            sendReply(Strings.UnknownCommand)
         }
     }
 }
