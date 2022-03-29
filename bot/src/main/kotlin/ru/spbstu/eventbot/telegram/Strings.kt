@@ -36,8 +36,8 @@ object Strings {
     fun courseDetails(course: Course): String {
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
         return """*${course.title}*
-          |
-          |🕒 До ${course.expiryDate.format(formatter)}
-          |${course.description}""".trimMargin()
+                 |
+                 |🕒 До ${course.expiryDate.format(formatter)}
+                 |${course.description}""".trimMargin()
     }
 }
