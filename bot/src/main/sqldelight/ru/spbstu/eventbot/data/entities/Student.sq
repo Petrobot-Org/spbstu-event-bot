@@ -9,3 +9,7 @@ CREATE TABLE Student (
 insert:
 INSERT OR REPLACE INTO Student(chat_id, email, full_name, group_number)
 VALUES (:chatId, :email, :fullName, :group);
+
+findByChatId:
+SELECT * FROM Student
+WHERE chat_id = :chatId;

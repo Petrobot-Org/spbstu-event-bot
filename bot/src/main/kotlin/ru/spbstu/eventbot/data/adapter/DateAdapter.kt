@@ -1,11 +1,11 @@
 package ru.spbstu.eventbot.data.adapter
 
 import com.squareup.sqldelight.ColumnAdapter
-import java.util.*
+import java.time.Instant
 
-class DateAdapter : ColumnAdapter<GregorianCalendar, Long> {
-    override fun encode(value: GregorianCalendar) = value.timeInMillis
-    override fun decode(databaseValue: Long) = GregorianCalendar.getInstance().apply {
-        timeInMillis = databaseValue
-    } as GregorianCalendar
+class DateAdapter : ColumnAdapter<Instant, Long> {
+    override fun encode(value: Instant) =
+        value.epochSecond
+    override fun decode(databaseValue: Long): Instant =
+        Instant.ofEpochSecond(databaseValue)
 }
