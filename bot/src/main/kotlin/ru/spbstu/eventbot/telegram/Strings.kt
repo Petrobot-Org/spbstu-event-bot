@@ -1,6 +1,7 @@
 package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.Course
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -34,10 +35,12 @@ object Strings {
            |Верно?""".trimMargin()
 
     fun courseDetails(course: Course): String {
-        val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+        val formatter = DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.LONG)
+            .withZone(ZoneId.systemDefault())
         return """|*${course.title}*
                   |
-                  |🕒 До ${course.expiryDate.format(formatter)}
+                  |🕒 До ${formatter.format(course.expiryDate)}
                   |${course.description}""".trimMargin()
     }
 }
