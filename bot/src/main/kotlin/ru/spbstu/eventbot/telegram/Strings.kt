@@ -28,16 +28,16 @@ object Strings {
     const val HelpStart = "I help you for start work with me!"
 
     fun registrationConfirmation(name: String, email: String, group: String) =
-        """Имя: $name
-          |Почта: $email
-          |Группа: $group
-          |Верно?""".trimMargin()
+        """|Имя: $name
+           |Почта: $email
+           |Группа: $group
+           |Верно?""".trimMargin()
 
     fun courseDetails(course: Course): String {
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-        return """*${course.title}*
-                 |
-                 |🕒 До ${course.expiryDate.format(formatter)}
-                 |${course.description}""".trimMargin()
+        return """|*${course.title}*
+                  |
+                  |🕒 До ${course.expiryDate.format(formatter)}
+                  |${course.description}""".trimMargin()
     }
 }
