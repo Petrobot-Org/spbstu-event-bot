@@ -1,11 +1,13 @@
 package ru.spbstu.eventbot.data.adapter
 
 import com.squareup.sqldelight.ColumnAdapter
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 
-class DateAdapter : ColumnAdapter<GregorianCalendar, Long> {
-    override fun encode(value: GregorianCalendar) = value.timeInMillis
-    override fun decode(databaseValue: Long) = GregorianCalendar.getInstance().apply {
-        timeInMillis = databaseValue
-    } as GregorianCalendar
+class DateAdapter : ColumnAdapter<LocalDateTime, Long> {
+    override fun encode(value: LocalDateTime) =
+        value.toEpochSecond(ZoneOffset.UTC)
+    override fun decode(databaseValue: Long): LocalDateTime =
+        LocalDateTime.ofEpochSecond(databaseValue, 0, ZoneOffset.UTC)
 }

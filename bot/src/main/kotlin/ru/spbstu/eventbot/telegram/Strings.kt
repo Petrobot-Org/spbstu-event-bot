@@ -1,6 +1,9 @@
 package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.Course
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 object Strings {
     const val InvalidName = "Некорректное имя. Попробуйте снова."
@@ -25,8 +28,16 @@ object Strings {
     const val HelpStart = "I help you for start work with me!"
 
     fun registrationConfirmation(name: String, email: String, group: String) =
-        "Имя: $name\nПочта: $email\nГруппа: $group\nВерно?"
+        """Имя: $name
+          |Почта: $email
+          |Группа: $group
+          |Верно?""".trimMargin()
 
-    fun courseDetails(course: Course) =
-        "*${course.title}*\n\n${course.description}"
+    fun courseDetails(course: Course): String {
+        val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+        return """*${course.title}*
+          |
+          |🕒 До ${course.expiryDate.format(formatter)}
+          |${course.description}""".trimMargin()
+    }
 }

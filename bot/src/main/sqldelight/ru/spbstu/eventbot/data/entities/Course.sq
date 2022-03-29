@@ -1,11 +1,11 @@
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 
 CREATE TABLE Course (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     client_id INTEGER NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
-    expiry_date INTEGER AS GregorianCalendar,
+    expiry_date INTEGER AS LocalDateTime,
     results_sent INTEGER AS Boolean,
     FOREIGN KEY (client_id) REFERENCES Client (id)
 );
