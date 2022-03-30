@@ -9,10 +9,7 @@ import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
-import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
-import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
-import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
+import ru.spbstu.eventbot.domain.usecases.*
 
 class Bot : KoinComponent {
     private val submitApplication: SubmitApplicationUseCase by inject()
@@ -20,6 +17,7 @@ class Bot : KoinComponent {
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
     private val getCourseById: GetCourseByIdUseCase by inject()
     private val userPermissions: UserPermissions by inject()
+    private val registerClient: RegisterClientUseCase by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
@@ -66,7 +64,7 @@ class Bot : KoinComponent {
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses" -> displayCourses(getAvailableCourses)
-            "/superdangerouscommand" -> requireOperator { sendReply("You're an operator") } // TODO: Remove example
+            "/newclient" -> requireOperator { startClientRegistration(setNewState) }
             else -> sendReply(Strings.UnknownCommand)
         }
     }
@@ -75,6 +73,7 @@ class Bot : KoinComponent {
         when (state) {
             ChatState.Empty -> sendReply(Strings.DontKnowWhatToDo)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
+            is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
         }
     }
 

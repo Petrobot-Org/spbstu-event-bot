@@ -7,16 +7,15 @@ import org.koin.dsl.module
 import ru.spbstu.eventbot.data.adapter.DateAdapter
 import ru.spbstu.eventbot.data.entities.Course
 import ru.spbstu.eventbot.data.repository.ApplicationRepositoryImpl
+import ru.spbstu.eventbot.data.repository.ClientRepositoryImpl
 import ru.spbstu.eventbot.data.repository.FakeCourseRepositoryImpl
 import ru.spbstu.eventbot.data.repository.StudentRepositoryImpl
 import ru.spbstu.eventbot.data.source.AppDatabase
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
+import ru.spbstu.eventbot.domain.repository.ClientRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
-import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
-import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
-import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
-import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
+import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
 import ru.spbstu.eventbot.telegram.UserPermissions
 import java.io.File
@@ -37,10 +36,12 @@ val mainModule = module {
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
     single<CourseRepository> { FakeCourseRepositoryImpl() }
+    single<ClientRepository> { ClientRepositoryImpl(get()) }
     single { SubmitApplicationUseCase(get(), get()) }
     single { RegisterStudentUseCase(get()) }
     single { GetAvailableCoursesUseCase(get()) }
     single { GetCourseByIdUseCase(get()) }
+    single { RegisterClientUseCase(get()) }
 }
 
 fun main(args: Array<String>) {
