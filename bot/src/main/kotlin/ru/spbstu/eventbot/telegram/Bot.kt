@@ -64,7 +64,7 @@ class Bot : KoinComponent {
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses" -> displayCourses(getAvailableCourses)
-            "/newclient" -> requireOperator { startClientRegistration(setNewState) }
+            "/newclient" -> ifOperator { startClientRegistration(setNewState) }
             else -> sendReply(Strings.UnknownCommand)
         }
     }
@@ -77,11 +77,11 @@ class Bot : KoinComponent {
         }
     }
 
-    private fun TextHandlerEnvironment.requireOperator(action: TextHandlerEnvironment.() -> Unit) {
+    private fun TextHandlerEnvironment.ifOperator(action: TextHandlerEnvironment.() -> Unit) {
         if (userPermissions.isOperator(message.from)) {
             action()
         } else {
-            sendReply(Strings.UnknownCommand)
+            sendReply(Strings.UnauthorizedError)
         }
     }
 }

@@ -27,6 +27,7 @@ object Strings {
 
     const val DontKnowWhatToDo = "Не знаю, что с этим делать"
     const val UnknownCommand = "Неизвестная команда"
+    const val UnauthorizedError = "Недостаточно прав"
     const val AvailableCoursesHeader = "Доступные курсы"
     const val NoSuchCourse = "Этого курса не существует"
     const val SubmitApplication = "✅ Записаться"
