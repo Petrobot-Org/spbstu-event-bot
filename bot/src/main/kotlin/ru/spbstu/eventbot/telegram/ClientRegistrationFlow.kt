@@ -6,7 +6,7 @@ import ru.spbstu.eventbot.domain.usecases.RegisterClientUseCase
 fun TextHandlerEnvironment.startClientRegistration(
     setState: (ChatState) -> Unit
 ) {
-    val request = requestInfo(ChatState.ClientRegistration(ClientRegistrationRequest.Name))
+    val request = requestInfo(null)
     setState(ChatState.ClientRegistration(request))
 }
 
@@ -69,10 +69,10 @@ private fun TextHandlerEnvironment.handleConfirmation(
 }
 
 private fun TextHandlerEnvironment.requestInfo(
-    state: ChatState.ClientRegistration
+    state: ChatState.ClientRegistration?
 ): ClientRegistrationRequest {
     return when {
-        state.name == null -> {
+        state?.name == null -> {
             sendReply(Strings.RequestClientName)
             ClientRegistrationRequest.Name
         }
