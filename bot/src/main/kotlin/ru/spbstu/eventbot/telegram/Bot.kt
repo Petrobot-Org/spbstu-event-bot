@@ -16,7 +16,7 @@ class Bot : KoinComponent {
     private val registerStudent: RegisterStudentUseCase by inject()
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
     private val getCourseById: GetCourseByIdUseCase by inject()
-    private val userPermissions: UserPermissions by inject()
+    private val operators: Operators by inject()
     private val registerClient: RegisterClientUseCase by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
@@ -78,7 +78,7 @@ class Bot : KoinComponent {
     }
 
     private fun TextHandlerEnvironment.ifOperator(action: TextHandlerEnvironment.() -> Unit) {
-        if (userPermissions.isOperator(message.from)) {
+        if (message.from in operators) {
             action()
         } else {
             sendReply(Strings.UnauthorizedError)

@@ -17,14 +17,13 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
-import ru.spbstu.eventbot.telegram.UserPermissions
-import java.io.File
 import java.sql.SQLException
 
 val mainModule = module {
-    single { UserPermissions(File("operators.txt")) }
+    val appConfig = appConfig()
+    single { appConfig.operators }
     single<SqlDriver> {
-        JdbcSqliteDriver("jdbc:sqlite:main.sqlite").also {
+        JdbcSqliteDriver(appConfig.jdbcString).also {
             try {
                 AppDatabase.Schema.create(it)
             } catch (e: SQLException) {
