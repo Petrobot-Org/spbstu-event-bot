@@ -9,3 +9,11 @@ CREATE TABLE Course (
     results_sent INTEGER AS Boolean,
     FOREIGN KEY (client_id) REFERENCES Client (id)
 );
+
+
+findAllCourse:
+SELECT * FROM Course;
+
+getById:
+SELECT * FROM Course
+WHERE id=:id;
