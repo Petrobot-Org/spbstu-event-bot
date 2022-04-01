@@ -9,3 +9,12 @@ CREATE TABLE Course (
     results_sent INTEGER AS Boolean,
     FOREIGN KEY (client_id) REFERENCES Client (id)
 );
+
+
+findAvailable:
+SELECT * FROM Course
+WHERE expiry_date > :now;
+
+getById:
+SELECT * FROM Course
+WHERE id = :id;

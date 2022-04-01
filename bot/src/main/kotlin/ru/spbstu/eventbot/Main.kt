@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import ru.spbstu.eventbot.data.adapter.DateAdapter
 import ru.spbstu.eventbot.data.entities.Course
 import ru.spbstu.eventbot.data.repository.ApplicationRepositoryImpl
+import ru.spbstu.eventbot.data.repository.CourseRepositoryImpl
 import ru.spbstu.eventbot.data.repository.FakeCourseRepositoryImpl
 import ru.spbstu.eventbot.data.repository.StudentRepositoryImpl
 import ru.spbstu.eventbot.data.source.AppDatabase
@@ -33,7 +34,7 @@ val mainModule = module {
     single { AppDatabase(driver = get(), CourseAdapter = Course.Adapter(expiry_dateAdapter = DateAdapter())) }
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
-    single<CourseRepository> { FakeCourseRepositoryImpl() }
+    single<CourseRepository> { CourseRepositoryImpl(get()) }
     single { SubmitApplicationUseCase(get(), get()) }
     single { RegisterStudentUseCase(get()) }
     single { GetAvailableCoursesUseCase(get()) }
