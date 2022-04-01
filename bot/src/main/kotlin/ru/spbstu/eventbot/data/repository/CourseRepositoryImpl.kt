@@ -12,17 +12,16 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
                         title: String,
                         description: String,
                         expiryDate: Instant?,
-                        resultsSent: Boolean?
-        ->
+                        resultsSent: Boolean? ->
         Course(id, title, description, clientId, expiryDate!!, resultsSent!!)
     }
 
     override fun getAvailable(): List<Course> {
-        return database.courseQueries.findAllCourse(map).executeAsList()
+        return database.courseQueries.findAvilable(Instant.now(), map).executeAsList()
     }
 
     override fun getById(id: Long): Course? {
-        return database.courseQueries.getById(id, map).executeAsOne()
+        return database.courseQueries.getById(id, map).executeAsOneOrNull()
 
     }
 }
