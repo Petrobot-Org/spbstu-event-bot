@@ -11,9 +11,9 @@ CREATE TABLE Course (
 );
 
 
-findAvilable:
+findAvailable:
 SELECT * FROM Course
-WHERE expiry_date > :expiryDate;
+WHERE expiry_date > :now;
 
 getById:
 SELECT * FROM Course
