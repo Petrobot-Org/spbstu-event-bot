@@ -16,17 +16,8 @@ object Strings {
     const val RegistrationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val RequestYesNo = "Напишите да или нет"
     const val RegisteredSuccessfully = "Успешная регистрация"
-
-    const val RequestClientName = "Имя клиента"
-    const val RequestClientEmail = "Адрес электронной почты клиента"
-    const val ClientRegistrationRetry = "Тогда начинаем заново"
-    const val ClientRegistrationErrorRetry = "Что-то пошло не так. Начинаем заново."
-    const val ClientRegisteredSuccessfully = "Клиент создан"
-    const val InvalidClientName = "Некорректное имя клиента. Попробуйте снова."
-
     const val DontKnowWhatToDo = "Не знаю, что с этим делать"
     const val UnknownCommand = "Неизвестная команда"
-    const val UnauthorizedError = "Недостаточно прав"
     const val AvailableCoursesHeader = "Доступные курсы"
     const val NoSuchCourse = "Этого курса не существует"
     const val SubmitApplication = "✅ Записаться"
@@ -42,11 +33,6 @@ object Strings {
            |Группа: $group
            |Верно?
         """.trimMargin()
-
-    fun clientRegistrationConfirmation(name: String, email: String) =
-        """|Имя: $name
-           |Почта: $email
-           |Верно?""".trimMargin()
 
     fun courseDetails(course: Course): String {
         val formatter = DateTimeFormatter
