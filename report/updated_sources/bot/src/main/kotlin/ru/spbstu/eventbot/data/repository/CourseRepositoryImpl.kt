@@ -7,10 +7,14 @@ import java.time.Instant
 
 class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository {
 
-    private val map =
-        { id: Long, clientId: Long, title: String, description: String, expiryDate: Instant?, resultsSent: Boolean? ->
-            Course(id, title, description, clientId, expiryDate!!, resultsSent!!)
-        }
+    private val map = { id: Long,
+        clientId: Long,
+        title: String,
+        description: String,
+        expiryDate: Instant?,
+        resultsSent: Boolean? ->
+        Course(id, title, description, clientId, expiryDate!!, resultsSent!!)
+    }
 
     override fun getAvailable(): List<Course> {
         return database.courseQueries.findAvailable(Instant.now(), map).executeAsList()
