@@ -46,7 +46,8 @@ object Strings {
     fun clientRegistrationConfirmation(name: String, email: String) =
         """|Имя: $name
            |Почта: $email
-           |Верно?""".trimMargin()
+           |Верно?
+        """.trimMargin()
 
     fun courseDetails(course: Course): String {
         val formatter = DateTimeFormatter
