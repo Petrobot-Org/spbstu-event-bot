@@ -18,3 +18,7 @@ WHERE expiry_date > :now;
 getById:
 SELECT * FROM Course
 WHERE id = :id;
+
+insert:
+INSERT INTO Course(title, description, client_id, expiry_date)
+VALUES (:title, :description, :clientId, :expiryDate);

@@ -19,4 +19,8 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
     override fun getById(id: Long): Course? {
         return database.courseQueries.getById(id, map).executeAsOneOrNull()
     }
+
+    override fun insert(title: String, description: String, clientId: Long, expiryDate: Instant) {
+        database.courseQueries.insert(title, description, clientId, expiryDate)
+    }
 }
