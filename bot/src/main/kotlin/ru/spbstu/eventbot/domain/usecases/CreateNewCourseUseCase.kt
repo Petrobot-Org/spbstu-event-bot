@@ -2,21 +2,20 @@ package ru.spbstu.eventbot.domain.usecases
 
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.ClientRepository
+import java.time.Instant
 
-class CreateNewCourseUseCase {
+class CreateNewCourseUseCase (
     private val courseRepository: CourseRepository,
-    private val clienRepository: ClientRepository
+    private val clientRepository: ClientRepository
     ) {
         sealed interface Result {
             object OK : Result
-            object Expired : Result
             object NotRegistered : Result
-            object AlreadySubmitted : Result
         }
 
-        operator fun invoke(chatId: Long, courseId: Long): Result {
-            val student = studentRepository.findByChatId(chatId) ?: return Result.NotRegistered
-            applicationRepository.insert(studentId = student.id, courseId = courseId)
+        operator fun invoke(chatId: Long, title: String, description: String,  expiryDate: Instant): Result {
+            val client = clientRepository.findByChatId(chatId) ?: return Result.NotRegistered
+            courseRepository.insert(title=title,  description=description, clientId=client.id, expiryDate = expiryDate)
             return Result.OK
         }
 }

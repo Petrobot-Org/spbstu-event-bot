@@ -19,4 +19,8 @@ class FakeCourseRepositoryImpl : CourseRepository {
     override fun getById(id: Long): Course? {
         return fakeCourses.find { it.id == id }
     }
+
+    override fun insert(title: String, description: String, clientId: Long, expiryDate: Instant) {
+        TODO("Not yet implemented")
+    }
 }
