@@ -8,8 +8,8 @@ import java.time.Instant
 class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository {
 
     private val map =
-        { id: Long, clientId: Long, title: String, description: String, expiryDate: Instant?, resultsSent: Boolean? ->
-            Course(id, title, description, clientId, expiryDate!!, resultsSent!!)
+        { id: Long, clientId: Long, title: String, description: String, additionalQuestion: String? ,expiryDate: Instant?, resultsSent: Boolean? ->
+            Course(id, title, description, additionalQuestion, clientId, expiryDate!!, resultsSent!!)
         }
 
     override fun getAvailable(): List<Course> {

@@ -5,6 +5,7 @@ CREATE TABLE Course (
     client_id INTEGER NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
+    additional_question TEXT,
     expiry_date INTEGER AS Instant,
     results_sent INTEGER AS Boolean,
     FOREIGN KEY (client_id) REFERENCES Client (id)
