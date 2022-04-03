@@ -10,4 +10,4 @@ VALUES (:name, :email);
 
 findByChatId:
 SELECT * FROM Client
-WHERE id = :chatId;
+WHERE chatId = :chatId;

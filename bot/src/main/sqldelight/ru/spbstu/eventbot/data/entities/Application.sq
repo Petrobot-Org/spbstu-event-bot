@@ -1,3 +1,5 @@
+import ry.spbstu.eventbot.data.entities.Student;
+
 CREATE TABLE Application (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER NOT NULL,
@@ -13,4 +15,5 @@ VALUES (:studentId, :courseId);
 
 getListOfApplicants:
 SELECT * FROM Application
-WHERE course_id > :id;
+INNER JOIN Student ON Student.id = Application.student_id
+WHERE course_id = :id;
