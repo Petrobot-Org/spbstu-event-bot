@@ -6,7 +6,7 @@ import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 
 class ApplicationRepositoryImpl(private val database: AppDatabase) : ApplicationRepository {
 
-    private val map = { _: Long, _: Long, _: Long, _: String?,id: Long,chatId: Long, email: String,fullName: String, group: String->
+    private val map = { id: Long,chatId: Long, email: String,fullName: String, group: String->
         Student(id,chatId, email, fullName, group)
     }
     override fun insert(studentId: Long, courseId: Long) {

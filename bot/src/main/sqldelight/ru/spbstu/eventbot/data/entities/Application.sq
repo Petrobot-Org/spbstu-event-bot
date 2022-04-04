@@ -14,6 +14,6 @@ INSERT INTO Application(student_id, course_id)
 VALUES (:studentId, :courseId);
 
 getListOfApplicants:
-SELECT * FROM Application
+SELECT Student.* FROM Application
 INNER JOIN Student ON Student.id = Application.student_id
 WHERE course_id = :id;
