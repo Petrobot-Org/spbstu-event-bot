@@ -7,7 +7,3 @@ CREATE TABLE Client (
 insert:
 INSERT INTO Client(name, email)
 VALUES (:name, :email);
-
-findById:
-SELECT * FROM Client
-WHERE id = :id;
