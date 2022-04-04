@@ -4,5 +4,5 @@ import ru.spbstu.eventbot.domain.entities.Client
 
 interface ClientRepository {
     fun insert(name: String, email: String)
-    fun findByChatId(chatId: Long): Client?
+    fun findById(chatId: Long): Client?
 }

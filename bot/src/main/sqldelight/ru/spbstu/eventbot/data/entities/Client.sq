@@ -8,6 +8,6 @@ insert:
 INSERT INTO Client(name, email)
 VALUES (:name, :email);
 
-findByChatId:
+findById:
 SELECT * FROM Client
-WHERE chatId = :chatId;
+WHERE id = :id;

@@ -9,8 +9,8 @@ class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository
         database.clientQueries.insert(name = name, email = email)
     }
 
-    override fun findByChatId(chatId: Long): Client? {
-        return database.clientQueries.findByChatId(chatId, mapper = { id, email, name ->
+    override fun findById(chatId: Long): Client? {
+        return database.clientQueries.findById(chatId, mapper = { id, email, name ->
             Client(id, email, name)
         }).executeAsOneOrNull()
     }

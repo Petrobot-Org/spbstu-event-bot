@@ -13,7 +13,3 @@ VALUES (:chatId, :email, :fullName, :group);
 findByChatId:
 SELECT * FROM Student
 WHERE chat_id = :chatId;
-
-findById:
-SELECT * FROM Student
-WHERE id = :id;

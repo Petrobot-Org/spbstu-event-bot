@@ -13,8 +13,8 @@ class CreateNewCourseUseCase (
             object NotRegistered : Result
         }
 
-        operator fun invoke(chatId: Long, title: String, description: String,  expiryDate: Instant): Result {
-            val client = clientRepository.findByChatId(chatId) ?: return Result.NotRegistered
+        operator fun invoke(id: Long, title: String, description: String,  expiryDate: Instant): Result {
+            val client = clientRepository.findById(id) ?: return Result.NotRegistered
             courseRepository.insert(title=title,  description=description, clientId=client.id, expiryDate = expiryDate)
             return Result.OK
         }
