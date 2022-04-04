@@ -1,11 +1,16 @@
 package ru.spbstu.eventbot.telegram
 
+import ru.spbstu.eventbot.domain.entities.Client
 import ru.spbstu.eventbot.domain.entities.Course
+import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
+import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 
 object Strings {
+    private val  submitApplicationUseCase : SubmitApplicationUseCase = TODO()
     const val InvalidName = "Некорректное имя. Попробуйте снова."
     const val InvalidEmail = "Некорректная почта. Попробуйте снова."
     const val InvalidGroup = "Некорректная группа. Попробуйте снова."
@@ -43,5 +48,23 @@ object Strings {
                   |🕒 До ${formatter.format(course.expiryDate)}
                   |${course.description}
         """.trimMargin()
+    }
+
+    fun signUp(course: Course, client: Client): String {
+        val timeNow: Instant = Calendar.getInstance().toInstant()
+
+        if (course.expiryDate.compareTo(timeNow) > 1) {
+            // todo: какая то реакция должна быть я хз какая
+            // println("Время истекло.")
+            return "Время истекло."
+        }
+        if (course.clientId == client.id) {
+            //todo: какая то реакция должна быть я хз какая
+            //println("Вы уже зарегестрированы.")
+            return "Вы уже зарегестрированы."
+        }
+        submitApplicationUseCase.invoke(client.id,course.id)
+
+        return """Вы записаны."""
     }
 }
