@@ -9,16 +9,15 @@ import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
-import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
-import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
-import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
+import ru.spbstu.eventbot.domain.usecases.*
 
 class Bot : KoinComponent {
     private val submitApplication: SubmitApplicationUseCase by inject()
     private val registerStudent: RegisterStudentUseCase by inject()
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
     private val getCourseById: GetCourseByIdUseCase by inject()
+    private val operators: Operators by inject()
+    private val registerClient: RegisterClientUseCase by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
@@ -65,6 +64,7 @@ class Bot : KoinComponent {
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses" -> displayCourses(getAvailableCourses)
+            "/newclient" -> ifOperator { startClientRegistration(setNewState) }
             else -> sendReply(Strings.UnknownCommand)
         }
     }
@@ -73,6 +73,15 @@ class Bot : KoinComponent {
         when (state) {
             ChatState.Empty -> sendReply(Strings.DontKnowWhatToDo)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
+            is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
+        }
+    }
+
+    private fun TextHandlerEnvironment.ifOperator(action: TextHandlerEnvironment.() -> Unit) {
+        if (message.from in operators) {
+            action()
+        } else {
+            sendReply(Strings.UnauthorizedError)
         }
     }
 }

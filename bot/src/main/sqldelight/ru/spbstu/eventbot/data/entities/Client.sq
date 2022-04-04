@@ -3,3 +3,7 @@ CREATE TABLE Client (
     email TEXT NOT NULL,
     name TEXT NOT NULL
 );
+
+insert:
+INSERT INTO Client(name, email)
+VALUES (:name, :email);
