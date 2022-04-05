@@ -1,9 +1,14 @@
 CREATE TABLE Client (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    user_id INTEGER
 );
 
 insert:
-INSERT INTO Client(name, email)
-VALUES (:name, :email);
+INSERT INTO Client(name, email, user_id)
+VALUES (:name, :email, :userId);
+
+containsUserId:
+SELECT COUNT(1) FROM Client
+WHERE user_id = :userId;

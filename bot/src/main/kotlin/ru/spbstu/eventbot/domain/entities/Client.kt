@@ -4,4 +4,5 @@ data class Client(
     val id: Long,
     val email: String,
     val name: String,
+    val userId: Long?
 )

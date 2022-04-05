@@ -1,6 +1,6 @@
 package ru.spbstu.eventbot
 
-import ru.spbstu.eventbot.telegram.Operators
+import ru.spbstu.eventbot.domain.permissions.Operators
 import java.util.Properties
 
 data class AppConfig(
@@ -20,7 +20,7 @@ fun appConfig(): AppConfig {
         val jdbcString = properties["jdbc"].toString()
         AppConfig(
             jdbcString = jdbcString,
-            operators = { it?.id in operatorUserIds }
+            operators = { it in operatorUserIds }
         )
     }
 }

@@ -1,52 +1,87 @@
 package ru.spbstu.eventbot.telegram
 
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
+import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.RegisterClientUseCase
 
 fun TextHandlerEnvironment.startClientRegistration(
     setState: (ChatState) -> Unit
 ) {
-    val request = requestInfo(null)
-    setState(ChatState.ClientRegistration(request))
+    sendReply(Strings.RequestClientName)
+    setState(ChatState.ClientRegistration(ClientRegistrationRequest.Name))
 }
 
+context(Permissions)
 fun TextHandlerEnvironment.handleClientRegistration(
     state: ChatState.ClientRegistration,
     setState: (ChatState) -> Unit,
     registerClient: RegisterClientUseCase
 ) {
-    val newState = when (state.request) {
-        ClientRegistrationRequest.Name -> {
-            if (!registerClient.isNameValid(text)) {
-                sendReply(Strings.InvalidClientName)
-                return
-            }
-            state.copy(name = text)
-        }
-        ClientRegistrationRequest.Email -> {
-            if (!registerClient.isEmailValid(text)) {
-                sendReply(Strings.InvalidEmail)
-                return
-            }
-            state.copy(email = text)
-        }
-        ClientRegistrationRequest.Confirm -> {
-            handleConfirmation(state, setState, registerClient)
+    when (state.request) {
+        ClientRegistrationRequest.Name -> handleName(state, setState, registerClient)
+        ClientRegistrationRequest.Email -> handleEmail(state, setState, registerClient)
+        ClientRegistrationRequest.UserId -> handleUserId(state, setState)
+        ClientRegistrationRequest.Confirm -> handleConfirmation(state, setState, registerClient)
+    }
+}
+
+private fun TextHandlerEnvironment.handleName(
+    state: ChatState.ClientRegistration,
+    setState: (ChatState) -> Unit,
+    registerClient: RegisterClientUseCase
+) {
+    if (!registerClient.isNameValid(text)) {
+        sendReply(Strings.InvalidClientName)
+        return
+    }
+    setState(state.copy(name = text, request = ClientRegistrationRequest.Email))
+    sendReply(Strings.RequestClientEmail)
+}
+
+private fun TextHandlerEnvironment.handleEmail(
+    state: ChatState.ClientRegistration,
+    setState: (ChatState) -> Unit,
+    registerClient: RegisterClientUseCase
+) {
+    if (!registerClient.isEmailValid(text)) {
+        sendReply(Strings.InvalidEmail)
+        return
+    }
+    setState(state.copy(email = text, request = ClientRegistrationRequest.UserId))
+    sendReply(Strings.RequestClientUserId)
+}
+
+private fun TextHandlerEnvironment.handleUserId(
+    state: ChatState.ClientRegistration,
+    setState: (ChatState) -> Unit
+) {
+    val userId = if (text in Strings.NegativeAnswers) {
+        null
+    } else {
+        text.toLongOrNull() ?: run {
+            sendReply(Strings.InvalidClientUserId)
             return
         }
     }
-    val request = requestInfo(newState)
-    setState(newState.copy(request = request))
+    setState(state.copy(userId = userId, request = ClientRegistrationRequest.Confirm))
+    sendReply(
+        Strings.clientRegistrationConfirmation(
+            name = state.name!!,
+            email = state.email!!,
+            userId = state.userId
+        )
+    )
 }
 
-private fun TextHandlerEnvironment.handleConfirmation(
+context(Permissions)
+        private fun TextHandlerEnvironment.handleConfirmation(
     state: ChatState.ClientRegistration,
     setState: (ChatState) -> Unit,
     registerClient: RegisterClientUseCase
 ) {
     when (text.lowercase()) {
         in Strings.PositiveAnswers -> {
-            val result = registerClient(state.name!!, state.email!!)
+            val result = registerClient(state.name!!, state.email!!, state.userId)
             when (result) {
                 RegisterClientUseCase.Result.OK -> {
                     setState(ChatState.Empty)
@@ -56,6 +91,10 @@ private fun TextHandlerEnvironment.handleConfirmation(
                     sendReply(Strings.ClientRegistrationErrorRetry)
                     startClientRegistration(setState)
                 }
+                RegisterClientUseCase.Result.Unauthorized -> {
+                    setState(ChatState.Empty)
+                    sendReply(Strings.UnauthorizedError)
+                }
             }
         }
         in Strings.NegativeAnswers -> {
@@ -64,30 +103,6 @@ private fun TextHandlerEnvironment.handleConfirmation(
         }
         else -> {
             sendReply(Strings.RequestYesNo)
-        }
-    }
-}
-
-private fun TextHandlerEnvironment.requestInfo(
-    state: ChatState.ClientRegistration?
-): ClientRegistrationRequest {
-    return when {
-        state?.name == null -> {
-            sendReply(Strings.RequestClientName)
-            ClientRegistrationRequest.Name
-        }
-        state.email == null -> {
-            sendReply(Strings.RequestClientEmail)
-            ClientRegistrationRequest.Email
-        }
-        else -> {
-            sendReply(
-                Strings.clientRegistrationConfirmation(
-                    name = state.name,
-                    email = state.email
-                )
-            )
-            ClientRegistrationRequest.Confirm
         }
     }
 }

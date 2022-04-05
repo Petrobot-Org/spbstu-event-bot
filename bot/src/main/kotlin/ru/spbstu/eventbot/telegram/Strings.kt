@@ -17,12 +17,14 @@ object Strings {
     const val RequestYesNo = "Напишите да или нет"
     const val RegisteredSuccessfully = "Успешная регистрация"
 
-    const val RequestClientName = "Имя клиента"
-    const val RequestClientEmail = "Адрес электронной почты клиента"
+    const val RequestClientName = "Имя заказчика"
+    const val RequestClientEmail = "Адрес электронной почты заказчика"
+    const val RequestClientUserId = "Id телеграма заказчика (напишите \"нет\", если нет)"
     const val ClientRegistrationRetry = "Тогда начинаем заново"
     const val ClientRegistrationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val ClientRegisteredSuccessfully = "Клиент создан"
-    const val InvalidClientName = "Некорректное имя клиента. Попробуйте снова."
+    const val InvalidClientName = "Некорректное имя заказчика. Попробуйте снова."
+    const val InvalidClientUserId = "Id заказчика должно быть целым числом. Попробуйте снова."
 
     const val DontKnowWhatToDo = "Не знаю, что с этим делать"
     const val UnknownCommand = "Неизвестная команда"
@@ -36,6 +38,10 @@ object Strings {
     const val HelpCommands = "I help you!"
     const val HelpStart = "I help you for start work with me!"
 
+    const val ButtonCourses = "Курсы"
+    const val ButtonRegister = "Регистрация"
+    const val ButtonNewClient = "Новый заказчик"
+
     fun registrationConfirmation(name: String, email: String, group: String) =
         """|Имя: $name
            |Почта: $email
@@ -43,9 +49,10 @@ object Strings {
            |Верно?
         """.trimMargin()
 
-    fun clientRegistrationConfirmation(name: String, email: String) =
+    fun clientRegistrationConfirmation(name: String, email: String, userId: Long?) =
         """|Имя: $name
            |Почта: $email
+           |id: $userId
            |Верно?
         """.trimMargin()
 
