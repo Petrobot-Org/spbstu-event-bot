@@ -14,7 +14,7 @@ class CreateNewCourseUseCase(
         object InvalidArguments : Result
     }
 
-    operator fun invoke(id: Long, title: String, description: String,additionalQuestion: String, expiryDate: Instant): Result {
+    operator fun invoke(id: Long, title: String, description: String, additionalQuestion: String, expiryDate: Instant): Result {
         val client = clientRepository.findById(id) ?: return Result.NotRegistered
         courseRepository.insert(clientId = client.id, title = title, description = description, additionalQuestion = additionalQuestion, expiryDate = expiryDate)
         return Result.OK
