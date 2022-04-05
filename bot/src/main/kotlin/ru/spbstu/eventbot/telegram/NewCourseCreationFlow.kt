@@ -3,6 +3,7 @@ package ru.spbstu.eventbot.telegram
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import ru.spbstu.eventbot.domain.usecases.CreateNewCourseUseCase
 import java.time.Instant
+import java.time.format.DateTimeFormatter
 
 
 fun TextHandlerEnvironment.startNewCourseCreation(
@@ -28,7 +29,8 @@ fun TextHandlerEnvironment.handleNewCourseCreation(
             state.copy(additionalQuestion = text)
         }
         NewCourseCreationRequest.ExpiryDate -> {
-            state.copy(expiryDate = Instant.parse(text))///?
+            val date = DateTimeFormatter.ofPattern(text).parse(text)
+            state.copy(expiryDate = Instant.parse(date.toString()))///?
         }
         NewCourseCreationRequest.Confirm -> {
             handleConfirmation(state, setState, createNewCourse)
