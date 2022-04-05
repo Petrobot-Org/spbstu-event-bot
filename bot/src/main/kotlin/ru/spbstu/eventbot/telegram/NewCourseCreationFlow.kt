@@ -46,7 +46,7 @@ private fun TextHandlerEnvironment.handleConfirmation(
     createNewCourse: CreateNewCourseUseCase
 ) {
     when (text.lowercase()) {
-        in Strings.PositiveAnswers -> {////добавить выбор заказчика, если их несколько
+        in Strings.PositiveAnswers -> { // //добавить выбор заказчика, если их несколько
             val result = createNewCourse(message.chat.id, state.title!!, state.description!!, state.additionalQuestion!!, state.expiryDate!!)
             when (result) {
                 CreateNewCourseUseCase.Result.OK -> {

@@ -57,7 +57,7 @@ class Bot : KoinComponent {
         val arg = tokens[1]
         when (command) {
             "details" -> courseDetails(arg.toLong(), getCourseById)
-            "applicants"-> applicantsInfo(arg.toLong(),getApplicants )
+            "applicants" -> applicantsInfo(arg.toLong(), getApplicants)
             "apply" -> TODO("Handle submit application callback")
         }
     }
@@ -68,7 +68,7 @@ class Bot : KoinComponent {
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses" -> displayCourses(getAvailableCourses)
-            "/getapplicants"-> ifOperator {displayApplicants(getAvailableCoursesByClientId)}///добавить для клиентов тоже
+            "/getapplicants" -> ifOperator { displayApplicants(getAvailableCoursesByClientId) } // /добавить для клиентов тоже
             "/newclient" -> ifOperator { startClientRegistration(setNewState) }
             "/newcourse" -> ifOperator { startNewCourseCreation(setNewState) }
             else -> sendReply(Strings.UnknownCommand)

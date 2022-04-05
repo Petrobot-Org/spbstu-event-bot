@@ -85,7 +85,7 @@ object Strings {
            |Группа: ${applicant.group}
            |Почта: ${applicant.email}
            |--------------------------
-        """.trimMargin()
+            """.trimMargin()
         }
         return listOfApplicants
     }
