@@ -16,6 +16,10 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         return database.courseQueries.findAvailable(Instant.now(), map).executeAsList()
     }
 
+    override fun getAvailableCoursesByClientId(clientId: Long): List<Course> {
+        return database.courseQueries.getAvailableCoursesByClientId(Instant.now(),clientId, map).executeAsList()
+    }
+
     override fun getById(id: Long): Course? {
         return database.courseQueries.getById(id, map).executeAsOneOrNull()
     }
