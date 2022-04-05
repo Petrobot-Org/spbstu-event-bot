@@ -16,7 +16,9 @@ class Bot : KoinComponent {
     private val submitApplication: SubmitApplicationUseCase by inject()
     private val registerStudent: RegisterStudentUseCase by inject()
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
+    private val getAvailableCoursesByClientId: GetAvailableCoursesByClientIdUseCase by inject()
     private val getCourseById: GetCourseByIdUseCase by inject()
+    private val getApplicants: GetApplicantsByCourseIdUseCase by inject()
     private val operators: Operators by inject()
     private val registerClient: RegisterClientUseCase by inject()
 
@@ -55,6 +57,7 @@ class Bot : KoinComponent {
         val arg = tokens[1]
         when (command) {
             "details" -> courseDetails(arg.toLong(), getCourseById)
+            "applicants"-> applicantsInfo(arg.toLong(),getApplicants )
             "apply" -> TODO("Handle submit application callback")
         }
     }
@@ -65,6 +68,7 @@ class Bot : KoinComponent {
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses" -> displayCourses(getAvailableCourses)
+            "/getapplicants"-> ifOperator {displayApplicants(getAvailableCoursesByClientId)}///добавить для клиентов тоже
             "/newclient" -> ifOperator { startClientRegistration(setNewState) }
             "/newcourse" -> ifOperator { startNewCourseCreation(setNewState) }
             else -> sendReply(Strings.UnknownCommand)

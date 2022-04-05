@@ -1,6 +1,7 @@
 package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.Course
+import ru.spbstu.eventbot.domain.entities.Student
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -37,6 +38,7 @@ object Strings {
     const val UnauthorizedError = "Недостаточно прав"
     const val AvailableCoursesHeader = "Доступные курсы"
     const val NoSuchCourse = "Этого курса не существует"
+    const val NoApplicants = "Никто ещё не подал заявку на этот курс"
     const val SubmitApplication = "✅ Записаться"
     val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
     val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
@@ -74,5 +76,17 @@ object Strings {
                   |🕒 До ${formatter.format(course.expiryDate)}
                   |${course.description}
         """.trimMargin()
+    }
+
+    fun applicantsInfo(applicants: List<Student>): String {
+        var listOfApplicants = ""
+        for (applicant in applicants) {
+            listOfApplicants += """|ФИО студента: ${applicant.fullName}
+           |Группа: ${applicant.group}
+           |Почта: ${applicant.email}
+           |--------------------------
+        """.trimMargin()
+        }
+        return listOfApplicants
     }
 }
