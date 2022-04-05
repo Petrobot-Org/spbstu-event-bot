@@ -1,3 +1,8 @@
 package ru.spbstu.eventbot.domain.repository
 
-interface ClientRepository
+import ru.spbstu.eventbot.domain.entities.Client
+
+interface ClientRepository {
+    fun findById(Id: Long): Client?
+}
+
