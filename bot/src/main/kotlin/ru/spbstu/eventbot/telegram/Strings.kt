@@ -46,4 +46,8 @@ object Strings {
                   |${course.description}
         """.trimMargin()
     }
+
+    fun apply(chatId: Long, courseId: Long): String {
+        return submitApplicationUseCase.invoke(chatId, courseId).toString()
+    }
 }
