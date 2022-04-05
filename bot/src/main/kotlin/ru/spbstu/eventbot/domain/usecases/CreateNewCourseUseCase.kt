@@ -11,11 +11,12 @@ class CreateNewCourseUseCase(
     sealed interface Result {
         object OK : Result
         object NotRegistered : Result
+        object InvalidArguments : Result
     }
 
-    operator fun invoke(id: Long, title: String, description: String, expiryDate: Instant): Result {
+    operator fun invoke(id: Long, title: String, description: String,additionalQuestion: String, expiryDate: Instant): Result {
         val client = clientRepository.findById(id) ?: return Result.NotRegistered
-        courseRepository.insert(title = title, description = description, clientId = client.id, expiryDate = expiryDate)
+        courseRepository.insert(clientId = client.id, title = title, description = description, additionalQuestion = additionalQuestion, expiryDate = expiryDate)
         return Result.OK
     }
 }

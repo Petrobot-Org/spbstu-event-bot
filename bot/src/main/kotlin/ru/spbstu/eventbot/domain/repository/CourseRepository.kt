@@ -6,5 +6,5 @@ import java.time.Instant
 interface CourseRepository {
     fun getAvailable(): List<Course>
     fun getById(id: Long): Course?
-    fun insert(title: String, description: String, clientId: Long, expiryDate: Instant)
+    fun insert(clientId: Long, title: String, description: String, additionalQuestion: String, expiryDate: Instant)
 }

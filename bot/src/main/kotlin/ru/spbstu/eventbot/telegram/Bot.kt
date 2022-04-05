@@ -12,6 +12,7 @@ import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.usecases.*
 
 class Bot : KoinComponent {
+    private val createNewCourse: CreateNewCourseUseCase by inject()
     private val submitApplication: SubmitApplicationUseCase by inject()
     private val registerStudent: RegisterStudentUseCase by inject()
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
@@ -65,6 +66,7 @@ class Bot : KoinComponent {
             "/start" -> writeStart()
             "/courses" -> displayCourses(getAvailableCourses)
             "/newclient" -> ifOperator { startClientRegistration(setNewState) }
+            "/newcourse" ->  ifOperator { startNewCourseCreation(setNewState) }
             else -> sendReply(Strings.UnknownCommand)
         }
     }
@@ -74,6 +76,7 @@ class Bot : KoinComponent {
             ChatState.Empty -> sendReply(Strings.DontKnowWhatToDo)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
             is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
+            is ChatState.NewCourseCreation -> handleNewCourseCreation(state, setNewState,createNewCourse)
         }
     }
 

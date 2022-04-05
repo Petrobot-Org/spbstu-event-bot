@@ -20,7 +20,7 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         return database.courseQueries.getById(id, map).executeAsOneOrNull()
     }
 
-    override fun insert(title: String, description: String, clientId: Long, expiryDate: Instant) {
-        database.courseQueries.insert(title, description, clientId, expiryDate)
+    override fun insert(clientId: Long, title: String, description: String, additionalQuestion: String, expiryDate: Instant) {
+        database.courseQueries.insert(clientId, title, description, additionalQuestion, expiryDate)
     }
 }
