@@ -86,23 +86,4 @@ class Bot : KoinComponent {
             is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
         }
     }
-
-    private fun TextHandlerEnvironment.require(condition: Boolean, action: TextHandlerEnvironment.() -> Unit) {
-        if (condition) {
-            action()
-        } else {
-            sendReply(Strings.UnauthorizedError)
-        }
-    }
-
-    private fun CallbackQueryHandlerEnvironment.require(
-        condition: Boolean,
-        action: CallbackQueryHandlerEnvironment.() -> Unit
-    ) {
-        if (condition) {
-            action()
-        } else {
-            sendReply(Strings.UnauthorizedError)
-        }
-    }
 }

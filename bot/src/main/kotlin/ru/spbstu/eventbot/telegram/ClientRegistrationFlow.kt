@@ -74,7 +74,7 @@ private fun TextHandlerEnvironment.handleUserId(
 }
 
 context(Permissions)
-        private fun TextHandlerEnvironment.handleConfirmation(
+private fun TextHandlerEnvironment.handleConfirmation(
     state: ChatState.ClientRegistration,
     setState: (ChatState) -> Unit,
     registerClient: RegisterClientUseCase
