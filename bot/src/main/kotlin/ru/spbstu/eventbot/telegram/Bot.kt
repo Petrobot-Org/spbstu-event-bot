@@ -39,7 +39,7 @@ class Bot : KoinComponent {
                     val (state, setState) = state(message.chat.id)
                     val permissions = getPermissions(message.from?.id)
                     with(permissions) {
-                        handleCommand(state, setState)
+                        handleText(state, setState)
                     }
                 }
             }
@@ -52,10 +52,7 @@ class Bot : KoinComponent {
     }
 
     context(Permissions)
-    private fun CallbackQueryHandlerEnvironment.handleCallback(
-        state: ChatState,
-        setState: (ChatState) -> Unit
-    ) {
+    private fun CallbackQueryHandlerEnvironment.handleCallback(state: ChatState, setState: (ChatState) -> Unit) {
         val tokens = callbackQuery.data.split(' ')
         require(tokens.size == 2)
         val command = tokens[0]
@@ -67,19 +64,19 @@ class Bot : KoinComponent {
     }
 
     context(Permissions)
-    private fun TextHandlerEnvironment.handleCommand(state: ChatState, setNewState: (ChatState) -> Unit) {
+    private fun TextHandlerEnvironment.handleText(state: ChatState, setNewState: (ChatState) -> Unit) {
         when (text) {
             "/register", Strings.ButtonRegister -> startRegistration(setNewState)
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses", Strings.ButtonCourses -> displayCourses(getAvailableCourses)
             "/newclient", Strings.ButtonNewClient -> require(canModifyClients) { startClientRegistration(setNewState) }
-            else -> handleText(state, setNewState)
+            else -> handleFreeText(state, setNewState)
         }
     }
 
     context(Permissions)
-    private fun TextHandlerEnvironment.handleText(state: ChatState, setNewState: (ChatState) -> Unit) {
+    private fun TextHandlerEnvironment.handleFreeText(state: ChatState, setNewState: (ChatState) -> Unit) {
         when (state) {
             ChatState.Empty -> sendReply(Strings.UnknownCommand)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
