@@ -6,19 +6,15 @@ import ru.spbstu.eventbot.domain.repository.ClientRepository
 
 class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository {
     private val map =
-        { id: Long, email: String, name: String, userId: Long? ->
-            Client(id, email, name, userId)
+        { id: Long, userId: Long?, email: String, name: String ->
+            Client(id, userId, email, name)
         }
-
-    override fun insert(name: String, email: String, userId: Long?) {
-        database.clientQueries.insert(name = name, email = email, userId = userId)
-    }
-
-    override fun contains(userId: Long): Boolean {
-        return database.clientQueries.containsUserId(userId).executeAsOne() == 1L
-    }
 
     override fun getClientsByUserId(userId: Long): List<Client> {
         return database.clientQueries.getClientsByUserId(userId, map).executeAsList()
+    }
+
+    override fun insert(userId: Long, name: String, email: String) {
+        database.clientQueries.insert(user_id = userId, name = name, email = email)
     }
 }

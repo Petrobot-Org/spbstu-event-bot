@@ -14,8 +14,7 @@ sealed interface ChatState {
     data class ClientRegistration(
         val request: ClientRegistrationRequest,
         val name: String? = null,
-        val email: String? = null,
-        val userId: Long? = null
+        val email: String? = null
     ) : ChatState
 
     data class NewCourseCreation(
@@ -38,7 +37,6 @@ sealed interface ClientRegistrationRequest {
     object Name : ClientRegistrationRequest
     object Email : ClientRegistrationRequest
     object Confirm : ClientRegistrationRequest
-    object UserId : ClientRegistrationRequest
 }
 
 sealed interface NewCourseCreationRequest {
