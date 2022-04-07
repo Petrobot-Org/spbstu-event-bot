@@ -51,6 +51,10 @@ object Strings {
     const val ButtonRegister = "Регистрация"
     const val ButtonNewClient = "Новый заказчик"
 
+    private val dateTimeFormatter = DateTimeFormatter
+        .ofLocalizedDateTime(FormatStyle.LONG)
+        .withZone(ZoneId.systemDefault())
+
     fun registrationConfirmation(name: String, email: String, group: String) =
         """|Имя: $name
            |Почта: $email
@@ -65,28 +69,20 @@ object Strings {
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant): String {
-        val formatter = DateTimeFormatter
-            .ofLocalizedDateTime(FormatStyle.LONG)
-            .withZone(ZoneId.systemDefault())
-        return """|Название курса: $title
+    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant) =
+        """|Название курса: $title
            |Описание курса: $description
            |Дополнительный вопрос: $additionalQuestion
-           |Дэдлайн подачи заявки: ${formatter.format(expiryDate)}
+           |Дэдлайн подачи заявки: ${dateTimeFormatter.format(expiryDate)}
            |Верно?
         """.trimMargin()
-    }
 
-    fun courseDetails(course: Course): String {
-        val formatter = DateTimeFormatter
-            .ofLocalizedDateTime(FormatStyle.LONG)
-            .withZone(ZoneId.systemDefault())
-        return """|*${course.title}*
-                  |
-                  |🕒 До ${formatter.format(course.expiryDate)}
-                  |${course.description}
+    fun courseDetails(course: Course) =
+        """|*${course.title}*
+           |
+           |🕒 До ${dateTimeFormatter.format(course.expiryDate)}
+           |${course.description}
         """.trimMargin()
-    }
 
     fun applicantsInfo(applicants: List<Student>): String {
         var listOfApplicants = ""
