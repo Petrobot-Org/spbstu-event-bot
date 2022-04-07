@@ -7,6 +7,8 @@ import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
 import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
+import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
+
 
 fun TextHandlerEnvironment.displayCourses(getAvailableCourses: GetAvailableCoursesUseCase) {
     val courses = getAvailableCourses()
@@ -24,5 +26,31 @@ fun CallbackQueryHandlerEnvironment.courseDetails(courseId: Long, getCourseById:
         replyMarkup = InlineKeyboardMarkup.createSingleButton(
             InlineKeyboardButton.CallbackData(Strings.SubmitApplication, "apply ${course.id}")
         )
+    )
+}
+
+var info = ""
+fun CallbackQueryHandlerEnvironment.apply(
+    chatId: Long,
+    courseId: Long,
+    submitApplicationUseCase: SubmitApplicationUseCase
+) {
+    val thisCase = submitApplicationUseCase.invoke(chatId, courseId)
+    when (thisCase) {
+        is SubmitApplicationUseCase.Result.OK -> {
+            info = "Все хорошо вы успешно зарегестрировались."
+        }
+        is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
+            info = "Ваша завяка уже отправлена."
+        }
+        is SubmitApplicationUseCase.Result.Expired -> {
+            info = "Время на приём заявок истекло."
+        }
+        is SubmitApplicationUseCase.Result.NotRegistered -> {
+            info = "Вы не зарегистрированы."
+        }
+    }
+    sendReply(
+        text = info
     )
 }

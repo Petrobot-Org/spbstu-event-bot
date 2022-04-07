@@ -7,4 +7,8 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
     override fun insert(studentId: Long, courseId: Long) {
         database.applicationQueries.insert(studentId, courseId)
     }
+
+    override fun containsApplication(studentId: Long, courseId: Long): Boolean {
+        TODO("Not yet implemented")
+    }
 }

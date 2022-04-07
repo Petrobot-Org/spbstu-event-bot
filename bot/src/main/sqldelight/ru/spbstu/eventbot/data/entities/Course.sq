@@ -5,6 +5,7 @@ CREATE TABLE Course (
     client_id INTEGER NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
+    additional_question TEXT,
     expiry_date INTEGER AS Instant,
     results_sent INTEGER AS Boolean,
     FOREIGN KEY (client_id) REFERENCES Client (id)
@@ -18,3 +19,11 @@ WHERE expiry_date > :now;
 getById:
 SELECT * FROM Course
 WHERE id = :id;
+
+getAvailableCoursesByClientId:
+SELECT * FROM Course
+WHERE (expiry_date > :now) AND (client_id = :id);
+
+insert:
+INSERT INTO Course(client_id, title, description, additional_question, expiry_date)
+VALUES ( :clientId, :title, :description, :additionalQuestion, :expiryDate);
