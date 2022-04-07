@@ -11,11 +11,11 @@ import ru.spbstu.eventbot.data.repository.ClientRepositoryImpl
 import ru.spbstu.eventbot.data.repository.CourseRepositoryImpl
 import ru.spbstu.eventbot.data.repository.StudentRepositoryImpl
 import ru.spbstu.eventbot.data.source.AppDatabase
+import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.ClientRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
-import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
 import java.sql.SQLException
