@@ -82,11 +82,11 @@ private fun TextHandlerEnvironment.requestInfo(
             NewCourseCreationRequest.Description
         }
         state.additionalQuestion == null -> {
-            sendReply(Strings.RequestAdditiinalQuestion)
+            sendReply(Strings.RequestAdditionalQuestion)
             NewCourseCreationRequest.AdditionalQuestion
         }
         state.expiryDate == null -> {
-            sendReply(Strings.RequestExriryDate)
+            sendReply(Strings.RequestExpiryDate)
             NewCourseCreationRequest.ExpiryDate
         }
         else -> {

@@ -30,8 +30,8 @@ object Strings {
 
     const val RequestTitle = "Название курса"
     const val RequestDescription = "Описание курса"
-    const val RequestAdditiinalQuestion = "Если помимо основной информации(номер группы, ФИО, адрес электронной почты) требуется дополнительная информация, укажите её в форме вопроса"
-    const val RequestExriryDate = "Дэдлайн подачи заявок на курс"
+    const val RequestAdditionalQuestion = "Если помимо основной информации(номер группы, ФИО, адрес электронной почты) требуется дополнительная информация, укажите её в форме вопроса"
+    const val RequestExpiryDate = "Дэдлайн подачи заявок на курс"
     const val CreationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
 
