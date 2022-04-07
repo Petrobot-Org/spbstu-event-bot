@@ -19,32 +19,43 @@ object Strings {
     const val RequestYesNo = "Напишите да или нет"
     const val RegisteredSuccessfully = "Успешная регистрация"
 
-    const val RequestClientName = "Имя клиента"
-    const val RequestClientEmail = "Адрес электронной почты клиента"
+    const val RequestClientName = "Имя заказчика"
+    const val RequestClientEmail = "Адрес электронной почты заказчика"
+    const val RequestClientUserId = "Id телеграма заказчика (напишите \"нет\", если нет)"
     const val ClientRegistrationRetry = "Тогда начинаем заново"
     const val ClientRegistrationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val ClientRegisteredSuccessfully = "Клиент создан"
-    const val InvalidClientName = "Некорректное имя клиента. Попробуйте снова."
+    const val InvalidClientName = "Некорректное имя заказчика. Попробуйте снова."
+    const val InvalidClientUserId = "Id заказчика должно быть целым числом. Попробуйте снова."
 
     const val RequestTitle = "Название курса"
     const val RequestDescription = "Описание курса"
-    const val RequestAdditiinalQuestion = "Если помимо основной информации(номер группы, ФИО, адрес элетронной почты) требуется дополнительная информация, укажите её в форме вопроса"
-    const val RequestExriryDate = "Дэдлайн подачи заявок на курс"
+    const val RequestAdditionalQuestion = "Если помимо основной информации(номер группы, ФИО, адрес электронной почты) требуется дополнительная информация, укажите её в форме вопроса"
+    const val RequestExpiryDate = "Дэдлайн подачи заявок на курс"
     const val CreationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
 
-    const val DontKnowWhatToDo = "Не знаю, что с этим делать"
     const val UnknownCommand = "Неизвестная команда"
     const val UnauthorizedError = "Недостаточно прав"
     const val AvailableCoursesHeader = "Доступные курсы"
     const val NoSuchCourse = "Этого курса не существует"
+    const val NoSuchClient = "Этого клиента не существует"
     const val NoApplicants = "Никто ещё не подал заявку на этот курс"
     const val SubmitApplication = "✅ Записаться"
-    val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
-    val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
 
     const val HelpCommands = "I help you!"
     const val HelpStart = "I help you for start work with me!"
+
+    const val ButtonCourses = "Курсы"
+    const val ButtonRegister = "Регистрация"
+    const val ButtonNewClient = "Новый заказчик"
+
+    val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
+    val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
+
+    private val dateTimeFormatter = DateTimeFormatter
+        .ofLocalizedDateTime(FormatStyle.LONG)
+        .withZone(ZoneId.systemDefault())
 
     fun registrationConfirmation(name: String, email: String, group: String) =
         """|Имя: $name
@@ -53,43 +64,37 @@ object Strings {
            |Верно?
         """.trimMargin()
 
-    fun clientRegistrationConfirmation(name: String, email: String) =
+    fun clientRegistrationConfirmation(name: String, email: String, userId: Long?) =
         """|Имя: $name
            |Почта: $email
+           |id: $userId
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant): String {
-        val formatter = DateTimeFormatter
-            .ofLocalizedDateTime(FormatStyle.LONG)
-            .withZone(ZoneId.systemDefault())
-        return """|Название курса: $title
+    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant) =
+        """|Название курса: $title
            |Описание курса: $description
            |Дополнительный вопрос: $additionalQuestion
-           |Дэдлайн подачи заявки: ${formatter.format(expiryDate)}
+           |Дэдлайн подачи заявки: ${dateTimeFormatter.format(expiryDate)}
            |Верно?
         """.trimMargin()
-    }
 
-    fun courseDetails(course: Course): String {
-        val formatter = DateTimeFormatter
-            .ofLocalizedDateTime(FormatStyle.LONG)
-            .withZone(ZoneId.systemDefault())
-        return """|*${course.title}*
-                  |
-                  |🕒 До ${formatter.format(course.expiryDate)}
-                  |${course.description}
+    fun courseDetails(course: Course) =
+        """|*${course.title}*
+           |
+           |🕒 До ${dateTimeFormatter.format(course.expiryDate)}
+           |${course.description}
         """.trimMargin()
-    }
 
+    // TODO: Убрать (заменить на генерацию CSV файла)
     fun applicantsInfo(applicants: List<Student>): String {
         var listOfApplicants = ""
         for (applicant in applicants) {
             listOfApplicants += """|ФИО студента: ${applicant.fullName}
            |Группа: ${applicant.group}
            |Почта: ${applicant.email}
-           |--------------------------
-            """.trimMargin()
+           |-------------------------- 
+            """.trimMargin() // Pochernin-style разделитель строк --------------------------
         }
         return listOfApplicants
     }
