@@ -21,4 +21,8 @@ class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository
     override fun getClientsByUserId(userId: Long): List<Client> {
         return database.clientQueries.getClientsByUserId(userId, map).executeAsList()
     }
+
+    override fun getById(id: Long): Client? {
+        return database.clientQueries.getById(id, map).executeAsOneOrNull()
+    }
 }

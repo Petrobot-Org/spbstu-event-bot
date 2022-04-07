@@ -1,8 +1,10 @@
 package ru.spbstu.eventbot.telegram
 
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
+import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.CreateNewCourseUseCase
 import java.time.Instant
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 fun TextHandlerEnvironment.startNewCourseCreation(
@@ -12,6 +14,7 @@ fun TextHandlerEnvironment.startNewCourseCreation(
     setState(ChatState.NewCourseCreation(request))
 }
 
+context(Permissions)
 fun TextHandlerEnvironment.handleNewCourseCreation(
     state: ChatState.NewCourseCreation,
     setState: (ChatState) -> Unit,
@@ -28,8 +31,11 @@ fun TextHandlerEnvironment.handleNewCourseCreation(
             state.copy(additionalQuestion = text)
         }
         NewCourseCreationRequest.ExpiryDate -> {
-            val date = DateTimeFormatter.ofPattern(text).parse(text)
-            state.copy(expiryDate = Instant.parse(date.toString())) // /?
+            val date = DateTimeFormatter
+                .ofPattern("uuuu-MM-dd HH:mm")
+                .withZone(ZoneId.systemDefault())
+                .parse(text, Instant::from)
+            state.copy(expiryDate = date)
         }
         NewCourseCreationRequest.Confirm -> {
             handleConfirmation(state, setState, createNewCourse)
@@ -40,6 +46,7 @@ fun TextHandlerEnvironment.handleNewCourseCreation(
     setState(newState.copy(request = request))
 }
 
+context(Permissions)
 private fun TextHandlerEnvironment.handleConfirmation(
     state: ChatState.NewCourseCreation,
     setState: (ChatState) -> Unit,
@@ -56,6 +63,14 @@ private fun TextHandlerEnvironment.handleConfirmation(
                 CreateNewCourseUseCase.Result.InvalidArguments -> {
                     sendReply(Strings.CreationErrorRetry)
                     startNewCourseCreation(setState)
+                }
+                CreateNewCourseUseCase.Result.Unauthorized -> {
+                    setState(ChatState.Empty)
+                    sendReply(Strings.UnauthorizedError)
+                }
+                CreateNewCourseUseCase.Result.NoSuchClient -> {
+                    setState(ChatState.Empty)
+                    sendReply(Strings.NoSuchClient)
                 }
             }
         }

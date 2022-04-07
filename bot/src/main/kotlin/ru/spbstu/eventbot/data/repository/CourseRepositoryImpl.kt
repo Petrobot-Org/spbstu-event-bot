@@ -9,16 +9,16 @@ import java.time.Instant
 class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository {
     private val map =
         { id: Long,
-            clientId: Long,
-            title: String,
-            description: String,
-            additional_question: String?,
-            expiryDate: Instant?,
-            resultsSent: Boolean?,
-            _: Long,
-            email: String,
-            name: String,
-            userId: Long? ->
+          clientId: Long,
+          title: String,
+          description: String,
+          additional_question: String?,
+          expiryDate: Instant?,
+          resultsSent: Boolean?,
+          _: Long,
+          email: String,
+          name: String,
+          userId: Long? ->
             val client = Client(clientId, email, name, userId)
             Course(id, title, description, additional_question, client, expiryDate!!, resultsSent!!)
         }

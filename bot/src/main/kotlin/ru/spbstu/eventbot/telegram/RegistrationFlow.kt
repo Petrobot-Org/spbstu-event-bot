@@ -62,7 +62,6 @@ private fun TextHandlerEnvironment.handleConfirmation(
                     setNewState(ChatState.Empty)
                     sendReply(Strings.RegisteredSuccessfully)
                 }
-                RegisterStudentUseCase.Result.Error,
                 RegisterStudentUseCase.Result.InvalidArguments -> {
                     sendReply(Strings.RegistrationErrorRetry)
                     startRegistration(setNewState)

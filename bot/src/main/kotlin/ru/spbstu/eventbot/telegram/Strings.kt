@@ -2,6 +2,7 @@ package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.Course
 import ru.spbstu.eventbot.domain.entities.Student
+import ru.spbstu.eventbot.domain.usecases.CreateNewCourseUseCase
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -39,6 +40,7 @@ object Strings {
     const val UnauthorizedError = "Недостаточно прав"
     const val AvailableCoursesHeader = "Доступные курсы"
     const val NoSuchCourse = "Этого курса не существует"
+    const val NoSuchClient = "Этого клиента не существует"
     const val NoApplicants = "Никто ещё не подал заявку на этот курс"
     const val SubmitApplication = "✅ Записаться"
 
