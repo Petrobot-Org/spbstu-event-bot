@@ -59,18 +59,17 @@ object Strings {
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant):String
-        {
-            val formatter = DateTimeFormatter
-                .ofLocalizedDateTime(FormatStyle.LONG)
-                .withZone(ZoneId.systemDefault())
-           return """|Название курса: $title
+    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant): String {
+        val formatter = DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.LONG)
+            .withZone(ZoneId.systemDefault())
+        return """|Название курса: $title
            |Описание курса: $description
            |Дополнительный вопрос: $additionalQuestion
            |Дэдлайн подачи заявки: ${formatter.format(expiryDate)}
            |Верно?
         """.trimMargin()
-        }
+    }
 
     fun courseDetails(course: Course): String {
         val formatter = DateTimeFormatter
