@@ -18,7 +18,7 @@ class Bot : KoinComponent {
     private val submitApplication: SubmitApplicationUseCase by inject()
     private val registerStudent: RegisterStudentUseCase by inject()
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
-    private val getAvailableCoursesByClientId: GetAvailableCoursesByClientIdUseCase by inject()
+    private val getAvailableCoursesByClientId: GetClientCoursesUseCase by inject()
     private val getCourseById: GetCourseByIdUseCase by inject()
     private val getApplicants: GetApplicantsByCourseIdUseCase by inject()
     private val registerClient: RegisterClientUseCase by inject()

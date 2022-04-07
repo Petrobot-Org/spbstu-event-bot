@@ -41,6 +41,8 @@ val mainModule = module {
     single { GetAvailableCoursesUseCase(get()) }
     single { GetCourseByIdUseCase(get()) }
     single { RegisterClientUseCase(get()) }
+    single { GetApplicantsByCourseIdUseCase(get(), get()) }
+    single { GetClientCoursesUseCase(get()) }
     single { GetPermissionsUseCase(appConfig.operators, get()) }
 }
 

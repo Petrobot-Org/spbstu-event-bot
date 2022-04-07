@@ -7,7 +7,7 @@ data class Course(
     val title: String,
     val description: String,
     val additionalQuestion: String?,
-    val clientId: Long,
+    val client: Client,
     val expiryDate: Instant,
     val resultsSent: Boolean
 )
