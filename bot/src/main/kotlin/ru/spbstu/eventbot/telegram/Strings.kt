@@ -48,7 +48,7 @@ object Strings {
     const val ButtonCourses = "Курсы"
     const val ButtonRegister = "Регистрация"
     const val ButtonNewClient = "Новый заказчик"
-    
+
     val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
     val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
 
@@ -85,14 +85,15 @@ object Strings {
            |${course.description}
         """.trimMargin()
 
+    // TODO: Убрать (заменить на генерацию CSV файла)
     fun applicantsInfo(applicants: List<Student>): String {
         var listOfApplicants = ""
         for (applicant in applicants) {
             listOfApplicants += """|ФИО студента: ${applicant.fullName}
            |Группа: ${applicant.group}
            |Почта: ${applicant.email}
-           |--------------------------
-            """.trimMargin()
+           |-------------------------- 
+            """.trimMargin() // Pochernin-style разделитель строк --------------------------
         }
         return listOfApplicants
     }
