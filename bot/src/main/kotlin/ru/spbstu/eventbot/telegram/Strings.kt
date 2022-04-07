@@ -28,7 +28,7 @@ object Strings {
 
     const val RequestTitle = "Название курса"
     const val RequestDescription = "Описание курса"
-    const val RequestAdditiinalQuestion = "Если помимо основной информации(номер группы, ФИО, номер почты) требуется дополнительная информация, укажите какая в форме вопроса"
+    const val RequestAdditiinalQuestion = "Если помимо основной информации(номер группы, ФИО, адрес элетронной почты) требуется дополнительная информация, укажите её в форме вопроса"
     const val RequestExriryDate = "Дэдлайн подачи заявок на курс"
     const val CreationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
@@ -59,13 +59,18 @@ object Strings {
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant) =
-        """|Название курса: $title
+    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant):String
+        {
+            val formatter = DateTimeFormatter
+                .ofLocalizedDateTime(FormatStyle.LONG)
+                .withZone(ZoneId.systemDefault())
+           return """|Название курса: $title
            |Описание курса: $description
            |Дополнительный вопрос: $additionalQuestion
-           |Дэдлайн подачи заявки: $expiryDate
+           |Дэдлайн подачи заявки: ${formatter.format(expiryDate)}
            |Верно?
         """.trimMargin()
+        }
 
     fun courseDetails(course: Course): String {
         val formatter = DateTimeFormatter
