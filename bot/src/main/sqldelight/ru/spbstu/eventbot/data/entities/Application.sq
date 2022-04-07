@@ -1,7 +1,10 @@
+import ry.spbstu.eventbot.data.entities.Student;
+
 CREATE TABLE Application (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER NOT NULL,
     course_id INTEGER NOT NULL,
+    additional_info TEXT,
     FOREIGN KEY (student_id) REFERENCES Student (id),
     FOREIGN KEY (course_id) REFERENCES Course (id)
 );
@@ -9,3 +12,8 @@ CREATE TABLE Application (
 insert:
 INSERT INTO Application(student_id, course_id)
 VALUES (:studentId, :courseId);
+
+getListOfApplicants:
+SELECT Student.* FROM Application
+INNER JOIN Student ON Student.id = Application.student_id
+WHERE course_id = :id;
