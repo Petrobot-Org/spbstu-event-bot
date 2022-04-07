@@ -41,8 +41,6 @@ object Strings {
     const val NoSuchCourse = "Этого курса не существует"
     const val NoApplicants = "Никто ещё не подал заявку на этот курс"
     const val SubmitApplication = "✅ Записаться"
-    val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
-    val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
 
     const val HelpCommands = "I help you!"
     const val HelpStart = "I help you for start work with me!"
@@ -50,6 +48,9 @@ object Strings {
     const val ButtonCourses = "Курсы"
     const val ButtonRegister = "Регистрация"
     const val ButtonNewClient = "Новый заказчик"
+    
+    val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
+    val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
 
     private val dateTimeFormatter = DateTimeFormatter
         .ofLocalizedDateTime(FormatStyle.LONG)
