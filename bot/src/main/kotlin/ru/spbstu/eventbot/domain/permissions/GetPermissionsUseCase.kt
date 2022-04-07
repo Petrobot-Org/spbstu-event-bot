@@ -10,10 +10,9 @@ class GetPermissionsUseCase(
     private val operators: Operators,
     private val clientRepository: ClientRepository
 ) {
-    operator fun invoke(userId: Long?): Permissions = when {
-        userId == null -> Permissions.Student
-        operators.contains(userId) -> Permissions.Operator
-        clientRepository.contains(userId) -> Permissions.Client
-        else -> Permissions.Student
+    operator fun invoke(userId: Long, chatId: Long): Permissions = when {
+        operators.contains(userId) -> Permissions.Operator(chatId, userId)
+        clientRepository.contains(userId) -> Permissions.Client(chatId, userId)
+        else -> Permissions.Student(chatId, userId)
     }
 }

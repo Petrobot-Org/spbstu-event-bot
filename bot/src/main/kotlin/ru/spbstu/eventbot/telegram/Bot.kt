@@ -29,16 +29,22 @@ class Bot : KoinComponent {
             token = telegramToken
             dispatch {
                 callbackQuery {
-                    val (state, setState) = state(callbackQuery.message?.chat?.id ?: return@callbackQuery)
-                    val permissions = getPermissions(callbackQuery.from.id)
+                    val permissions = getPermissions(
+                        userId = callbackQuery.from.id,
+                        chatId = callbackQuery.message?.chat?.id ?: return@callbackQuery
+                    )
                     with(permissions) {
+                        val (state, setState) = state()
                         handleCallback(state, setState)
                     }
                 }
                 text {
-                    val (state, setState) = state(message.chat.id)
-                    val permissions = getPermissions(message.from?.id)
+                    val permissions = getPermissions(
+                        userId = message.from?.id ?: return@text,
+                        chatId = message.chat.id
+                    )
                     with(permissions) {
+                        val (state, setState) = state()
                         handleText(state, setState)
                     }
                 }
@@ -47,7 +53,8 @@ class Bot : KoinComponent {
         bot.startPolling()
     }
 
-    private fun state(chatId: Long): Pair<ChatState, (ChatState) -> Unit> {
+    context(Permissions)
+    private fun state(): Pair<ChatState, (ChatState) -> Unit> {
         return (states[chatId] ?: ChatState.Empty) to { newState: ChatState -> states[chatId] = newState }
     }
 

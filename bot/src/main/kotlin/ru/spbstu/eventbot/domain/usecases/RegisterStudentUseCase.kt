@@ -1,5 +1,6 @@
 package ru.spbstu.eventbot.domain.usecases
 
+import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 
 class RegisterStudentUseCase(
@@ -15,7 +16,8 @@ class RegisterStudentUseCase(
         object InvalidArguments : Result
     }
 
-    operator fun invoke(chatId: Long, fullName: String, email: String, group: String): Result {
+    context(Permissions)
+    operator fun invoke(fullName: String, email: String, group: String): Result {
         if (!isFullNameValid(fullName) || !isEmailValid(email) || !isGroupValid(group)) {
             return Result.InvalidArguments
         }
