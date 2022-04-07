@@ -83,7 +83,9 @@ class Bot : KoinComponent {
             "/courses", Strings.ButtonCourses -> displayCourses(getAvailableCourses)
             "/newclient", Strings.ButtonNewClient -> require(canModifyClients) { startClientRegistration(setNewState) }
             "/getapplicants" -> displayApplicants(getAvailableCoursesByClientId)
-            "/newcourse" -> startNewCourseCreation(setNewState)
+            "/newcourse", Strings.ButtonNewCourse -> require(canAccessAnyCourse || canAccessTheirCourse) {
+                startNewCourseCreation(setNewState)
+            }
             else -> handleFreeText(state, setNewState)
         }
     }

@@ -13,7 +13,10 @@ fun TextHandlerEnvironment.writeStart() {
             KeyboardButton(Strings.ButtonCourses),
             KeyboardButton(Strings.ButtonRegister)
         )
-        val clientButtons = buildList<KeyboardButton> {
+        val clientButtons = buildList {
+            if (canAccessTheirCourse || canAccessAnyCourse) {
+                add(KeyboardButton(Strings.ButtonNewCourse))
+            }
         }
         val operatorButtons = buildList {
             if (canModifyClients) add(KeyboardButton(Strings.ButtonNewClient))

@@ -49,6 +49,7 @@ object Strings {
     const val ButtonCourses = "Курсы"
     const val ButtonRegister = "Регистрация"
     const val ButtonNewClient = "Новый заказчик"
+    const val ButtonNewCourse = "Новый курс"
 
     val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
     val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
