@@ -7,8 +7,8 @@ import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.GetApplicantsByCourseIdUseCase
-import ru.spbstu.eventbot.domain.usecases.GetClientCoursesUseCase
 import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
+import ru.spbstu.eventbot.domain.usecases.GetClientCoursesUseCase
 import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
 
 fun TextHandlerEnvironment.displayCourses(getAvailableCourses: GetAvailableCoursesUseCase) {
