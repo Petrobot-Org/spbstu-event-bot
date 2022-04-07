@@ -26,7 +26,6 @@ object Strings {
     const val InvalidClientName = "Некорректное имя заказчика. Попробуйте снова."
     const val InvalidClientUserId = "Id заказчика должно быть целым числом. Попробуйте снова."
 
-    const val DontKnowWhatToDo = "Не знаю, что с этим делать"
     const val UnknownCommand = "Неизвестная команда"
     const val UnauthorizedError = "Недостаточно прав"
     const val AvailableCoursesHeader = "Доступные курсы"
