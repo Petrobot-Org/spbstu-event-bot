@@ -12,7 +12,6 @@ class RegisterStudentUseCase(
 
     sealed interface Result {
         object OK : Result
-        object Error : Result
         object InvalidArguments : Result
     }
 
@@ -21,11 +20,7 @@ class RegisterStudentUseCase(
         if (!isFullNameValid(fullName) || !isEmailValid(email) || !isGroupValid(group)) {
             return Result.InvalidArguments
         }
-        return try {
-            studentRepository.insert(chatId, email, fullName, group)
-            Result.OK
-        } catch (e: Exception) {
-            Result.Error
-        }
+        studentRepository.insert(chatId, email, fullName, group)
+        return Result.OK
     }
 }
