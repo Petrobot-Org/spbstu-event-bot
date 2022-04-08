@@ -68,7 +68,7 @@ private fun TextHandlerEnvironment.handleUserId(
         Strings.clientRegistrationConfirmation(
             name = state.name!!,
             email = state.email!!,
-            userId = state.userId
+            userId = userId
         )
     )
 }
