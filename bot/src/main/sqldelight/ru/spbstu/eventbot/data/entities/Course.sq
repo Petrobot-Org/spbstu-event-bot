@@ -6,24 +6,26 @@ CREATE TABLE Course (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     additional_question TEXT,
-    expiry_date INTEGER AS Instant,
-    results_sent INTEGER AS Boolean,
+    expiry_date INTEGER AS Instant NOT NULL,
+    results_sent INTEGER AS Boolean NOT NULL,
     FOREIGN KEY (client_id) REFERENCES Client (id)
 );
 
-
 findAvailable:
 SELECT * FROM Course
+JOIN Client ON Course.client_id = Client.id
 WHERE expiry_date > :now;
 
 getById:
 SELECT * FROM Course
-WHERE id = :id;
+JOIN Client ON Course.client_id = Client.id
+WHERE Course.id = :id;
 
-getAvailableCoursesByClientId:
+getAvailableCoursesByUserId:
 SELECT * FROM Course
-WHERE (expiry_date > :now) AND (client_id = :id);
+JOIN Client ON Course.client_id = Client.id
+WHERE (expiry_date > :now) AND (Client.user_id = :userId);
 
 insert:
-INSERT INTO Course(client_id, title, description, additional_question, expiry_date)
-VALUES ( :clientId, :title, :description, :additionalQuestion, :expiryDate);
+INSERT INTO Course(client_id, title, description, additional_question, expiry_date, results_sent)
+VALUES ( :clientId, :title, :description, :additionalQuestion, :expiryDate, 0);

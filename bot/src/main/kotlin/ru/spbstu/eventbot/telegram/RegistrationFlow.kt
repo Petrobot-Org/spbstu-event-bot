@@ -1,6 +1,7 @@
 package ru.spbstu.eventbot.telegram
 
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
+import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 
 fun TextHandlerEnvironment.startRegistration(
@@ -10,6 +11,7 @@ fun TextHandlerEnvironment.startRegistration(
     sendReply(Strings.RequestName)
 }
 
+context(Permissions)
 fun TextHandlerEnvironment.handleRegistration(
     state: ChatState.Registration,
     setNewState: (ChatState) -> Unit,
@@ -46,6 +48,7 @@ fun TextHandlerEnvironment.handleRegistration(
     setNewState(newState.copy(request = request))
 }
 
+context(Permissions)
 private fun TextHandlerEnvironment.handleConfirmation(
     registerStudent: RegisterStudentUseCase,
     state: ChatState.Registration,
@@ -53,13 +56,12 @@ private fun TextHandlerEnvironment.handleConfirmation(
 ) {
     when (text.lowercase()) {
         in Strings.PositiveAnswers -> {
-            val result = registerStudent(message.chat.id, state.fullName!!, state.email!!, state.group!!)
+            val result = registerStudent(state.fullName!!, state.email!!, state.group!!)
             when (result) {
                 RegisterStudentUseCase.Result.OK -> {
                     setNewState(ChatState.Empty)
                     sendReply(Strings.RegisteredSuccessfully)
                 }
-                RegisterStudentUseCase.Result.Error,
                 RegisterStudentUseCase.Result.InvalidArguments -> {
                     sendReply(Strings.RegistrationErrorRetry)
                     startRegistration(setNewState)

@@ -5,9 +5,10 @@ import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
 import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
+import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.GetApplicantsByCourseIdUseCase
-import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesByClientIdUseCase
 import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
+import ru.spbstu.eventbot.domain.usecases.GetClientCoursesUseCase
 import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
 
 fun TextHandlerEnvironment.displayCourses(getAvailableCourses: GetAvailableCoursesUseCase) {
@@ -16,22 +17,6 @@ fun TextHandlerEnvironment.displayCourses(getAvailableCourses: GetAvailableCours
         listOf(InlineKeyboardButton.CallbackData(it.title, "details ${it.id}"))
     }
     sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
-}
-
-fun TextHandlerEnvironment.displayApplicants(getAvailableCoursesByClientId: GetAvailableCoursesByClientIdUseCase) {
-    val courses = getAvailableCoursesByClientId(message.chat.id) // ///id заказчика
-    val buttons = courses.map {
-        listOf(InlineKeyboardButton.CallbackData(it.title, "applicants ${it.id}"))
-    }
-    sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
-}
-
-fun CallbackQueryHandlerEnvironment.applicantsInfo(courseId: Long, getApplicants: GetApplicantsByCourseIdUseCase) {
-    val applicants = getApplicants(courseId) ?: return sendReply(Strings.NoApplicants)
-    sendReply(
-        text = Strings.applicantsInfo(applicants),
-        parseMode = ParseMode.MARKDOWN
-    )
 }
 
 fun CallbackQueryHandlerEnvironment.courseDetails(courseId: Long, getCourseById: GetCourseByIdUseCase) {
@@ -43,4 +28,37 @@ fun CallbackQueryHandlerEnvironment.courseDetails(courseId: Long, getCourseById:
             InlineKeyboardButton.CallbackData(Strings.SubmitApplication, "apply ${course.id}")
         )
     )
+}
+
+context(Permissions)
+fun TextHandlerEnvironment.displayApplicants(getClientCourses: GetClientCoursesUseCase) {
+    val result = getClientCourses()
+    when (result) {
+        is GetClientCoursesUseCase.Result.OK -> {
+            val buttons = result.courses.map {
+                listOf(InlineKeyboardButton.CallbackData(it.title, "applicants ${it.id}"))
+            }
+            sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
+        }
+        GetClientCoursesUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
+    }
+}
+
+context(Permissions)
+fun CallbackQueryHandlerEnvironment.applicantsInfo(courseId: Long, getApplicants: GetApplicantsByCourseIdUseCase) {
+    val result = getApplicants(courseId)
+    when (result) {
+        is GetApplicantsByCourseIdUseCase.Result.OK -> {
+            if (result.applicants.isEmpty()) {
+                sendReply(Strings.NoApplicants)
+                return
+            }
+            sendReply(
+                text = Strings.applicantsInfo(result.applicants),
+                parseMode = ParseMode.MARKDOWN
+            )
+        }
+        GetApplicantsByCourseIdUseCase.Result.NoSuchCourse -> sendReply(Strings.NoSuchCourse)
+        GetApplicantsByCourseIdUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
+    }
 }
