@@ -22,6 +22,7 @@ import java.sql.SQLException
 
 val mainModule = module {
     val appConfig = appConfig()
+    single { appConfig.zone }
     single<SqlDriver> {
         JdbcSqliteDriver(appConfig.jdbcString).also {
             try {
@@ -31,7 +32,14 @@ val mainModule = module {
             }
         }
     }
-    single { AppDatabase(driver = get(), CourseAdapter = Course.Adapter(expiry_dateAdapter = DateAdapter())) }
+    single {
+        AppDatabase(
+            driver = get(),
+            CourseAdapter = Course.Adapter(
+                expiry_dateAdapter = DateAdapter()
+            )
+        )
+    }
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
     single<ClientRepository> { ClientRepositoryImpl(get()) }
@@ -44,6 +52,7 @@ val mainModule = module {
     single { GetApplicantsByCourseIdUseCase(get(), get()) }
     single { GetClientCoursesUseCase(get()) }
     single { CreateNewCourseUseCase(get(), get()) }
+    single { GetMyClientsUseCase(get()) }
     single { GetPermissionsUseCase(appConfig.operators, get()) }
 }
 

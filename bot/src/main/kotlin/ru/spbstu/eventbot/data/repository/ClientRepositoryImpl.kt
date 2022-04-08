@@ -18,11 +18,15 @@ class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository
         return database.clientQueries.containsUserId(userId).executeAsOne() == 1L
     }
 
-    override fun getClientsByUserId(userId: Long): List<Client> {
+    override fun getByUserId(userId: Long): List<Client> {
         return database.clientQueries.getClientsByUserId(userId, map).executeAsList()
     }
 
     override fun getById(id: Long): Client? {
         return database.clientQueries.getById(id, map).executeAsOneOrNull()
+    }
+
+    override fun getAll(): List<Client> {
+        return database.clientQueries.getAll(map).executeAsList()
     }
 }

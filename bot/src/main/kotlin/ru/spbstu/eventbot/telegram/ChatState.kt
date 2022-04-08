@@ -1,5 +1,6 @@
 package ru.spbstu.eventbot.telegram
 
+import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
 import java.time.Instant
 
 sealed interface ChatState {
@@ -20,9 +21,10 @@ sealed interface ChatState {
 
     data class NewCourseCreation(
         val request: NewCourseCreationRequest,
+        val clientId: Long,
         val title: String? = null,
         val description: String? = null,
-        val additionalQuestion: String? = null,
+        val additionalQuestion: AdditionalQuestion? = null,
         val expiryDate: Instant? = null
     ) : ChatState
 }

@@ -1,6 +1,7 @@
 package ru.spbstu.eventbot.data.repository
 
 import ru.spbstu.eventbot.data.source.AppDatabase
+import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
 import ru.spbstu.eventbot.domain.entities.Client
 import ru.spbstu.eventbot.domain.entities.Course
 import ru.spbstu.eventbot.domain.repository.CourseRepository
@@ -12,7 +13,7 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
             clientId: Long,
             title: String,
             description: String,
-            additional_question: String?,
+            additionalQuestion: String?,
             expiryDate: Instant?,
             resultsSent: Boolean?,
             _: Long,
@@ -20,7 +21,7 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
             name: String,
             userId: Long? ->
             val client = Client(clientId, email, name, userId)
-            Course(id, title, description, additional_question, client, expiryDate!!, resultsSent!!)
+            Course(id, title, description, AdditionalQuestion(additionalQuestion), client, expiryDate!!, resultsSent!!)
         }
 
     override fun getAvailable(): List<Course> {
@@ -39,9 +40,9 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         clientId: Long,
         title: String,
         description: String,
-        additionalQuestion: String,
+        additionalQuestion: AdditionalQuestion,
         expiryDate: Instant
     ) {
-        database.courseQueries.insert(clientId, title, description, additionalQuestion, expiryDate)
+        database.courseQueries.insert(clientId, title, description, additionalQuestion.value, expiryDate)
     }
 }

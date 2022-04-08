@@ -12,6 +12,7 @@ import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.*
+import java.time.ZoneId
 
 class Bot : KoinComponent {
     private val createNewCourse: CreateNewCourseUseCase by inject()
@@ -23,6 +24,8 @@ class Bot : KoinComponent {
     private val getApplicants: GetApplicantsByCourseIdUseCase by inject()
     private val registerClient: RegisterClientUseCase by inject()
     private val getPermissions: GetPermissionsUseCase by inject()
+    private val getMyClients: GetMyClientsUseCase by inject()
+    private val zone: ZoneId by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
@@ -71,6 +74,7 @@ class Bot : KoinComponent {
             "details" -> courseDetails(arg.toLong(), getCourseById)
             "applicants" -> applicantsInfo(arg.toLong(), getApplicants)
             "apply" -> TODO("Handle submit application callback")
+            "newcourse" -> startCourseCreation(arg.toLong(), setState)
         }
     }
 
@@ -84,7 +88,7 @@ class Bot : KoinComponent {
             "/newclient", Strings.ButtonNewClient -> require(canModifyClients) { startClientRegistration(setNewState) }
             "/getapplicants" -> displayApplicants(getAvailableCoursesByClientId)
             "/newcourse", Strings.ButtonNewCourse -> require(canAccessAnyCourse || canAccessTheirCourse) {
-                startNewCourseCreation(setNewState)
+                selectClientForCourseCreation(getMyClients)
             }
             else -> handleFreeText(state, setNewState)
         }
@@ -96,7 +100,7 @@ class Bot : KoinComponent {
             ChatState.Empty -> sendReply(Strings.UnknownCommand)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
             is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
-            is ChatState.NewCourseCreation -> handleNewCourseCreation(state, setNewState, createNewCourse)
+            is ChatState.NewCourseCreation -> handleNewCourseCreation(state, setNewState, createNewCourse, getMyClients, zone)
         }
     }
 }

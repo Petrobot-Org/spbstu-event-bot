@@ -28,10 +28,13 @@ object Strings {
     const val InvalidClientName = "Некорректное имя заказчика. Попробуйте снова."
     const val InvalidClientUserId = "Id заказчика должно быть целым числом. Попробуйте снова."
 
+    const val SelectClient = "От кого?"
     const val RequestTitle = "Название курса"
     const val RequestDescription = "Описание курса"
-    const val RequestAdditionalQuestion = "Если помимо основной информации(номер группы, ФИО, адрес электронной почты) требуется дополнительная информация, укажите её в форме вопроса"
-    const val RequestExpiryDate = "Дэдлайн подачи заявок на курс"
+    const val RequestAdditionalQuestion = "Если помимо основной информации (номер группы, ФИО, адрес электронной " +
+            "почты) требуется дополнительная информация, укажите её в форме вопроса. Если нет, то напишите \"нет\"."
+    const val RequestExpiryDate = "Дэдлайн подачи заявок на курс (дд.ММ.гггг чч:мм)"
+    const val InvalidDate = "Неправильный формат даты"
     const val CreationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
 

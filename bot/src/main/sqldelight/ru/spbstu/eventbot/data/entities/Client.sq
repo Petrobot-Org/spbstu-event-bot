@@ -20,3 +20,6 @@ WHERE user_id = :userId;
 getById:
 SELECT * FROM Client
 WHERE id = :id;
+
+getAll:
+SELECT * FROM Client;

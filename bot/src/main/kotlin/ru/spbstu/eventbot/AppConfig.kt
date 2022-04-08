@@ -1,11 +1,13 @@
 package ru.spbstu.eventbot
 
 import ru.spbstu.eventbot.domain.permissions.Operators
+import java.time.ZoneId
 import java.util.Properties
 
 data class AppConfig(
     val jdbcString: String,
-    val operators: Operators
+    val operators: Operators,
+    val zone: ZoneId
 )
 
 fun appConfig(): AppConfig {
@@ -18,9 +20,11 @@ fun appConfig(): AppConfig {
             .filter { it.isNotEmpty() }
             .map { it.toLong() }
         val jdbcString = properties["jdbc"].toString()
+        val zone = ZoneId.of(properties["timezone"].toString())
         AppConfig(
             jdbcString = jdbcString,
-            operators = { it in operatorUserIds }
+            operators = { it in operatorUserIds },
+            zone = zone
         )
     }
 }
