@@ -18,11 +18,14 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
+import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
+import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
 import java.sql.SQLException
 
 val mainModule = module {
     val appConfig = appConfig()
     single { appConfig.zone }
+    single { appConfig.operators }
     single<SqlDriver> {
         JdbcSqliteDriver(appConfig.jdbcString).also {
             try {
@@ -53,7 +56,9 @@ val mainModule = module {
     single { GetClientCoursesUseCase(get()) }
     single { CreateNewCourseUseCase(get(), get()) }
     single { GetMyClientsUseCase(get()) }
-    single { GetPermissionsUseCase(appConfig.operators, get()) }
+    single { GetPermissionsUseCase(get(), get()) }
+    single { RegistrationFlow(get()) }
+    single { CourseCreationFlow(get(), get(), get()) }
 }
 
 fun main(args: Array<String>) {
