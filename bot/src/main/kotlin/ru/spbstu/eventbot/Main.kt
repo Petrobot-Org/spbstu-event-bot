@@ -18,6 +18,8 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
+import ru.spbstu.eventbot.telegram.ProvidePermissions
+import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
 import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
 import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
 import java.sql.SQLException
@@ -59,6 +61,8 @@ val mainModule = module {
     single { GetPermissionsUseCase(get(), get()) }
     single { RegistrationFlow(get()) }
     single { CourseCreationFlow(get(), get(), get()) }
+    single { ClientRegistrationFlow(get()) }
+    single { ProvidePermissions(get()) }
 }
 
 fun main(args: Array<String>) {
