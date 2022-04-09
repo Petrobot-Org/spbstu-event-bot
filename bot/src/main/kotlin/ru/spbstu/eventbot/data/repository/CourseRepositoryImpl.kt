@@ -1,5 +1,8 @@
 package ru.spbstu.eventbot.data.repository
 
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToOne
+import kotlinx.coroutines.flow.Flow
 import ru.spbstu.eventbot.data.source.AppDatabase
 import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
 import ru.spbstu.eventbot.domain.entities.Client
@@ -32,6 +35,10 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         return database.courseQueries.getAvailableCoursesByUserId(Instant.now(), userId, map).executeAsList()
     }
 
+    override fun getEarliestUnsent(): Flow<Course> {
+        return database.courseQueries.getEarliestUnsent(map).asFlow().mapToOne()
+    }
+
     override fun getById(id: Long): Course? {
         return database.courseQueries.getById(id, map).executeAsOneOrNull()
     }
@@ -44,5 +51,9 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         expiryDate: Instant
     ) {
         database.courseQueries.insert(clientId, title, description, additionalQuestion.value, expiryDate)
+    }
+
+    override fun updateResultsSent(id: Long, value: Boolean) {
+        database.courseQueries.updateResultsSent(id = id, resultsSent = value)
     }
 }

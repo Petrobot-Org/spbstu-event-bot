@@ -1,5 +1,6 @@
 package ru.spbstu.eventbot.telegram
 
+import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.callbackQuery
@@ -7,6 +8,8 @@ import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvi
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
@@ -15,6 +18,7 @@ import ru.spbstu.eventbot.domain.usecases.*
 import java.time.ZoneId
 
 class Bot : KoinComponent {
+    private val coroutineScope = CoroutineScope(Job() + Dispatchers.Default)
     private val createNewCourse: CreateNewCourseUseCase by inject()
     private val submitApplication: SubmitApplicationUseCase by inject()
     private val registerStudent: RegisterStudentUseCase by inject()
@@ -25,6 +29,7 @@ class Bot : KoinComponent {
     private val registerClient: RegisterClientUseCase by inject()
     private val getPermissions: GetPermissionsUseCase by inject()
     private val getMyClients: GetMyClientsUseCase by inject()
+    private val getExpiredCourses: GetExpiredCoursesFlowUseCase by inject()
     private val zone: ZoneId by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
@@ -57,6 +62,17 @@ class Bot : KoinComponent {
             }
         }
         bot.startPolling()
+        collectExpiredCourses(bot)
+    }
+
+    private fun collectExpiredCourses(bot: Bot) {
+        coroutineScope.launch {
+            getExpiredCourses().collect {
+                TODO("""Отправить сообщение заказчику с прикреплённой таблицей и email с этим же файлом.
+                     Формирование списка заявок - чужое задание, поэтому можно сделать фейковую реализацию.""")
+                it.markAsSent()
+            }
+        }
     }
 
     context(Permissions)
@@ -100,7 +116,13 @@ class Bot : KoinComponent {
             ChatState.Empty -> sendReply(Strings.UnknownCommand)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
             is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
-            is ChatState.NewCourseCreation -> handleNewCourseCreation(state, setNewState, createNewCourse, getMyClients, zone)
+            is ChatState.NewCourseCreation -> handleNewCourseCreation(
+                state,
+                setNewState,
+                createNewCourse,
+                getMyClients,
+                zone
+            )
         }
     }
 }

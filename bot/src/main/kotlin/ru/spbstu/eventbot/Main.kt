@@ -53,6 +53,7 @@ val mainModule = module {
     single { GetClientCoursesUseCase(get()) }
     single { CreateNewCourseUseCase(get(), get()) }
     single { GetMyClientsUseCase(get()) }
+    single { GetExpiredCoursesFlowUseCase(get()) }
     single { GetPermissionsUseCase(appConfig.operators, get()) }
 }
 

@@ -26,6 +26,17 @@ SELECT * FROM Course
 JOIN Client ON Course.client_id = Client.id
 WHERE (expiry_date > :now) AND (Client.user_id = :userId);
 
+getEarliestUnsent:
+SELECT * FROM Course
+JOIN Client ON Course.client_id = Client.id
+WHERE results_sent = 0
+ORDER BY expiry_date ASC
+LIMIT 1;
+
 insert:
 INSERT INTO Course(client_id, title, description, additional_question, expiry_date, results_sent)
 VALUES ( :clientId, :title, :description, :additionalQuestion, :expiryDate, 0);
+
+updateResultsSent:
+UPDATE Course SET results_sent = :resultsSent
+WHERE id = :id;
