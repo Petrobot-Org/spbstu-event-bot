@@ -116,13 +116,7 @@ class Bot : KoinComponent {
             ChatState.Empty -> sendReply(Strings.UnknownCommand)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
             is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
-            is ChatState.NewCourseCreation -> handleNewCourseCreation(
-                state,
-                setNewState,
-                createNewCourse,
-                getMyClients,
-                zone
-            )
+            is ChatState.NewCourseCreation -> handleNewCourseCreation(state, setNewState, createNewCourse, getMyClients, zone)
         }
     }
 }
