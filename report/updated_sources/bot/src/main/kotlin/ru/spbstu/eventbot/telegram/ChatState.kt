@@ -1,6 +1,5 @@
 package ru.spbstu.eventbot.telegram
 
-import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
 import java.time.Instant
 
 sealed interface ChatState {
@@ -15,16 +14,14 @@ sealed interface ChatState {
     data class ClientRegistration(
         val request: ClientRegistrationRequest,
         val name: String? = null,
-        val email: String? = null,
-        val userId: Long? = null
+        val email: String? = null
     ) : ChatState
 
     data class NewCourseCreation(
         val request: NewCourseCreationRequest,
-        val clientId: Long,
         val title: String? = null,
         val description: String? = null,
-        val additionalQuestion: AdditionalQuestion? = null,
+        val additionalQuestion: String? = null,
         val expiryDate: Instant? = null
     ) : ChatState
 }
@@ -40,7 +37,6 @@ sealed interface ClientRegistrationRequest {
     object Name : ClientRegistrationRequest
     object Email : ClientRegistrationRequest
     object Confirm : ClientRegistrationRequest
-    object UserId : ClientRegistrationRequest
 }
 
 sealed interface NewCourseCreationRequest {

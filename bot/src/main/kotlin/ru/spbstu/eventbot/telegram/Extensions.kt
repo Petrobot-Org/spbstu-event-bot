@@ -47,3 +47,19 @@ fun CallbackQueryHandlerEnvironment.sendReply(
         replyMarkup = replyMarkup
     )
 }
+
+fun TextHandlerEnvironment.require(condition: Boolean, action: TextHandlerEnvironment.() -> Unit) {
+    if (condition) {
+        action()
+    } else {
+        sendReply(Strings.UnauthorizedError)
+    }
+}
+
+fun CallbackQueryHandlerEnvironment.require(condition: Boolean, action: CallbackQueryHandlerEnvironment.() -> Unit) {
+    if (condition) {
+        action()
+    } else {
+        sendReply(Strings.UnauthorizedError)
+    }
+}

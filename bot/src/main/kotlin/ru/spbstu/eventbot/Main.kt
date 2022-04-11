@@ -7,22 +7,24 @@ import org.koin.dsl.module
 import ru.spbstu.eventbot.data.adapter.DateAdapter
 import ru.spbstu.eventbot.data.entities.Course
 import ru.spbstu.eventbot.data.repository.ApplicationRepositoryImpl
+import ru.spbstu.eventbot.data.repository.ClientRepositoryImpl
 import ru.spbstu.eventbot.data.repository.CourseRepositoryImpl
 import ru.spbstu.eventbot.data.repository.StudentRepositoryImpl
 import ru.spbstu.eventbot.data.source.AppDatabase
+import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
+import ru.spbstu.eventbot.domain.repository.ClientRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
-import ru.spbstu.eventbot.domain.usecases.GetAvailableCoursesUseCase
-import ru.spbstu.eventbot.domain.usecases.GetCourseByIdUseCase
-import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
-import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
+import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
 import java.sql.SQLException
 
 val mainModule = module {
+    val appConfig = appConfig()
+    single { appConfig.zone }
     single<SqlDriver> {
-        JdbcSqliteDriver("jdbc:sqlite:main.sqlite").also {
+        JdbcSqliteDriver(appConfig.jdbcString).also {
             try {
                 AppDatabase.Schema.create(it)
             } catch (e: SQLException) {
@@ -30,14 +32,28 @@ val mainModule = module {
             }
         }
     }
-    single { AppDatabase(driver = get(), CourseAdapter = Course.Adapter(expiry_dateAdapter = DateAdapter())) }
+    single {
+        AppDatabase(
+            driver = get(),
+            CourseAdapter = Course.Adapter(
+                expiry_dateAdapter = DateAdapter()
+            )
+        )
+    }
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
+    single<ClientRepository> { ClientRepositoryImpl(get()) }
     single<CourseRepository> { CourseRepositoryImpl(get()) }
     single { SubmitApplicationUseCase(get(), get()) }
     single { RegisterStudentUseCase(get()) }
     single { GetAvailableCoursesUseCase(get()) }
     single { GetCourseByIdUseCase(get()) }
+    single { RegisterClientUseCase(get()) }
+    single { GetApplicantsByCourseIdUseCase(get(), get()) }
+    single { GetClientCoursesUseCase(get()) }
+    single { CreateNewCourseUseCase(get(), get()) }
+    single { GetMyClientsUseCase(get()) }
+    single { GetPermissionsUseCase(appConfig.operators, get()) }
 }
 
 fun main(args: Array<String>) {
