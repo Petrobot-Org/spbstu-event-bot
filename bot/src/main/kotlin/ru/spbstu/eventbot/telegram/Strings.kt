@@ -61,6 +61,10 @@ object Strings {
         .ofLocalizedDateTime(FormatStyle.LONG)
         .withZone(ZoneId.systemDefault())
 
+    fun courseExpiredNotification(course: Course) =
+        """время записи на курс \"${course.title}\" истекло""".trimMargin()
+
+
     fun registrationConfirmation(name: String, email: String, group: String) =
         """|Имя: $name
            |Почта: $email

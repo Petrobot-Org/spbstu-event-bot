@@ -20,6 +20,7 @@ dependencies {
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.5.3")
     implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.0.6")
     implementation("commons-validator:commons-validator:1.7")
+    implementation("org.apache.commons:commons-email:1.5")
     testImplementation(kotlin("test"))
 }
 

@@ -18,6 +18,7 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
+import ru.spbstu.eventbot.telegram.CreateApplicantsTable
 import java.sql.SQLException
 
 val mainModule = module {
@@ -55,6 +56,7 @@ val mainModule = module {
     single { GetMyClientsUseCase(get()) }
     single { GetExpiredCoursesFlowUseCase(get()) }
     single { GetPermissionsUseCase(appConfig.operators, get()) }
+    single { CreateApplicantsTable(get()) }
 }
 
 fun main(args: Array<String>) {

@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.collect
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
-import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.*
+import ru.spbstu.eventbot.email.sendCourseExpiredEmail
 import java.time.ZoneId
 
 class Bot : KoinComponent {
@@ -30,6 +30,7 @@ class Bot : KoinComponent {
     private val getPermissions: GetPermissionsUseCase by inject()
     private val getMyClients: GetMyClientsUseCase by inject()
     private val getExpiredCourses: GetExpiredCoursesFlowUseCase by inject()
+    private val createApplicantsTable: CreateApplicantsTable by inject()
     private val zone: ZoneId by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
@@ -68,10 +69,9 @@ class Bot : KoinComponent {
     private fun collectExpiredCourses(bot: Bot) {
         coroutineScope.launch {
             getExpiredCourses().collect {
-                TODO(
-                    """Отправить сообщение заказчику с прикреплённой таблицей и email с этим же файлом.
-                     Формирование списка заявок - чужое задание, поэтому можно сделать фейковую реализацию."""
-                )
+                val byteArray:ByteArray = createApplicantsTable(it.course.client.id)
+                notifyCourseExpired(it.course, bot, byteArray)
+                sendCourseExpiredEmail(it.course, byteArray)
                 it.markAsSent()
             }
         }
