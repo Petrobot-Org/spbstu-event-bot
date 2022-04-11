@@ -25,7 +25,7 @@ class SubmitApplicationUseCase(
         val student = studentRepository.findByChatId(chatId) ?: return Result.NotRegistered
         val course = courseRepository.getById(courseId) ?: return Result.NoSuchCourse
         val timeNow: Instant = Instant.now()
-        if (course.expiryDate.compareTo(timeNow) > 1) {
+        if (timeNow.isAfter(course.expiryDate)) {
             return Result.Expired
         }
         if (applicationRepository.containsApplication(chatId, courseId)) {
