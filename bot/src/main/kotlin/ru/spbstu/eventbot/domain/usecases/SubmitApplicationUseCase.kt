@@ -19,12 +19,13 @@ class SubmitApplicationUseCase(
         object Expired : Result
         object NotRegistered : Result
         object AlreadySubmitted : Result
+        object NoSuchCourse  : Result
     }
 
     operator fun invoke(chatId: Long, courseId: Long): Result {
         val student = studentRepository.findByChatId(chatId) ?: return Result.NotRegistered
-        val course = courseRepository.getById(courseId) ?: return Result.NotRegistered
-        val timeNow: Instant = Calendar.getInstance().toInstant()
+        val course = courseRepository.getById(courseId) ?: return Result.NoSuchCourse
+        val timeNow: Instant = Instant.now()
         if (course.expiryDate.compareTo(timeNow) > 1) {
             return Result.Expired
         }

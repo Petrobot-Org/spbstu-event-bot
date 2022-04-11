@@ -59,4 +59,8 @@ object Strings {
                   |${course.description}
         """.trimMargin()
     }
+
+    fun apply(): String {
+        return apply()
+    }
 }

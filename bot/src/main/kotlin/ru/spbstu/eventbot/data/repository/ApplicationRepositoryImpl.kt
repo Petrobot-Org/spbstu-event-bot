@@ -9,6 +9,7 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
     }
 
     override fun containsApplication(studentId: Long, courseId: Long): Boolean {
-        TODO("Not yet implemented")
+        val list = database.applicationQueries.check(student_id = studentId, course_id = courseId).executeAsList()
+        return list.isNotEmpty()
     }
 }

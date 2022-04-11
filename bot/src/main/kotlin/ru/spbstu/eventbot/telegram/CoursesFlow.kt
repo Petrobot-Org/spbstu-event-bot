@@ -29,25 +29,26 @@ fun CallbackQueryHandlerEnvironment.courseDetails(courseId: Long, getCourseById:
     )
 }
 
-var info = ""
 fun CallbackQueryHandlerEnvironment.apply(
     chatId: Long,
     courseId: Long,
     submitApplicationUseCase: SubmitApplicationUseCase
 ) {
-    val thisCase = submitApplicationUseCase.invoke(chatId, courseId)
-    when (thisCase) {
+    val info = when (submitApplicationUseCase.invoke(chatId, courseId)) {
         is SubmitApplicationUseCase.Result.OK -> {
-            info = "Все хорошо вы успешно зарегестрировались."
+            "Все хорошо вы успешно зарегестрировались."
         }
         is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
-            info = "Ваша завяка уже отправлена."
+            "Ваша завяка уже отправлена."
         }
         is SubmitApplicationUseCase.Result.Expired -> {
-            info = "Время на приём заявок истекло."
+            "Время на приём заявок истекло."
         }
         is SubmitApplicationUseCase.Result.NotRegistered -> {
-            info = "Вы не зарегистрированы."
+            "Вы не зарегистрированы."
+        }
+        is SubmitApplicationUseCase.Result.NoSuchCourse -> {
+            "Такого курса нет."
         }
     }
     sendReply(
