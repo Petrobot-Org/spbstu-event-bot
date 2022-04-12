@@ -49,11 +49,11 @@ object Strings {
     const val HelpCommands = "I help you!"
     const val HelpStart = "I help you for start work with me!"
 
-    const val AppliedSuccessfully = "Заявка отправлена"
-    const val AlreadyApplied = "Заявка уже отправлена"
-    const val CourseExpired = "Время на приём заявок истекло"
-    const val NotRegistered = "Вы не зарегистрированы"
-    const val CourseNotFound = "Такого курса нет"
+    const val GoodResult = "Все хорошо вы успешно зарегестрировались."
+    const val ApplicationAdded = "Ваша завяка уже отправлена."
+    const val TimeOut = "Время на приём заявок истекло."
+    const val NotRegistered = "Вы не зарегистрированы."
+    const val CourseNotFound = "Такого курса нет."
 
     const val ButtonCourses = "Курсы"
     const val ButtonRegister = "Регистрация"
