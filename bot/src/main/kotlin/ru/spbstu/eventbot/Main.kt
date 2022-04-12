@@ -45,6 +45,7 @@ val mainModule = module {
     single<ClientRepository> { ClientRepositoryImpl(get()) }
     single<CourseRepository> { CourseRepositoryImpl(get()) }
     single { SubmitApplicationUseCase(get(), get(), get(), get()) }
+    single { RevokeApplicationUseCase(get(), get()) }
     single { RegisterStudentUseCase(get()) }
     single { GetAvailableCoursesUseCase(get()) }
     single { GetCourseByIdUseCase(get()) }

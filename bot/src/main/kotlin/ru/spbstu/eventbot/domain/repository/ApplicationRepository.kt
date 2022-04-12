@@ -6,4 +6,5 @@ interface ApplicationRepository {
     fun insert(studentId: Long, courseId: Long)
     fun contains(studentId: Long, courseId: Long): Boolean
     fun getListOfApplicants(id: Long): List<Student>
+    fun delete(studentId: Long, courseId: Long)
 }

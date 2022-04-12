@@ -25,6 +25,7 @@ class Bot : KoinComponent {
     private val registerClient: RegisterClientUseCase by inject()
     private val getPermissions: GetPermissionsUseCase by inject()
     private val getMyClients: GetMyClientsUseCase by inject()
+    private val revokeApplication: RevokeApplicationUseCase by inject()
     private val zone: ZoneId by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
@@ -73,6 +74,7 @@ class Bot : KoinComponent {
         when (command) {
             "details" -> courseDetails(arg.toLong(), getCourseById)
             "apply" -> apply(arg.toLong(), submitApplication)
+            "revoke" -> revoke(arg.toLong(), revokeApplication)
             "applicants" -> applicantsInfo(arg.toLong(), getApplicants)
             "newcourse" -> startCourseCreation(arg.toLong(), setState)
         }

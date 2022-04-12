@@ -20,4 +20,8 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
     override fun getListOfApplicants(id: Long): List<Student> {
         return database.applicationQueries.getListOfApplicants(id, map).executeAsList()
     }
+
+    override fun delete(studentId: Long, courseId: Long) {
+        database.applicationQueries.delete(studentId = studentId, courseId = courseId)
+    }
 }

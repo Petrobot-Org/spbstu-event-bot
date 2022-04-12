@@ -20,3 +20,7 @@ getListOfApplicants:
 SELECT Student.* FROM Application
 INNER JOIN Student ON Student.id = Application.student_id
 WHERE course_id = :id;
+
+delete:
+DELETE FROM Application
+WHERE course_id = :courseId AND student_id = :studentId;
