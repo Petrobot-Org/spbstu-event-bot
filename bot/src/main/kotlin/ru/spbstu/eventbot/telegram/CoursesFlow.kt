@@ -35,19 +35,19 @@ fun CallbackQueryHandlerEnvironment.apply(
 ) {
     val info = when (submitApplicationUseCase.invoke(chatId, courseId)) {
         is SubmitApplicationUseCase.Result.OK -> {
-            "Все хорошо вы успешно зарегестрировались."
+            Strings.GoodResult
         }
         is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
-            "Ваша завяка уже отправлена."
+            Strings.ApplicationAdded
         }
         is SubmitApplicationUseCase.Result.Expired -> {
-            "Время на приём заявок истекло."
+            Strings.TimeOut
         }
         is SubmitApplicationUseCase.Result.NotRegistered -> {
-            "Вы не зарегистрированы."
+            Strings.NotRegistered
         }
         is SubmitApplicationUseCase.Result.NoSuchCourse -> {
-            "Такого курса нет."
+            Strings.CourseNotFound
         }
     }
     sendReply(
