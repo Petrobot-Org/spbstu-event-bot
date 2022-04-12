@@ -29,11 +29,10 @@ fun CallbackQueryHandlerEnvironment.courseDetails(courseId: Long, getCourseById:
 }
 
 fun CallbackQueryHandlerEnvironment.apply(
-    chatId: Long,
     courseId: Long,
     submitApplicationUseCase: SubmitApplicationUseCase
 ) {
-    val info = when (submitApplicationUseCase.invoke(chatId, courseId)) {
+    val info = when (submitApplicationUseCase.invoke(callbackQuery.message?.chat?.id ?: return, courseId)) {
         is SubmitApplicationUseCase.Result.OK -> {
             Strings.GoodResult
         }
