@@ -38,13 +38,13 @@ fun CallbackQueryHandlerEnvironment.apply(
 ) {
     val info = when (submitApplicationUseCase.invoke(courseId)) {
         is SubmitApplicationUseCase.Result.OK -> {
-            Strings.GoodResult
+            Strings.AppliedSuccessfully
         }
         is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
-            Strings.ApplicationAdded
+            Strings.AlreadyApplied
         }
         is SubmitApplicationUseCase.Result.Expired -> {
-            Strings.TimeOut
+            Strings.CourseExpired
         }
         is SubmitApplicationUseCase.Result.NotRegistered -> {
             Strings.NotRegistered
