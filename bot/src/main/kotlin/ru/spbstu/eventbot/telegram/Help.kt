@@ -7,6 +7,7 @@ context(Permissions)
 fun TextHandlerEnvironment.writeHelp() {
     val helpText = buildString {
         append(Strings.HelpCommands)
+        append(Strings.StartDescription)
         append(Strings.RegisterDescription)
         append(Strings.CoursesDescription)
 

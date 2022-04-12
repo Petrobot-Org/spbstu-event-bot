@@ -52,7 +52,7 @@ object Strings {
     const val GetApplicantsDescription = "`/getapplicants` - получение списка студентов, подавших заявку на курс\n"
     const val NewCourseDescription = "`/newcourse` - создание нового курса\n"
 
-    fun helpStart()=
+    val HelpStart =
         """**Приветствую!**
             С помощью этого бота ты можешь подать заявку на участие в дополнительных курсах
                  партнёров ВШПИ, не утруждая себя вводом одних и тех же личных данных каждый раз. 
