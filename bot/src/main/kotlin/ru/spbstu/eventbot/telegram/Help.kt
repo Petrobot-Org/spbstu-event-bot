@@ -5,17 +5,18 @@ import ru.spbstu.eventbot.domain.permissions.Permissions
 
 context(Permissions)
 fun TextHandlerEnvironment.writeHelp() {
-    var helpText = Strings.HelpCommands + Strings.StartDescription
+    val helpText = buildString {
+        append(Strings.HelpCommands)
+        append(Strings.RegisterDescription)
+        append(Strings.CoursesDescription)
 
-    helpText += Strings.RegisterDescription
-    helpText += Strings.CoursesDescription
-
-    if (canAccessTheirCourse || canAccessAnyCourse) {
-        helpText += Strings.GetApplicantsDescription
-        helpText += Strings.NewCourseDescription
+        if (canAccessTheirCourse || canAccessAnyCourse) {
+            append(Strings.GetApplicantsDescription)
+            append(Strings.NewCourseDescription)
+        }
+        if (canModifyClients) append(Strings.NewClientDescription)
     }
-    if (canModifyClients)  helpText+= Strings.NewClientDescription
-    sendReply(
-        text = helpText
+        sendReply(
+            text = helpText
         )
-}
+    }
