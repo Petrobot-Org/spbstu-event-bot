@@ -1,12 +1,11 @@
 package ru.spbstu.eventbot.telegram
 
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
-import ru.spbstu.eventbot.telegram.Strings.HelpCommands
-import ru.spbstu.eventbot.telegram.Strings.StartDescription
+import ru.spbstu.eventbot.domain.permissions.Permissions
 
 context(Permissions)
 fun TextHandlerEnvironment.writeHelp() {
-    var helpText = HelpCommands + StartDescription
+    var helpText = Strings.HelpCommands + Strings.StartDescription
 
     helpText += Strings.RegisterDescription
     helpText += Strings.CoursesDescription
