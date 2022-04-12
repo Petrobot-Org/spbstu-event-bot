@@ -15,7 +15,7 @@ VALUES (:studentId, :courseId);
 check:
 SELECT student_id, course_id
 FROM Application
-WHERE  student_id =:student_id AND  course_id =:course_id;
+WHERE student_id = :studentId AND course_id = :courseId;
 
 getListOfApplicants:
 SELECT Student.* FROM Application
