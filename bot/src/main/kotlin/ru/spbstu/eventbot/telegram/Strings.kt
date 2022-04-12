@@ -22,8 +22,6 @@ object Strings {
     const val RequestClientName = "Имя заказчика"
     const val RequestClientEmail = "Адрес электронной почты заказчика"
     const val RequestClientUserId = "Id телеграма заказчика (напишите \"нет\", если нет)"
-    const val ClientRegistrationRetry = "Тогда начинаем заново"
-    const val ClientRegistrationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val ClientRegisteredSuccessfully = "Клиент создан"
     const val InvalidClientName = "Некорректное имя заказчика. Попробуйте снова."
     const val InvalidClientUserId = "Id заказчика должно быть целым числом. Попробуйте снова."
@@ -46,8 +44,21 @@ object Strings {
     const val NoApplicants = "Никто ещё не подал заявку на этот курс"
     const val SubmitApplication = "✅ Записаться"
 
-    const val HelpCommands = "I help you!"
-    const val HelpStart = "I help you for start work with me!"
+    const val HelpCommands = "Список доступных команд: \n"
+    const val RegisterDescription = " `/register` - регистрация студентов в боте\n"
+    const val StartDescription = "`/start` -  приветственное слово с кратким описанием функционала\n"
+    const val CoursesDescription = "`/courses` - получение списка актуальных курсов\n"
+    const val NewClientDescription = "`/newclient` - создание нового заказчика(партнёра, предоставляющего курса)\n"
+    const val GetApplicantsDescription = "`/getapplicants` - получение списка студентов, подавших заявку на курс\n"
+    const val NewCourseDescription = "`/newcourse` - создание нового курса\n"
+
+    const val HelpStart = """**Приветствую!**
+                             С помощью этого бота ты можешь подать заявку на участие в дополнительных курсах
+                               партнёров ВШПИ, не утруждая себя вводом одних и тех же личных данных каждый раз. 
+                             Для этого тебе нужно зарегистрироваться (нажми на кнопку «Регистрация» или введи команду `/register`)
+                             Здесь хранится список открытых для записи курсов, а также мы будем оповещать тебя о новых курсах, 
+                             как только они появятся.
+                             """
 
     const val ButtonCourses = "Курсы"
     const val ButtonRegister = "Регистрация"
