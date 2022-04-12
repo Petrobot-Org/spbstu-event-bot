@@ -45,12 +45,12 @@ object Strings {
     const val SubmitApplication = "✅ Записаться"
 
     const val HelpCommands = "Список доступных команд: \n"
-    const val RegisterDescription = " `/register` - регистрация студентов в боте\n"
-    const val StartDescription = "`/start` -  приветственное слово с кратким описанием функционала\n"
-    const val CoursesDescription = "`/courses` - получение списка актуальных курсов\n"
-    const val NewClientDescription = "`/newclient` - создание нового заказчика(партнёра, предоставляющего курса)\n"
-    const val GetApplicantsDescription = "`/getapplicants` - получение списка студентов, подавших заявку на курс\n"
-    const val NewCourseDescription = "`/newcourse` - создание нового курса\n"
+    const val RegisterDescription = " /register - регистрация студентов в боте\n"
+    const val StartDescription = "/start -  приветственное слово с кратким описанием функционала\n"
+    const val CoursesDescription = "/courses - получение списка актуальных курсов\n"
+    const val NewClientDescription = "/newclient - создание нового заказчика(партнёра, предоставляющего курса)\n"
+    const val GetApplicantsDescription = "/getapplicants - получение списка студентов, подавших заявку на курс\n"
+    const val NewCourseDescription = "/newcourse - создание нового курса\n"
 
     val HelpStart =
         """**Приветствую!**
