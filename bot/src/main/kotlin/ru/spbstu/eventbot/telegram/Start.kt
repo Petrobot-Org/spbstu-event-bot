@@ -2,6 +2,7 @@ package ru.spbstu.eventbot.telegram
 
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.entities.KeyboardReplyMarkup
+import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.keyboard.KeyboardButton
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.telegram.Strings.HelpStart
@@ -27,9 +28,11 @@ fun TextHandlerEnvironment.writeStart() {
     }
     sendReply(
         text =  HelpStart,
+        parseMode = ParseMode.MARKDOWN,
         replyMarkup = KeyboardReplyMarkup(
             keyboard = keyboard,
             resizeKeyboard = true
         )
+
     )
 }
