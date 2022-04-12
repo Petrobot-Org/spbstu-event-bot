@@ -14,7 +14,7 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
     }
 
     override fun contains(studentId: Long, courseId: Long): Boolean {
-        return database.applicationQueries.contains(studentId = studentId, courseId = courseId).executeAsOne() == 1L
+        return database.applicationQueries.contains(studentId = studentId, courseId = courseId).executeAsOne() >= 1L
     }
 
     override fun getListOfApplicants(id: Long): List<Student> {
