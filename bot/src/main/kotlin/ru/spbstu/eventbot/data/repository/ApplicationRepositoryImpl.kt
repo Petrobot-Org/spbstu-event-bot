@@ -5,17 +5,16 @@ import ru.spbstu.eventbot.domain.entities.Student
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 
 class ApplicationRepositoryImpl(private val database: AppDatabase) : ApplicationRepository {
-
     private val map = { id: Long, chatId: Long, email: String, fullName: String, group: String ->
         Student(id, chatId, email, fullName, group)
     }
+
     override fun insert(studentId: Long, courseId: Long) {
         database.applicationQueries.insert(studentId, courseId)
     }
 
-    override fun containsApplication(studentId: Long, courseId: Long): Boolean {
-        val list = database.applicationQueries.check(studentId = studentId, courseId = courseId).executeAsList()
-        return list.isNotEmpty()
+    override fun contains(studentId: Long, courseId: Long): Boolean {
+        return database.applicationQueries.contains(studentId = studentId, courseId = courseId).executeAsOne() == 1L
     }
 
     override fun getListOfApplicants(id: Long): List<Student> {
