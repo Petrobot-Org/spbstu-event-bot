@@ -4,7 +4,7 @@ import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.entities.KeyboardReplyMarkup
 import com.github.kotlintelegrambot.entities.keyboard.KeyboardButton
 import ru.spbstu.eventbot.domain.permissions.Permissions
-import ru.spbstu.eventbot.telegram.Strings.HelpStart
+import ru.spbstu.eventbot.telegram.Strings.helpStart
 
 context(Permissions)
 fun TextHandlerEnvironment.writeStart() {
@@ -26,7 +26,7 @@ fun TextHandlerEnvironment.writeStart() {
         if (operatorButtons.isNotEmpty()) add(operatorButtons)
     }
     sendReply(
-        text = HelpStart,
+        text =  helpStart(),
         replyMarkup = KeyboardReplyMarkup(
             keyboard = keyboard,
             resizeKeyboard = true
