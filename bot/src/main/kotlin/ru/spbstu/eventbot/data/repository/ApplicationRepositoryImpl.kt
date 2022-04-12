@@ -14,7 +14,7 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
     }
 
     override fun containsApplication(studentId: Long, courseId: Long): Boolean {
-        val list = database.applicationQueries.check(student_id = studentId, course_id = courseId).executeAsList()
+        val list = database.applicationQueries.check(studentId = studentId, courseId = courseId).executeAsList()
         return list.isNotEmpty()
     }
 
