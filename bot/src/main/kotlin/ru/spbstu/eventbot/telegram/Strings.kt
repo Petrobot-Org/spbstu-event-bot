@@ -36,6 +36,13 @@ object Strings {
     const val HelpCommands = "I help you!"
     const val HelpStart = "I help you for start work with me!"
 
+    const val goodResult = "Все хорошо вы успешно зарегестрировались."
+    const val applicationAdded = "Ваша завяка уже отправлена."
+    const val timeOut = "Время на приём заявок истекло."
+    const val notRegistered = "Вы не зарегистрированы."
+    const val courseNotFound = "Такого курса нет."
+
+
     fun registrationConfirmation(name: String, email: String, group: String) =
         """|Имя: $name
            |Почта: $email
@@ -60,7 +67,4 @@ object Strings {
         """.trimMargin()
     }
 
-    fun apply(): String {
-        return apply()
-    }
 }
