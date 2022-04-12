@@ -9,15 +9,23 @@ import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
+import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.*
+import java.time.ZoneId
 
 class Bot : KoinComponent {
+    private val createNewCourse: CreateNewCourseUseCase by inject()
     private val submitApplication: SubmitApplicationUseCase by inject()
     private val registerStudent: RegisterStudentUseCase by inject()
     private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
+    private val getAvailableCoursesByClientId: GetClientCoursesUseCase by inject()
     private val getCourseById: GetCourseByIdUseCase by inject()
-    private val operators: Operators by inject()
+    private val getApplicants: GetApplicantsByCourseIdUseCase by inject()
     private val registerClient: RegisterClientUseCase by inject()
+    private val getPermissions: GetPermissionsUseCase by inject()
+    private val getMyClients: GetMyClientsUseCase by inject()
+    private val zone: ZoneId by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
@@ -27,14 +35,22 @@ class Bot : KoinComponent {
             token = telegramToken
             dispatch {
                 callbackQuery {
-                    val (state, setState) = state(callbackQuery.message?.chat?.id ?: return@callbackQuery)
-                    handleCallback(state, setState)
+                    val permissions = getPermissions(
+                        userId = callbackQuery.from.id,
+                        chatId = callbackQuery.message?.chat?.id ?: return@callbackQuery
+                    )
+                    with(permissions) {
+                        val (state, setState) = state()
+                        handleCallback(state, setState)
+                    }
                 }
                 text {
-                    val (state, setState) = state(message.chat.id)
-                    if (text.startsWith("/")) {
-                        handleCommand(state, setState)
-                    } else {
+                    val permissions = getPermissions(
+                        userId = message.from?.id ?: return@text,
+                        chatId = message.chat.id
+                    )
+                    with(permissions) {
+                        val (state, setState) = state()
                         handleText(state, setState)
                     }
                 }
@@ -43,10 +59,12 @@ class Bot : KoinComponent {
         bot.startPolling()
     }
 
-    private fun state(chatId: Long): Pair<ChatState, (ChatState) -> Unit> {
+    context(Permissions)
+    private fun state(): Pair<ChatState, (ChatState) -> Unit> {
         return (states[chatId] ?: ChatState.Empty) to { newState: ChatState -> states[chatId] = newState }
     }
 
+    context(Permissions)
     private fun CallbackQueryHandlerEnvironment.handleCallback(state: ChatState, setState: (ChatState) -> Unit) {
         val tokens = callbackQuery.data.split(' ')
         require(tokens.size == 2)
@@ -55,33 +73,34 @@ class Bot : KoinComponent {
         when (command) {
             "details" -> courseDetails(arg.toLong(), getCourseById)
             "apply" -> apply(arg.toLong(), submitApplication)
+            "applicants" -> applicantsInfo(arg.toLong(), getApplicants)
+            "newcourse" -> startCourseCreation(arg.toLong(), setState)
         }
     }
 
-    private fun TextHandlerEnvironment.handleCommand(state: ChatState, setNewState: (ChatState) -> Unit) {
+    context(Permissions)
+    private fun TextHandlerEnvironment.handleText(state: ChatState, setNewState: (ChatState) -> Unit) {
         when (text) {
-            "/register" -> startRegistration(setNewState)
+            "/register", Strings.ButtonRegister -> startRegistration(setNewState)
             "/help" -> writeHelp()
             "/start" -> writeStart()
-            "/courses" -> displayCourses(getAvailableCourses)
-            "/newclient" -> ifOperator { startClientRegistration(setNewState) }
-            else -> sendReply(Strings.UnknownCommand)
+            "/courses", Strings.ButtonCourses -> displayCourses(getAvailableCourses)
+            "/newclient", Strings.ButtonNewClient -> require(canModifyClients) { startClientRegistration(setNewState) }
+            "/getapplicants" -> displayApplicants(getAvailableCoursesByClientId)
+            "/newcourse", Strings.ButtonNewCourse -> require(canAccessAnyCourse || canAccessTheirCourse) {
+                selectClientForCourseCreation(getMyClients)
+            }
+            else -> handleFreeText(state, setNewState)
         }
     }
 
-    private fun TextHandlerEnvironment.handleText(state: ChatState, setNewState: (ChatState) -> Unit) {
+    context(Permissions)
+    private fun TextHandlerEnvironment.handleFreeText(state: ChatState, setNewState: (ChatState) -> Unit) {
         when (state) {
-            ChatState.Empty -> sendReply(Strings.DontKnowWhatToDo)
+            ChatState.Empty -> sendReply(Strings.UnknownCommand)
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
             is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
-        }
-    }
-
-    private fun TextHandlerEnvironment.ifOperator(action: TextHandlerEnvironment.() -> Unit) {
-        if (message.from in operators) {
-            action()
-        } else {
-            sendReply(Strings.UnauthorizedError)
+            is ChatState.NewCourseCreation -> handleNewCourseCreation(state, setNewState, createNewCourse, getMyClients, zone)
         }
     }
 }

@@ -2,6 +2,7 @@ CREATE TABLE Application (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER NOT NULL,
     course_id INTEGER NOT NULL,
+    additional_info TEXT,
     FOREIGN KEY (student_id) REFERENCES Student (id),
     FOREIGN KEY (course_id) REFERENCES Course (id),
     UNIQUE (student_id, course_id)

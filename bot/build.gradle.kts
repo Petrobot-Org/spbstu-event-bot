@@ -19,6 +19,7 @@ dependencies {
     implementation("com.squareup.sqldelight:sqlite-driver:1.5.3")
     implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.0.6")
     implementation("commons-validator:commons-validator:1.7")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation(kotlin("test"))
 }
 
@@ -28,6 +29,7 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.freeCompilerArgs += listOf("-Xcontext-receivers")
 }
 
 application {
