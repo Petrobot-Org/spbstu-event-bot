@@ -17,7 +17,7 @@ fun TextHandlerEnvironment.writeHelp() {
         }
         if (canModifyClients) append(Strings.NewClientDescription)
     }
-        sendReply(
-            text = helpText
-        )
-    }
+    sendReply(
+        text = helpText
+    )
+}
