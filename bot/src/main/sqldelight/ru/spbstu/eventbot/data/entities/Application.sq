@@ -16,8 +16,9 @@ contains:
 SELECT COUNT(1) FROM Application
 WHERE student_id = :studentId AND course_id = :courseId;
 
-getListOfApplicants:
-SELECT Student.* FROM Application
+getApplicants:
+SELECT Application.id, Application.course_id, Application.additional_info,Student.*
+FROM Application
 INNER JOIN Student ON Student.id = Application.student_id
 WHERE course_id = :id;
 

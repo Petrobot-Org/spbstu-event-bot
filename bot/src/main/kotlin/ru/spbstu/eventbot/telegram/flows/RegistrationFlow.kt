@@ -2,6 +2,9 @@ package ru.spbstu.eventbot.telegram.flows
 
 import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
+import ru.spbstu.eventbot.domain.entities.Email
+import ru.spbstu.eventbot.domain.entities.FullName
+import ru.spbstu.eventbot.domain.entities.Group
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
 import ru.spbstu.eventbot.telegram.ChatState
@@ -28,25 +31,16 @@ class RegistrationFlow(
     fun handle(state: ChatState.Registration, setState: (ChatState) -> Unit) {
         val newState = when (state.request) {
             RegistrationRequest.FullName -> {
-                if (!registerStudent.isFullNameValid(text)) {
-                    sendReply(Strings.InvalidName)
-                    return
-                }
-                state.copy(fullName = text)
+                val fullName = FullName.valueOf(text) ?: return sendReply(Strings.InvalidName)
+                state.copy(fullName = fullName)
             }
             RegistrationRequest.Email -> {
-                if (!registerStudent.isEmailValid(text)) {
-                    sendReply(Strings.InvalidEmail)
-                    return
-                }
-                state.copy(email = text)
+                val email = Email.valueOf(text) ?: return sendReply(Strings.InvalidEmail)
+                state.copy(email = email)
             }
             RegistrationRequest.Group -> {
-                if (!registerStudent.isGroupValid(text)) {
-                    sendReply(Strings.InvalidGroup)
-                    return
-                }
-                state.copy(group = text)
+                val group = Group.valueOf(text) ?: return sendReply(Strings.InvalidGroup)
+                state.copy(group = group)
             }
             RegistrationRequest.Confirm -> {
                 handleConfirmation(state, setState)
@@ -64,17 +58,9 @@ class RegistrationFlow(
     ) {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
-                val result = registerStudent(state.fullName!!, state.email!!, state.group!!)
-                when (result) {
-                    RegisterStudentUseCase.Result.OK -> {
-                        setState(ChatState.Empty)
-                        sendReply(Strings.RegisteredSuccessfully)
-                    }
-                    RegisterStudentUseCase.Result.InvalidArguments -> {
-                        sendReply(Strings.RegistrationErrorRetry)
-                        start(setState)
-                    }
-                }
+                registerStudent(state.fullName!!, state.email!!, state.group!!)
+                setState(ChatState.Empty)
+                sendReply(Strings.RegisteredSuccessfully)
             }
             in Strings.NegativeAnswers -> {
                 sendReply(Strings.RegistrationRetry)

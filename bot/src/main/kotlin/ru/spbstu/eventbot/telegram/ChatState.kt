@@ -1,21 +1,21 @@
 package ru.spbstu.eventbot.telegram
 
-import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
+import ru.spbstu.eventbot.domain.entities.*
 import java.time.Instant
 
 sealed interface ChatState {
     object Empty : ChatState
     data class Registration(
         val request: RegistrationRequest,
-        val fullName: String? = null,
-        val email: String? = null,
-        val group: String? = null
+        val fullName: FullName? = null,
+        val email: Email? = null,
+        val group: Group? = null
     ) : ChatState
 
     data class ClientRegistration(
         val request: ClientRegistrationRequest,
-        val name: String? = null,
-        val email: String? = null,
+        val name: ClientName? = null,
+        val email: Email? = null,
         val userId: Long? = null
     ) : ChatState
 

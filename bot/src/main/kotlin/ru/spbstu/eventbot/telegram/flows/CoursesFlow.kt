@@ -18,7 +18,7 @@ class CoursesFlow(
     private val isApplicationSubmitted: IsApplicationSubmittedUseCase,
     private val getCourseById: GetCourseByIdUseCase,
     private val submitApplication: SubmitApplicationUseCase,
-    private val getApplicants: GetApplicantsByCourseIdUseCase,
+    private val getApplicants: GetApplicationsByCourseIdUseCase,
     private val revokeApplication: RevokeApplicationUseCase,
     private val getClientCourses: GetClientCoursesUseCase,
     private val registrationFlow: RegistrationFlow
@@ -139,18 +139,18 @@ class CoursesFlow(
     fun applicantsInfo(courseId: Long) {
         val result = getApplicants(courseId)
         when (result) {
-            is GetApplicantsByCourseIdUseCase.Result.OK -> {
-                if (result.applicants.isEmpty()) {
+            is GetApplicationsByCourseIdUseCase.Result.OK -> {
+                if (result.applications.isEmpty()) {
                     sendReply(Strings.NoApplicants)
                     return
                 }
                 sendReply(
-                    text = Strings.applicantsInfo(result.applicants),
+                    text = Strings.applicantsInfo(result.applications),
                     parseMode = ParseMode.MARKDOWN
                 )
             }
-            GetApplicantsByCourseIdUseCase.Result.NoSuchCourse -> sendReply(Strings.NoSuchCourse)
-            GetApplicantsByCourseIdUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
+            GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> sendReply(Strings.NoSuchCourse)
+            GetApplicationsByCourseIdUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
         }
     }
 

@@ -1,16 +1,17 @@
 package ru.spbstu.eventbot.domain.usecases
 
+import ru.spbstu.eventbot.domain.entities.Application
 import ru.spbstu.eventbot.domain.entities.Student
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 
-class GetApplicantsByCourseIdUseCase(
+class GetApplicationsByCourseIdUseCase(
     private val applicationRepository: ApplicationRepository,
     private val courseRepository: CourseRepository
 ) {
     sealed interface Result {
-        data class OK(val applicants: List<Student>) : Result
+        data class OK(val applications: List<Application>) : Result
         object NoSuchCourse : Result
         object Unauthorized : Result
     }
@@ -22,6 +23,6 @@ class GetApplicantsByCourseIdUseCase(
         if (!isPermitted) {
             return Result.Unauthorized
         }
-        return Result.OK(applicationRepository.getListOfApplicants(courseId))
+        return Result.OK(applicationRepository.getApplications(courseId))
     }
 }
