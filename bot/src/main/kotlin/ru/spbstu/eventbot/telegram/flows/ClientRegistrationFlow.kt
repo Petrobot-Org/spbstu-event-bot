@@ -81,7 +81,7 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
                         sendReply(Strings.ClientRegisteredSuccessfully)
                     }
                     RegisterClientUseCase.Result.InvalidArguments -> {
-                        sendReply(Strings.ClientRegistrationErrorRetry)
+                        sendReply(Strings.RegistrationErrorRetry)
                         start(setState)
                     }
                     RegisterClientUseCase.Result.Unauthorized -> {
@@ -91,7 +91,7 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
                 }
             }
             in Strings.NegativeAnswers -> {
-                sendReply(Strings.ClientRegistrationRetry)
+                sendReply(Strings.RegistrationRetry)
                 start(setState)
             }
             else -> {
