@@ -19,12 +19,16 @@ class SubmitApplicationUseCase(
         object NotRegistered : Result
         object AlreadySubmitted : Result
         object NoSuchCourse : Result
+        data class AdditionalInfoRequired(val question: String) : Result
     }
 
     context(Permissions)
-    operator fun invoke(courseId: Long): Result {
+    operator fun invoke(courseId: Long, additionalInfo: String? = null): Result {
         val student = studentRepository.findByChatId(chatId) ?: return Result.NotRegistered
         val course = courseRepository.getById(courseId) ?: return Result.NoSuchCourse
+        if (course.additionalQuestion.value != null && additionalInfo == null) {
+            return Result.AdditionalInfoRequired(course.additionalQuestion.value)
+        }
         val timeNow: Instant = Instant.now()
         if (timeNow.isAfter(course.expiryDate)) {
             return Result.Expired
@@ -32,7 +36,7 @@ class SubmitApplicationUseCase(
         if (applicationRepository.contains(student.id, courseId)) {
             return Result.AlreadySubmitted
         }
-        applicationRepository.insert(studentId = student.id, courseId = courseId)
+        applicationRepository.insert(studentId = student.id, courseId = courseId, additionalInfo = additionalInfo)
         return Result.OK
     }
 }
