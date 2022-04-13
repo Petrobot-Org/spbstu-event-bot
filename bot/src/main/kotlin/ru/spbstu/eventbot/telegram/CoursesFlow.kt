@@ -67,12 +67,10 @@ fun CallbackQueryHandlerEnvironment.revoke(
     revokeApplication: RevokeApplicationUseCase,
     isApplicationSubmitted: IsApplicationSubmittedUseCase
 ) {
-    val info = when (revokeApplication(courseId)) {
-        is RevokeApplicationUseCase.Result.OK -> {
-            null
-        }
+    when (revokeApplication(courseId)) {
+        is RevokeApplicationUseCase.Result.OK -> {}
         RevokeApplicationUseCase.Result.NotRegistered -> {
-            Strings.NotRegistered
+            sendReply(Strings.NotRegistered)
         }
     }
     bot.editMessageReplyMarkup(
@@ -80,7 +78,6 @@ fun CallbackQueryHandlerEnvironment.revoke(
         messageId = callbackQuery.message?.messageId,
         replyMarkup = detailsReplyMarkup(courseId, isApplicationSubmitted)
     )
-    info?.let { sendReply(text = it) }
 }
 
 context(Permissions)
