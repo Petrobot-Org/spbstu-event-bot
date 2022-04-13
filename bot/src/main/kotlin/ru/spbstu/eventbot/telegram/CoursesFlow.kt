@@ -37,16 +37,9 @@ fun CallbackQueryHandlerEnvironment.apply(
     courseId: Long,
     setState: (ChatState) -> Unit,
     submitApplicationUseCase: SubmitApplicationUseCase,
-    isApplicationSubmitted: IsApplicationSubmittedUseCase,
-    getCourseById: GetCourseByIdUseCase
+    isApplicationSubmitted: IsApplicationSubmittedUseCase
 ) {
-    val course = getCourseById(courseId) ?: return sendReply(Strings.CourseNotFound)
-    course.additionalQuestion.value?.let { question ->
-        sendReply(question)
-        setState(ChatState.AdditionalInfoRequested(courseId, callbackQuery.message?.messageId))
-        return
-    }
-    when (submitApplicationUseCase.invoke(courseId)) {
+    when (val result = submitApplicationUseCase.invoke(courseId)) {
         is SubmitApplicationUseCase.Result.OK -> {}
         is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
             sendReply(Strings.AlreadyApplied)
@@ -60,8 +53,9 @@ fun CallbackQueryHandlerEnvironment.apply(
         is SubmitApplicationUseCase.Result.NoSuchCourse -> {
             sendReply(Strings.CourseNotFound)
         }
-        SubmitApplicationUseCase.Result.AdditionalInfoRequired -> {
-            sendReply(Strings.AdditionalInfoRequired)
+        is SubmitApplicationUseCase.Result.AdditionalInfoRequired -> {
+            sendReply(result.question)
+            setState(ChatState.AdditionalInfoRequested(courseId, callbackQuery.message?.messageId))
         }
     }
     bot.editMessageReplyMarkup(
@@ -79,7 +73,8 @@ fun TextHandlerEnvironment.handleAdditionalInfo(
     submitApplicationUseCase: SubmitApplicationUseCase,
     isApplicationSubmitted: IsApplicationSubmittedUseCase
 ) {
-    when (submitApplicationUseCase(state.courseId, text)) {
+    setState(ChatState.Empty)
+    when (val result = submitApplicationUseCase(state.courseId, text)) {
         is SubmitApplicationUseCase.Result.OK -> {}
         is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
             sendReply(Strings.AlreadyApplied)
@@ -93,8 +88,9 @@ fun TextHandlerEnvironment.handleAdditionalInfo(
         is SubmitApplicationUseCase.Result.NoSuchCourse -> {
             sendReply(Strings.CourseNotFound)
         }
-        SubmitApplicationUseCase.Result.AdditionalInfoRequired -> {
-            sendReply(Strings.AdditionalInfoRequired)
+        is SubmitApplicationUseCase.Result.AdditionalInfoRequired -> {
+            sendReply(result.question)
+            setState(state)
         }
     }
     bot.editMessageReplyMarkup(

@@ -1,10 +1,12 @@
 package ru.spbstu.eventbot.domain.usecases
 
+import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.ClientRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
+import ru.spbstu.eventbot.telegram.NewCourseCreationRequest
 import java.time.Instant
 
 class SubmitApplicationUseCase(
@@ -19,7 +21,7 @@ class SubmitApplicationUseCase(
         object NotRegistered : Result
         object AlreadySubmitted : Result
         object NoSuchCourse : Result
-        object AdditionalInfoRequired : Result
+        data class AdditionalInfoRequired(val question: String) : Result
     }
 
     context(Permissions)
@@ -27,7 +29,7 @@ class SubmitApplicationUseCase(
         val student = studentRepository.findByChatId(chatId) ?: return Result.NotRegistered
         val course = courseRepository.getById(courseId) ?: return Result.NoSuchCourse
         if (course.additionalQuestion.value != null && additionalInfo == null) {
-            return Result.AdditionalInfoRequired
+            return Result.AdditionalInfoRequired(course.additionalQuestion.value)
         }
         val timeNow: Instant = Instant.now()
         if (timeNow.isAfter(course.expiryDate)) {

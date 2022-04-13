@@ -55,7 +55,6 @@ object Strings {
     const val CourseExpired = "Время на приём заявок истекло"
     const val NotRegistered = "Вы не зарегистрированы"
     const val CourseNotFound = "Такого курса нет"
-    const val AdditionalInfoRequired = "Требуется дополнительная информация"
 
     const val ButtonCourses = "Курсы"
     const val ButtonRegister = "Регистрация"
