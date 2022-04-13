@@ -25,6 +25,8 @@ class Bot : KoinComponent {
     private val registerClient: RegisterClientUseCase by inject()
     private val getPermissions: GetPermissionsUseCase by inject()
     private val getMyClients: GetMyClientsUseCase by inject()
+    private val revokeApplication: RevokeApplicationUseCase by inject()
+    private val isApplicationSubmitted: IsApplicationSubmittedUseCase by inject()
     private val zone: ZoneId by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
@@ -71,9 +73,10 @@ class Bot : KoinComponent {
         val command = tokens[0]
         val arg = tokens[1]
         when (command) {
-            "details" -> courseDetails(arg.toLong(), getCourseById)
+            "details" -> courseDetails(arg.toLong(), getCourseById, isApplicationSubmitted)
+            "apply" -> apply(arg.toLong(), setState, submitApplication, isApplicationSubmitted)
+            "revoke" -> revoke(arg.toLong(), revokeApplication, isApplicationSubmitted)
             "applicants" -> applicantsInfo(arg.toLong(), getApplicants)
-            "apply" -> TODO("Handle submit application callback")
             "newcourse" -> startCourseCreation(arg.toLong(), setState)
         }
     }
@@ -101,6 +104,7 @@ class Bot : KoinComponent {
             is ChatState.Registration -> handleRegistration(state, setNewState, registerStudent)
             is ChatState.ClientRegistration -> handleClientRegistration(state, setNewState, registerClient)
             is ChatState.NewCourseCreation -> handleNewCourseCreation(state, setNewState, createNewCourse, getMyClients, zone)
+            is ChatState.AdditionalInfoRequested -> handleAdditionalInfo(state, setNewState, submitApplication, isApplicationSubmitted)
         }
     }
 }
