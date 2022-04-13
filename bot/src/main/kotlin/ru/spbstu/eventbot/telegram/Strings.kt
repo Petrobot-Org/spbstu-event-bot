@@ -50,7 +50,6 @@ object Strings {
     const val HelpCommands = "I help you!"
     const val HelpStart = "I help you for start work with me!"
 
-    const val AppliedSuccessfully = "Заявка отправлена"
     const val AlreadyApplied = "Заявка уже отправлена"
     const val CourseExpired = "Время на приём заявок истекло"
     const val NotRegistered = "Вы не зарегистрированы"
