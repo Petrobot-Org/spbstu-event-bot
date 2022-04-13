@@ -45,9 +45,16 @@ object Strings {
     const val NoSuchClient = "Этого клиента не существует"
     const val NoApplicants = "Никто ещё не подал заявку на этот курс"
     const val SubmitApplication = "✅ Записаться"
+    const val RevokeApplication = "❌ Отозвать запись"
 
     const val HelpCommands = "I help you!"
     const val HelpStart = "I help you for start work with me!"
+
+    const val AlreadyApplied = "Заявка уже отправлена"
+    const val CourseExpired = "Время на приём заявок истекло"
+    const val NotRegistered = "Вы не зарегистрированы"
+    const val CourseNotFound = "Такого курса нет"
+    const val AdditionalInfoRequired = "Требуется дополнительная информация"
 
     const val ButtonCourses = "Курсы"
     const val ButtonRegister = "Регистрация"

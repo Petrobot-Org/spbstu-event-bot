@@ -10,22 +10,17 @@ import com.github.kotlintelegrambot.logging.LogLevel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.permissions.Permissions
-import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
 import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
+import ru.spbstu.eventbot.telegram.flows.CoursesFlow
 import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
 
 class Bot : KoinComponent {
-    private val submitApplication: SubmitApplicationUseCase by inject()
-    private val getAvailableCourses: GetAvailableCoursesUseCase by inject()
-    private val getAvailableCoursesByClientId: GetClientCoursesUseCase by inject()
-    private val getCourseById: GetCourseByIdUseCase by inject()
-    private val getApplicants: GetApplicantsByCourseIdUseCase by inject()
-
     private val providePermissions: ProvidePermissions by inject()
     private val registrationFlow: RegistrationFlow by inject()
     private val courseCreationFlow: CourseCreationFlow by inject()
     private val clientRegistrationFlow: ClientRegistrationFlow by inject()
+    private val coursesFlow: CoursesFlow by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
 
@@ -63,9 +58,10 @@ class Bot : KoinComponent {
         val command = tokens[0]
         val arg = tokens[1]
         when (command) {
-            "details" -> courseDetails(arg.toLong(), getCourseById)
-            "applicants" -> applicantsInfo(arg.toLong(), getApplicants)
-            "apply" -> TODO("Handle submit application callback")
+            "details" -> coursesFlow.details(arg.toLong())
+            "apply" -> coursesFlow.apply(arg.toLong(), setState)
+            "revoke" -> coursesFlow.revoke(arg.toLong())
+            "applicants" -> coursesFlow.applicantsInfo(arg.toLong())
             "newcourse" -> courseCreationFlow.onClientSelected(arg.toLong(), setState)
         }
     }
@@ -76,12 +72,12 @@ class Bot : KoinComponent {
             "/register", Strings.ButtonRegister -> registrationFlow.start(setState)
             "/help" -> writeHelp()
             "/start" -> writeStart()
-            "/courses", Strings.ButtonCourses -> displayCourses(getAvailableCourses)
+            "/courses", Strings.ButtonCourses -> coursesFlow.display()
             "/newclient", Strings.ButtonNewClient -> require(canModifyClients) {
                 clientRegistrationFlow.start(setState)
             }
             "/getapplicants" -> require(canAccessAnyCourse || canAccessTheirCourse) {
-                displayApplicants(getAvailableCoursesByClientId)
+                coursesFlow.displayApplicants()
             }
             "/newcourse", Strings.ButtonNewCourse -> require(canAccessAnyCourse || canAccessTheirCourse) {
                 courseCreationFlow.start()
@@ -97,6 +93,7 @@ class Bot : KoinComponent {
             is ChatState.Registration -> registrationFlow.handle(state, setState)
             is ChatState.ClientRegistration -> clientRegistrationFlow.handle(state, setState)
             is ChatState.NewCourseCreation -> courseCreationFlow.handle(state, setState)
+            is ChatState.AdditionalInfoRequested -> coursesFlow.handleAdditionalInfo(state, setState)
         }
     }
 }

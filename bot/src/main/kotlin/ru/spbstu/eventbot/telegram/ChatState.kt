@@ -27,6 +27,11 @@ sealed interface ChatState {
         val additionalQuestion: AdditionalQuestion? = null,
         val expiryDate: Instant? = null
     ) : ChatState
+
+    data class AdditionalInfoRequested(
+        val courseId: Long,
+        val messageId: Long?
+    ) : ChatState
 }
 
 sealed interface RegistrationRequest {

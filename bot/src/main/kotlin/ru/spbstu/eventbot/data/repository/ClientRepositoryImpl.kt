@@ -15,7 +15,7 @@ class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository
     }
 
     override fun contains(userId: Long): Boolean {
-        return database.clientQueries.containsUserId(userId).executeAsOne() == 1L
+        return database.clientQueries.containsUserId(userId).executeAsOne() >= 1L
     }
 
     override fun getByUserId(userId: Long): List<Client> {

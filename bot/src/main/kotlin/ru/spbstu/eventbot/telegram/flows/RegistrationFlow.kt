@@ -1,5 +1,6 @@
 package ru.spbstu.eventbot.telegram.flows
 
+import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
@@ -12,6 +13,12 @@ class RegistrationFlow(
     private val registerStudent: RegisterStudentUseCase
 ) {
     context(TextHandlerEnvironment)
+    fun start(setState: (ChatState) -> Unit) {
+        setState(ChatState.Registration(RegistrationRequest.FullName))
+        sendReply(Strings.RequestName)
+    }
+
+    context(CallbackQueryHandlerEnvironment)
     fun start(setState: (ChatState) -> Unit) {
         setState(ChatState.Registration(RegistrationRequest.FullName))
         sendReply(Strings.RequestName)
