@@ -9,8 +9,8 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
         Student(id, chatId, email, fullName, group)
     }
 
-    override fun insert(studentId: Long, courseId: Long) {
-        database.applicationQueries.insert(studentId, courseId)
+    override fun insert(studentId: Long, courseId: Long, additionalInfo: String?) {
+        database.applicationQueries.insert(studentId, courseId, additionalInfo)
     }
 
     override fun contains(studentId: Long, courseId: Long): Boolean {

@@ -2,6 +2,7 @@ package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.Course
 import ru.spbstu.eventbot.domain.entities.Student
+import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -54,6 +55,7 @@ object Strings {
     const val CourseExpired = "Время на приём заявок истекло"
     const val NotRegistered = "Вы не зарегистрированы"
     const val CourseNotFound = "Такого курса нет"
+    const val AdditionalInfoRequired = "Требуется дополнительная информация"
 
     const val ButtonCourses = "Курсы"
     const val ButtonRegister = "Регистрация"

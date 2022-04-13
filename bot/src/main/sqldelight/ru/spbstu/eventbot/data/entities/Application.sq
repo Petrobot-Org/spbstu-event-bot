@@ -9,8 +9,8 @@ CREATE TABLE Application (
 );
 
 insert:
-INSERT INTO Application(student_id, course_id)
-VALUES (:studentId, :courseId);
+INSERT INTO Application(student_id, course_id, additional_info)
+VALUES (:studentId, :courseId, :additionalInfo);
 
 contains:
 SELECT COUNT(1) FROM Application

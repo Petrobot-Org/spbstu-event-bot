@@ -37,8 +37,15 @@ fun CallbackQueryHandlerEnvironment.apply(
     courseId: Long,
     setState: (ChatState) -> Unit,
     submitApplicationUseCase: SubmitApplicationUseCase,
-    isApplicationSubmitted: IsApplicationSubmittedUseCase
+    isApplicationSubmitted: IsApplicationSubmittedUseCase,
+    getCourseById: GetCourseByIdUseCase
 ) {
+    val course = getCourseById(courseId) ?: return sendReply(Strings.CourseNotFound)
+    course.additionalQuestion.value?.let { question ->
+        sendReply(question)
+        setState(ChatState.AdditionalInfoRequested(courseId, callbackQuery.message?.messageId))
+        return
+    }
     when (submitApplicationUseCase.invoke(courseId)) {
         is SubmitApplicationUseCase.Result.OK -> {}
         is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
@@ -53,11 +60,47 @@ fun CallbackQueryHandlerEnvironment.apply(
         is SubmitApplicationUseCase.Result.NoSuchCourse -> {
             sendReply(Strings.CourseNotFound)
         }
+        SubmitApplicationUseCase.Result.AdditionalInfoRequired -> {
+            sendReply(Strings.AdditionalInfoRequired)
+        }
     }
     bot.editMessageReplyMarkup(
         chatId = ChatId.fromId(chatId),
         messageId = callbackQuery.message?.messageId,
         replyMarkup = detailsReplyMarkup(courseId, isApplicationSubmitted)
+    )
+}
+
+// TODO: Deal with code duplication
+context(Permissions)
+fun TextHandlerEnvironment.handleAdditionalInfo(
+    state: ChatState.AdditionalInfoRequested,
+    setState: (ChatState) -> Unit,
+    submitApplicationUseCase: SubmitApplicationUseCase,
+    isApplicationSubmitted: IsApplicationSubmittedUseCase
+) {
+    when (submitApplicationUseCase(state.courseId, text)) {
+        is SubmitApplicationUseCase.Result.OK -> {}
+        is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
+            sendReply(Strings.AlreadyApplied)
+        }
+        is SubmitApplicationUseCase.Result.Expired -> {
+            sendReply(Strings.CourseExpired)
+        }
+        is SubmitApplicationUseCase.Result.NotRegistered -> {
+            startRegistration(setState)
+        }
+        is SubmitApplicationUseCase.Result.NoSuchCourse -> {
+            sendReply(Strings.CourseNotFound)
+        }
+        SubmitApplicationUseCase.Result.AdditionalInfoRequired -> {
+            sendReply(Strings.AdditionalInfoRequired)
+        }
+    }
+    bot.editMessageReplyMarkup(
+        chatId = ChatId.fromId(chatId),
+        messageId = state.messageId,
+        replyMarkup = detailsReplyMarkup(state.courseId, isApplicationSubmitted)
     )
 }
 
