@@ -27,12 +27,11 @@ fun TextHandlerEnvironment.writeStart() {
         if (operatorButtons.isNotEmpty()) add(operatorButtons)
     }
     sendReply(
-        text =  HelpStart,
+        text = HelpStart,
         parseMode = ParseMode.MARKDOWN,
         replyMarkup = KeyboardReplyMarkup(
             keyboard = keyboard,
             resizeKeyboard = true
         )
-
     )
 }

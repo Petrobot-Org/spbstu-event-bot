@@ -6,7 +6,8 @@ import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.ReplyMarkup
 
-fun TextHandlerEnvironment.sendReply(
+context(TextHandlerEnvironment)
+fun sendReply(
     text: String,
     parseMode: ParseMode? = null,
     disableWebPagePreview: Boolean? = null,
@@ -27,7 +28,8 @@ fun TextHandlerEnvironment.sendReply(
     )
 }
 
-fun CallbackQueryHandlerEnvironment.sendReply(
+context(CallbackQueryHandlerEnvironment)
+fun sendReply(
     text: String,
     parseMode: ParseMode? = null,
     disableWebPagePreview: Boolean? = null,
@@ -48,7 +50,8 @@ fun CallbackQueryHandlerEnvironment.sendReply(
     )
 }
 
-fun TextHandlerEnvironment.require(condition: Boolean, action: TextHandlerEnvironment.() -> Unit) {
+context(TextHandlerEnvironment)
+fun require(condition: Boolean, action: () -> Unit) {
     if (condition) {
         action()
     } else {
@@ -56,7 +59,8 @@ fun TextHandlerEnvironment.require(condition: Boolean, action: TextHandlerEnviro
     }
 }
 
-fun CallbackQueryHandlerEnvironment.require(condition: Boolean, action: CallbackQueryHandlerEnvironment.() -> Unit) {
+context(CallbackQueryHandlerEnvironment)
+fun require(condition: Boolean, action: () -> Unit) {
     if (condition) {
         action()
     } else {

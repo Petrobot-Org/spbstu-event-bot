@@ -3,6 +3,7 @@ package ru.spbstu.eventbot
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import org.koin.core.context.startKoin
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import ru.spbstu.eventbot.data.adapter.DateAdapter
 import ru.spbstu.eventbot.data.entities.Course
@@ -18,11 +19,17 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
+import ru.spbstu.eventbot.telegram.ProvidePermissions
+import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
+import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
+import ru.spbstu.eventbot.telegram.flows.CoursesFlow
+import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
 import java.sql.SQLException
 
 val mainModule = module {
     val appConfig = appConfig()
     single { appConfig.zone }
+    single { appConfig.operators }
     single<SqlDriver> {
         JdbcSqliteDriver(appConfig.jdbcString).also {
             try {
@@ -44,18 +51,23 @@ val mainModule = module {
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
     single<ClientRepository> { ClientRepositoryImpl(get()) }
     single<CourseRepository> { CourseRepositoryImpl(get()) }
-    single { SubmitApplicationUseCase(get(), get(), get(), get()) }
-    single { RevokeApplicationUseCase(get(), get()) }
-    single { IsApplicationSubmittedUseCase(get(), get()) }
-    single { RegisterStudentUseCase(get()) }
-    single { GetAvailableCoursesUseCase(get()) }
-    single { GetCourseByIdUseCase(get()) }
-    single { RegisterClientUseCase(get()) }
-    single { GetApplicantsByCourseIdUseCase(get(), get()) }
-    single { GetClientCoursesUseCase(get()) }
-    single { CreateNewCourseUseCase(get(), get()) }
-    single { GetMyClientsUseCase(get()) }
-    single { GetPermissionsUseCase(appConfig.operators, get()) }
+    singleOf(::SubmitApplicationUseCase)
+    singleOf(::RevokeApplicationUseCase)
+    singleOf(::IsApplicationSubmittedUseCase)
+    singleOf(::RegisterStudentUseCase)
+    singleOf(::GetAvailableCoursesUseCase)
+    singleOf(::GetCourseByIdUseCase)
+    singleOf(::RegisterClientUseCase)
+    singleOf(::GetApplicantsByCourseIdUseCase)
+    singleOf(::GetClientCoursesUseCase)
+    singleOf(::CreateNewCourseUseCase)
+    singleOf(::GetMyClientsUseCase)
+    singleOf(::GetPermissionsUseCase)
+    singleOf(::RegistrationFlow)
+    singleOf(::CourseCreationFlow)
+    singleOf(::ClientRegistrationFlow)
+    singleOf(::CoursesFlow)
+    singleOf(::ProvidePermissions)
 }
 
 fun main(args: Array<String>) {
