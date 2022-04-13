@@ -5,6 +5,7 @@ import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
 import com.github.kotlintelegrambot.entities.ParseMode
+import com.github.kotlintelegrambot.entities.ReplyMarkup
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.*
@@ -34,24 +35,23 @@ fun CallbackQueryHandlerEnvironment.courseDetails(
 context(Permissions)
 fun CallbackQueryHandlerEnvironment.apply(
     courseId: Long,
+    setState: (ChatState) -> Unit,
     submitApplicationUseCase: SubmitApplicationUseCase,
     isApplicationSubmitted: IsApplicationSubmittedUseCase
 ) {
-    val info = when (submitApplicationUseCase.invoke(courseId)) {
-        is SubmitApplicationUseCase.Result.OK -> {
-            null
-        }
+    when (submitApplicationUseCase.invoke(courseId)) {
+        is SubmitApplicationUseCase.Result.OK -> {}
         is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
-            Strings.AlreadyApplied
+            sendReply(Strings.AlreadyApplied)
         }
         is SubmitApplicationUseCase.Result.Expired -> {
-            Strings.CourseExpired
+            sendReply(Strings.CourseExpired)
         }
         is SubmitApplicationUseCase.Result.NotRegistered -> {
-            Strings.NotRegistered
+            startRegistration(setState)
         }
         is SubmitApplicationUseCase.Result.NoSuchCourse -> {
-            Strings.CourseNotFound
+            sendReply(Strings.CourseNotFound)
         }
     }
     bot.editMessageReplyMarkup(
@@ -59,7 +59,6 @@ fun CallbackQueryHandlerEnvironment.apply(
         messageId = callbackQuery.message?.messageId,
         replyMarkup = detailsReplyMarkup(courseId, isApplicationSubmitted)
     )
-    info?.let { sendReply(text = it) }
 }
 
 context(Permissions)
@@ -121,19 +120,18 @@ context(Permissions)
 private fun detailsReplyMarkup(
     courseId: Long,
     isApplicationSubmitted: IsApplicationSubmittedUseCase
-) = when (val isSubmitted = isApplicationSubmitted(courseId)) {
-    is IsApplicationSubmittedUseCase.Result.OK -> {
-        if (isSubmitted.value) revokeReplyMarkup(courseId) else applyReplyMarkup(courseId)
+): ReplyMarkup {
+    val button = when (val isSubmitted = isApplicationSubmitted(courseId)) {
+        is IsApplicationSubmittedUseCase.Result.OK -> {
+            if (isSubmitted.value) {
+                InlineKeyboardButton.CallbackData(Strings.RevokeApplication, "revoke $courseId")
+            } else {
+                InlineKeyboardButton.CallbackData(Strings.SubmitApplication, "apply $courseId")
+            }
+        }
+        IsApplicationSubmittedUseCase.Result.NotRegistered -> {
+            InlineKeyboardButton.CallbackData(Strings.NotRegistered, "apply $courseId")
+        }
     }
-    IsApplicationSubmittedUseCase.Result.NotRegistered -> {
-        null
-    }
+    return InlineKeyboardMarkup.createSingleButton(button)
 }
-
-private fun revokeReplyMarkup(courseId: Long) = InlineKeyboardMarkup.createSingleButton(
-    InlineKeyboardButton.CallbackData(Strings.RevokeApplication, "revoke $courseId")
-)
-
-private fun applyReplyMarkup(courseId: Long) = InlineKeyboardMarkup.createSingleButton(
-    InlineKeyboardButton.CallbackData(Strings.SubmitApplication, "apply $courseId")
-)

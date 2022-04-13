@@ -74,7 +74,7 @@ class Bot : KoinComponent {
         val arg = tokens[1]
         when (command) {
             "details" -> courseDetails(arg.toLong(), getCourseById, isApplicationSubmitted)
-            "apply" -> apply(arg.toLong(), submitApplication, isApplicationSubmitted)
+            "apply" -> apply(arg.toLong(), setState, submitApplication, isApplicationSubmitted)
             "revoke" -> revoke(arg.toLong(), revokeApplication, isApplicationSubmitted)
             "applicants" -> applicantsInfo(arg.toLong(), getApplicants)
             "newcourse" -> startCourseCreation(arg.toLong(), setState)

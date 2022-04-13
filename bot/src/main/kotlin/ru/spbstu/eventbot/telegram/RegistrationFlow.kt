@@ -1,8 +1,16 @@
 package ru.spbstu.eventbot.telegram
 
+import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
+
+fun CallbackQueryHandlerEnvironment.startRegistration(
+    setNewState: (ChatState) -> Unit
+) {
+    setNewState(ChatState.Registration(RegistrationRequest.FullName))
+    sendReply(Strings.RequestName)
+}
 
 fun TextHandlerEnvironment.startRegistration(
     setNewState: (ChatState) -> Unit
