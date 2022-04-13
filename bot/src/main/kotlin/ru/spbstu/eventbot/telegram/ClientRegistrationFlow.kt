@@ -88,7 +88,7 @@ private fun TextHandlerEnvironment.handleConfirmation(
                     sendReply(Strings.ClientRegisteredSuccessfully)
                 }
                 RegisterClientUseCase.Result.InvalidArguments -> {
-                    sendReply(Strings.ClientRegistrationErrorRetry)
+                    sendReply(Strings.RegistrationErrorRetry)
                     startClientRegistration(setState)
                 }
                 RegisterClientUseCase.Result.Unauthorized -> {
@@ -98,7 +98,7 @@ private fun TextHandlerEnvironment.handleConfirmation(
             }
         }
         in Strings.NegativeAnswers -> {
-            sendReply(Strings.ClientRegistrationRetry)
+            sendReply(Strings.RegistrationRetry)
             startClientRegistration(setState)
         }
         else -> {
