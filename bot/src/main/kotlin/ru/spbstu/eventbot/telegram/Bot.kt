@@ -38,12 +38,10 @@ class Bot : KoinComponent {
                     }
                 }
                 text {
-                    sendReply("За мной идёт слежка")
-                    println(message.chat.id)
-                    /*providePermissions {
+                    providePermissions {
                         val (state, setState) = state()
                         handleText(state, setState)
-                    }*/
+                    }
                 }
             }
         }
