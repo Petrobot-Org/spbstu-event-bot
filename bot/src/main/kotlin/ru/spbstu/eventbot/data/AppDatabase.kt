@@ -8,9 +8,13 @@ import ru.spbstu.eventbot.data.entities.Course
 import ru.spbstu.eventbot.data.entities.Student
 import ru.spbstu.eventbot.data.source.AppDatabase
 import java.sql.SQLException
+import java.util.*
 
 fun createAppDatabase(jdbcString: String): AppDatabase {
-    val driver = JdbcSqliteDriver(jdbcString).also {
+    val driver = JdbcSqliteDriver(
+        jdbcString,
+        Properties(1).apply { put("foreign_keys", "true") }
+    ).also {
         try {
             AppDatabase.Schema.create(it)
         } catch (e: SQLException) {
