@@ -1,7 +1,7 @@
 package ru.spbstu.eventbot.domain.usecases
 
 import ru.spbstu.eventbot.domain.entities.Application
-import ru.spbstu.eventbot.domain.entities.Student
+import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
@@ -17,7 +17,7 @@ class GetApplicationsByCourseIdUseCase(
     }
 
     context(Permissions)
-    operator fun invoke(courseId: Long): Result {
+    operator fun invoke(courseId: CourseId): Result {
         val course = courseRepository.getById(courseId) ?: return Result.NoSuchCourse
         val isPermitted = canAccessAnyCourse || (canAccessTheirCourse && course.client.userId == userId)
         if (!isPermitted) {

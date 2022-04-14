@@ -7,14 +7,14 @@ import java.time.Instant
 
 class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository {
     private val map =
-        { id: Long,
-            clientId: Long,
-            title: String,
-            description: String,
+        { id: CourseId,
+            clientId: ClientId,
+            title: CourseTitle,
+            description: CourseDescription,
             additionalQuestion: String?,
             expiryDate: Instant?,
             resultsSent: Boolean?,
-            _: Long,
+            _: ClientId,
             email: Email,
             name: ClientName,
             userId: Long? ->
@@ -30,14 +30,14 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         return database.courseQueries.getAvailableCoursesByUserId(Instant.now(), userId, map).executeAsList()
     }
 
-    override fun getById(id: Long): Course? {
+    override fun getById(id: CourseId): Course? {
         return database.courseQueries.getById(id, map).executeAsOneOrNull()
     }
 
     override fun insert(
-        clientId: Long,
-        title: String,
-        description: String,
+        clientId: ClientId,
+        title: CourseTitle,
+        description: CourseDescription,
         additionalQuestion: AdditionalQuestion,
         expiryDate: Instant
     ) {

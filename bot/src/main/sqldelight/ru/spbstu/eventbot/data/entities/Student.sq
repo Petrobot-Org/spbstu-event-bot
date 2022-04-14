@@ -1,9 +1,10 @@
 import ru.spbstu.eventbot.domain.entities.Email;
 import ru.spbstu.eventbot.domain.entities.FullName;
 import ru.spbstu.eventbot.domain.entities.Group;
+import ru.spbstu.eventbot.domain.entities.StudentId;
 
 CREATE TABLE Student (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER AS StudentId PRIMARY KEY AUTOINCREMENT,
     chat_id INTEGER NOT NULL UNIQUE,
     email TEXT AS Email NOT NULL,
     full_name TEXT AS FullName NOT NULL,

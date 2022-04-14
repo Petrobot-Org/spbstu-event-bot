@@ -1,15 +1,14 @@
 package ru.spbstu.eventbot.domain.usecases
 
+import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
-import ru.spbstu.eventbot.domain.repository.ClientRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import java.time.Instant
 
 class SubmitApplicationUseCase(
     private val applicationRepository: ApplicationRepository,
-    private val clientRepository: ClientRepository,
     private val courseRepository: CourseRepository,
     private val studentRepository: StudentRepository
 ) {
@@ -23,7 +22,7 @@ class SubmitApplicationUseCase(
     }
 
     context(Permissions)
-    operator fun invoke(courseId: Long, additionalInfo: String? = null): Result {
+    operator fun invoke(courseId: CourseId, additionalInfo: String? = null): Result {
         val student = studentRepository.findByChatId(chatId) ?: return Result.NotRegistered
         val course = courseRepository.getById(courseId) ?: return Result.NoSuchCourse
         if (course.additionalQuestion.value != null && additionalInfo == null) {

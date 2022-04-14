@@ -9,6 +9,8 @@ import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.spbstu.eventbot.domain.entities.ClientId
+import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
 import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
@@ -36,10 +38,12 @@ class Bot : KoinComponent {
                     }
                 }
                 text {
-                    providePermissions {
+                    sendReply("За мной идёт слежка")
+                    println(message.chat.id)
+                    /*providePermissions {
                         val (state, setState) = state()
                         handleText(state, setState)
-                    }
+                    }*/
                 }
             }
         }
@@ -58,11 +62,15 @@ class Bot : KoinComponent {
         val command = tokens[0]
         val arg = tokens[1]
         when (command) {
-            "details" -> coursesFlow.details(arg.toLong())
-            "apply" -> coursesFlow.apply(arg.toLong(), setState)
-            "revoke" -> coursesFlow.revoke(arg.toLong())
-            "applicants" -> coursesFlow.applicantsInfo(arg.toLong())
-            "newcourse" -> courseCreationFlow.onClientSelected(arg.toLong(), setState)
+            "details" -> coursesFlow.details(CourseId(arg.toLong()))
+            "apply" -> coursesFlow.apply(CourseId(arg.toLong()), setState)
+            "revoke" -> coursesFlow.revoke(CourseId(arg.toLong()))
+            "applicants" -> require(canAccessAnyCourse || canAccessTheirCourse) {
+                coursesFlow.applicantsInfo(CourseId(arg.toLong()))
+            }
+            "newcourse" -> require(canAccessAnyCourse || canAccessTheirCourse) {
+                courseCreationFlow.onClientSelected(ClientId(arg.toLong()), setState)
+            }
         }
     }
 

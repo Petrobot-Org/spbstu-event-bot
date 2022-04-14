@@ -1,10 +1,14 @@
 import java.time.Instant;
+import ru.spbstu.eventbot.domain.entities.ClientId;
+import ru.spbstu.eventbot.domain.entities.CourseDescription;
+import ru.spbstu.eventbot.domain.entities.CourseId;
+import ru.spbstu.eventbot.domain.entities.CourseTitle;
 
 CREATE TABLE Course (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id INTEGER NOT NULL,
-    title TEXT NOT NULL,
-    description TEXT NOT NULL,
+    id INTEGER AS CourseId PRIMARY KEY AUTOINCREMENT,
+    client_id INTEGER AS ClientId NOT NULL,
+    title TEXT AS CourseTitle NOT NULL,
+    description TEXT AS CourseDescription NOT NULL,
     additional_question TEXT,
     expiry_date INTEGER AS Instant NOT NULL,
     results_sent INTEGER AS Boolean NOT NULL,

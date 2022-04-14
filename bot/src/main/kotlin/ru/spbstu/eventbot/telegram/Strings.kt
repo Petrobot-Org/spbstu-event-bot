@@ -85,14 +85,14 @@ object Strings {
     fun clientRegistrationConfirmation(name: ClientName, email: Email, userId: Long?) =
         """|Имя: $name
            |Почта: $email
-           |id: $userId
+           |id: ${userId ?: "нет"}
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant) =
+    fun newCourseCreationConfirmation(title: CourseTitle, description: CourseDescription, additionalQuestion: String?, expiryDate: Instant) =
         """|Название курса: $title
            |Описание курса: $description
-           |Дополнительный вопрос: $additionalQuestion
+           |Дополнительный вопрос: ${additionalQuestion ?: "нет"}
            |Дэдлайн подачи заявки: ${dateTimeFormatter.format(expiryDate)}
            |Верно?
         """.trimMargin()

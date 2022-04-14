@@ -3,7 +3,7 @@ package ru.spbstu.eventbot
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ru.spbstu.eventbot.data.appDatabase
+import ru.spbstu.eventbot.data.createAppDatabase
 import ru.spbstu.eventbot.data.repository.ApplicationRepositoryImpl
 import ru.spbstu.eventbot.data.repository.ClientRepositoryImpl
 import ru.spbstu.eventbot.data.repository.CourseRepositoryImpl
@@ -25,7 +25,7 @@ val mainModule = module {
     val appConfig = appConfig()
     single { appConfig.zone }
     single { appConfig.operators }
-    single { appDatabase(appConfig.jdbcString) }
+    single { createAppDatabase(appConfig.jdbcString) }
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
     single<ClientRepository> { ClientRepositoryImpl(get()) }

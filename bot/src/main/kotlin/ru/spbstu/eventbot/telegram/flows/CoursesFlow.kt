@@ -7,6 +7,7 @@ import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
 import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.ReplyMarkup
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
+import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.ChatState
@@ -27,13 +28,13 @@ class CoursesFlow(
     fun display() {
         val courses = getAvailableCourses()
         val buttons = courses.map {
-            listOf(InlineKeyboardButton.CallbackData(it.title, "details ${it.id}"))
+            listOf(InlineKeyboardButton.CallbackData(it.title.value, "details ${it.id}"))
         }
         sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    fun details(courseId: Long) {
+    fun details(courseId: CourseId) {
         val course = getCourseById(courseId) ?: return sendReply(Strings.NoSuchCourse)
         sendReply(
             text = Strings.courseDetails(course),
@@ -44,7 +45,7 @@ class CoursesFlow(
 
     context(Permissions, CallbackQueryHandlerEnvironment)
     fun apply(
-        courseId: Long,
+        courseId: CourseId,
         setState: (ChatState) -> Unit
     ) {
         when (val result = submitApplication(courseId)) {
@@ -107,7 +108,7 @@ class CoursesFlow(
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    fun revoke(courseId: Long) {
+    fun revoke(courseId: CourseId) {
         when (revokeApplication(courseId)) {
             is RevokeApplicationUseCase.Result.OK -> {}
             RevokeApplicationUseCase.Result.NotRegistered -> {
@@ -123,11 +124,10 @@ class CoursesFlow(
 
     context(Permissions, TextHandlerEnvironment)
     fun displayApplicants() {
-        val result = getClientCourses()
-        when (result) {
+        when (val result = getClientCourses()) {
             is GetClientCoursesUseCase.Result.OK -> {
                 val buttons = result.courses.map {
-                    listOf(InlineKeyboardButton.CallbackData(it.title, "applicants ${it.id}"))
+                    listOf(InlineKeyboardButton.CallbackData(it.title.value, "applicants ${it.id}"))
                 }
                 sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
             }
@@ -136,9 +136,8 @@ class CoursesFlow(
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    fun applicantsInfo(courseId: Long) {
-        val result = getApplicants(courseId)
-        when (result) {
+    fun applicantsInfo(courseId: CourseId) {
+        when (val result = getApplicants(courseId)) {
             is GetApplicationsByCourseIdUseCase.Result.OK -> {
                 if (result.applications.isEmpty()) {
                     sendReply(Strings.NoApplicants)
@@ -155,7 +154,7 @@ class CoursesFlow(
     }
 
     context(Permissions)
-    private fun detailsReplyMarkup(courseId: Long): ReplyMarkup {
+    private fun detailsReplyMarkup(courseId: CourseId): ReplyMarkup {
         val button = when (val isSubmitted = isApplicationSubmitted(courseId)) {
             is IsApplicationSubmittedUseCase.Result.OK -> {
                 if (isSubmitted.value) {

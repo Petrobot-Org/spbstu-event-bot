@@ -21,15 +21,15 @@ sealed interface ChatState {
 
     data class NewCourseCreation(
         val request: NewCourseCreationRequest,
-        val clientId: Long,
-        val title: String? = null,
-        val description: String? = null,
+        val clientId: ClientId,
+        val title: CourseTitle? = null,
+        val description: CourseDescription? = null,
         val additionalQuestion: AdditionalQuestion? = null,
         val expiryDate: Instant? = null
     ) : ChatState
 
     data class AdditionalInfoRequested(
-        val courseId: Long,
+        val courseId: CourseId,
         val messageId: Long?
     ) : ChatState
 }

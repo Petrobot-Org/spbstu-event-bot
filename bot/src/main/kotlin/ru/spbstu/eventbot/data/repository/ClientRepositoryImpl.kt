@@ -2,13 +2,14 @@ package ru.spbstu.eventbot.data.repository
 
 import ru.spbstu.eventbot.data.source.AppDatabase
 import ru.spbstu.eventbot.domain.entities.Client
+import ru.spbstu.eventbot.domain.entities.ClientId
 import ru.spbstu.eventbot.domain.entities.ClientName
 import ru.spbstu.eventbot.domain.entities.Email
 import ru.spbstu.eventbot.domain.repository.ClientRepository
 
 class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository {
     private val map =
-        { id: Long, email: Email, name: ClientName, userId: Long? ->
+        { id: ClientId, email: Email, name: ClientName, userId: Long? ->
             Client(id, email, name, userId)
         }
 
@@ -24,7 +25,7 @@ class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository
         return database.clientQueries.getClientsByUserId(userId, map).executeAsList()
     }
 
-    override fun getById(id: Long): Client? {
+    override fun getById(id: ClientId): Client? {
         return database.clientQueries.getById(id, map).executeAsOneOrNull()
     }
 

@@ -1,7 +1,11 @@
+import ru.spbstu.eventbot.domain.entities.ApplicationId;
+import ru.spbstu.eventbot.domain.entities.CourseId;
+import ru.spbstu.eventbot.domain.entities.StudentId;
+
 CREATE TABLE Application (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    student_id INTEGER NOT NULL,
-    course_id INTEGER NOT NULL,
+    id INTEGER AS ApplicationId PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER AS StudentId NOT NULL,
+    course_id INTEGER AS CourseId NOT NULL,
     additional_info TEXT,
     FOREIGN KEY (student_id) REFERENCES Student (id),
     FOREIGN KEY (course_id) REFERENCES Course (id),

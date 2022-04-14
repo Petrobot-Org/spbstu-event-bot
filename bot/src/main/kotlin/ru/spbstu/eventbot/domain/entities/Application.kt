@@ -1,8 +1,11 @@
 package ru.spbstu.eventbot.domain.entities
 
 data class Application(
-    val id: Long,
+    val id: ApplicationId,
     val student: Student,
-    val courseId: Long,
+    val courseId: CourseId,
     val additionalInfo: String?
 )
+
+@JvmInline
+value class ApplicationId(val value: Long)

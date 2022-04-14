@@ -1,8 +1,9 @@
+import ru.spbstu.eventbot.domain.entities.ClientId;
 import ru.spbstu.eventbot.domain.entities.ClientName;
 import ru.spbstu.eventbot.domain.entities.Email;
 
 CREATE TABLE Client (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER AS ClientId PRIMARY KEY AUTOINCREMENT,
     email TEXT AS Email NOT NULL,
     name TEXT AS ClientName NOT NULL,
     user_id INTEGER

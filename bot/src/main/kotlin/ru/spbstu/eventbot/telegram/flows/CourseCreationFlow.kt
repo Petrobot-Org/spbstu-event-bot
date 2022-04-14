@@ -5,6 +5,9 @@ import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
+import ru.spbstu.eventbot.domain.entities.ClientId
+import ru.spbstu.eventbot.domain.entities.CourseDescription
+import ru.spbstu.eventbot.domain.entities.CourseTitle
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.CreateNewCourseUseCase
 import ru.spbstu.eventbot.domain.usecases.GetMyClientsUseCase
@@ -39,7 +42,7 @@ class CourseCreationFlow(
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    fun onClientSelected(clientId: Long, setState: (ChatState) -> Unit) {
+    fun onClientSelected(clientId: ClientId, setState: (ChatState) -> Unit) {
         setState(ChatState.NewCourseCreation(NewCourseCreationRequest.Title, clientId))
         sendReply(Strings.RequestTitle)
     }
@@ -62,12 +65,14 @@ class CourseCreationFlow(
 
     context(TextHandlerEnvironment)
     private fun handleTitle(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
-        return state.copy(title = text)
+        val title = CourseTitle.valueOf(text)
+        return state.copy(title = title)
     }
 
     context(TextHandlerEnvironment)
     private fun handleDescription(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
-        return state.copy(description = text)
+        val description = CourseDescription.valueOf(text)
+        return state.copy(description = description)
     }
 
     context(TextHandlerEnvironment)

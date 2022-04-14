@@ -70,8 +70,7 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
     private fun handleConfirmation(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
-                val result = registerClient(state.name!!, state.email!!, state.userId)
-                when (result) {
+                when (registerClient(state.name!!, state.email!!, state.userId)) {
                     RegisterClientUseCase.Result.OK -> {
                         setState(ChatState.Empty)
                         sendReply(Strings.ClientRegisteredSuccessfully)
