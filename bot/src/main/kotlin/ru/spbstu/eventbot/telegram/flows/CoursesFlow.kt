@@ -28,7 +28,7 @@ class CoursesFlow(
     fun display() {
         val courses = getAvailableCourses()
         val buttons = courses.map {
-            listOf(InlineKeyboardButton.CallbackData(it.title.value, "details ${it.id}"))
+            listOf(InlineKeyboardButton.CallbackData(it.title.value, "details ${it.id.value}"))
         }
         sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
     }
@@ -127,7 +127,7 @@ class CoursesFlow(
         when (val result = getClientCourses()) {
             is GetClientCoursesUseCase.Result.OK -> {
                 val buttons = result.courses.map {
-                    listOf(InlineKeyboardButton.CallbackData(it.title.value, "applicants ${it.id}"))
+                    listOf(InlineKeyboardButton.CallbackData(it.title.value, "applicants ${it.id.value}"))
                 }
                 sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
             }
@@ -158,13 +158,13 @@ class CoursesFlow(
         val button = when (val isSubmitted = isApplicationSubmitted(courseId)) {
             is IsApplicationSubmittedUseCase.Result.OK -> {
                 if (isSubmitted.value) {
-                    InlineKeyboardButton.CallbackData(Strings.RevokeApplication, "revoke $courseId")
+                    InlineKeyboardButton.CallbackData(Strings.RevokeApplication, "revoke ${courseId.value}")
                 } else {
-                    InlineKeyboardButton.CallbackData(Strings.SubmitApplication, "apply $courseId")
+                    InlineKeyboardButton.CallbackData(Strings.SubmitApplication, "apply ${courseId.value}")
                 }
             }
             IsApplicationSubmittedUseCase.Result.NotRegistered -> {
-                InlineKeyboardButton.CallbackData(Strings.NotRegistered, "apply $courseId")
+                InlineKeyboardButton.CallbackData(Strings.NotRegistered, "apply ${courseId.value}")
             }
         }
         return InlineKeyboardMarkup.createSingleButton(button)

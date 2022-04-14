@@ -30,7 +30,7 @@ class CourseCreationFlow(
         when (val result = getMyClients()) {
             is GetMyClientsUseCase.Result.OK -> {
                 val buttons = result.clients.map {
-                    listOf(InlineKeyboardButton.CallbackData(it.name.value, "newcourse ${it.id}"))
+                    listOf(InlineKeyboardButton.CallbackData(it.name.value, "newcourse ${it.id.value}"))
                 }
                 sendReply(
                     text = Strings.SelectClient,
