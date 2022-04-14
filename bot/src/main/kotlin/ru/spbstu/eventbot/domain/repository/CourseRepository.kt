@@ -7,5 +7,5 @@ interface CourseRepository {
     fun getAvailable(): List<Course>
     fun getById(id: CourseId): Course?
     fun getAvailableCoursesByUserId(userId: Long): List<Course>
-    fun insert(clientId: ClientId, title: CourseTitle, description: CourseDescription, additionalQuestion: AdditionalQuestion, expiryDate: Instant)
+    fun insert(clientId: ClientId, title: CourseTitle, description: CourseDescription, additionalQuestion: AdditionalQuestion, expiryDate: Instant): Boolean
 }

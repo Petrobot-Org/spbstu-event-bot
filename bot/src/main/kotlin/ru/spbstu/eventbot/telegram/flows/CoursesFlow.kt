@@ -66,6 +66,9 @@ class CoursesFlow(
                 sendReply(result.question)
                 setState(ChatState.AdditionalInfoRequested(courseId, callbackQuery.message?.messageId))
             }
+            SubmitApplicationUseCase.Result.Error -> {
+                sendReply(Strings.SubmitError)
+            }
         }
         bot.editMessageReplyMarkup(
             chatId = ChatId.fromId(chatId),
@@ -98,6 +101,9 @@ class CoursesFlow(
             is SubmitApplicationUseCase.Result.AdditionalInfoRequired -> {
                 sendReply(result.question)
                 setState(state)
+            }
+            SubmitApplicationUseCase.Result.Error -> {
+                sendReply(Strings.SubmitError)
             }
         }
         bot.editMessageReplyMarkup(

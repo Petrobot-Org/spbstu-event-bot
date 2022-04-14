@@ -58,9 +58,16 @@ class RegistrationFlow(
     ) {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
-                registerStudent(state.fullName!!, state.email!!, state.group!!)
-                setState(ChatState.Empty)
-                sendReply(Strings.RegisteredSuccessfully)
+                when (registerStudent(state.fullName!!, state.email!!, state.group!!)) {
+                    RegisterStudentUseCase.Result.Error -> {
+                        start(setState)
+                        sendReply(Strings.ErrorRetry)
+                    }
+                    RegisterStudentUseCase.Result.OK -> {
+                        setState(ChatState.Empty)
+                        sendReply(Strings.RegisteredSuccessfully)
+                    }
+                }
             }
             in Strings.NegativeAnswers -> {
                 sendReply(Strings.RegistrationRetry)

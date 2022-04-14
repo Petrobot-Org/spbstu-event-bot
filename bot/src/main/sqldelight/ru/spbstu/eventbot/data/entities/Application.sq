@@ -29,3 +29,6 @@ WHERE course_id = :id;
 delete:
 DELETE FROM Application
 WHERE course_id = :courseId AND student_id = :studentId;
+
+rowsAffected:
+SELECT changes();

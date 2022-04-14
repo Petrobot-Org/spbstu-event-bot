@@ -9,8 +9,11 @@ class StudentRepositoryImpl(private val database: AppDatabase) : StudentReposito
         { id: StudentId, chatId: Long, email: Email, fullName: FullName, group: Group ->
             Student(id, chatId, email, fullName, group)
         }
-    override fun insert(chatId: Long, email: Email, fullName: FullName, group: Group) {
-        database.studentQueries.insert(chatId, email, fullName, group)
+    override fun insert(chatId: Long, email: Email, fullName: FullName, group: Group): Boolean {
+        return database.transactionWithResult {
+            database.studentQueries.insert(chatId, email, fullName, group)
+            database.studentQueries.rowsAffected().executeAsOne() >= 1L
+        }
     }
 
     override fun findByChatId(chatId: Long): Student? {

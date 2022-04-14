@@ -15,9 +15,9 @@ class CreateNewCourseUseCase(
 ) {
     sealed interface Result {
         object OK : Result
-        object InvalidArguments : Result
         object NoSuchClient : Result
         object Unauthorized : Result
+        object Error : Result
     }
 
     context(Permissions)
@@ -33,7 +33,7 @@ class CreateNewCourseUseCase(
         if (!isPermitted) {
             return Result.Unauthorized
         }
-        courseRepository.insert(clientId = clientId, title = title, description = description, additionalQuestion = additionalQuestion, expiryDate = expiryDate)
-        return Result.OK
+        val wasInserted = courseRepository.insert(clientId, title, description, additionalQuestion, expiryDate)
+        return if (wasInserted) Result.OK else Result.Error
     }
 }

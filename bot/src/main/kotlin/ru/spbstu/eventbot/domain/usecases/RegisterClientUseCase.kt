@@ -11,6 +11,7 @@ class RegisterClientUseCase(
     sealed interface Result {
         object OK : Result
         object Unauthorized : Result
+        object Error : Result
     }
 
     context(Permissions)
@@ -18,7 +19,7 @@ class RegisterClientUseCase(
         if (!canModifyClients) {
             return Result.Unauthorized
         }
-        clientRepository.insert(name = name, email = email, userId = userId)
-        return Result.OK
+        val wasInserted = clientRepository.insert(name = name, email = email, userId = userId)
+        return if (wasInserted) Result.OK else Result.Error
     }
 }

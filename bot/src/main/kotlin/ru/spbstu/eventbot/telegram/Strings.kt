@@ -31,7 +31,7 @@ object Strings {
         "почты) требуется дополнительная информация, укажите её в форме вопроса. Если нет, то напишите \"нет\"."
     const val RequestExpiryDate = "Дэдлайн подачи заявок на курс (дд.ММ.гггг чч:мм)"
     const val InvalidDate = "Неправильный формат даты"
-    const val CreationErrorRetry = "Что-то пошло не так. Начинаем заново."
+    const val ErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
 
     const val UnknownCommand = "Неизвестная команда"
@@ -42,6 +42,7 @@ object Strings {
     const val NoApplicants = "Никто ещё не подал заявку на этот курс"
     const val SubmitApplication = "✅ Записаться"
     const val RevokeApplication = "❌ Отозвать запись"
+    const val SubmitError = "Не получилось подать заявку"
 
     const val HelpCommands = "Список доступных команд: \n"
     const val RegisterDescription = " /register - регистрация студентов в боте\n"
