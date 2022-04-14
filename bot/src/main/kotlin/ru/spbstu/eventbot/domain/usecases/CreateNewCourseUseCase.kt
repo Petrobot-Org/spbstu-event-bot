@@ -1,6 +1,9 @@
 package ru.spbstu.eventbot.domain.usecases
 
 import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
+import ru.spbstu.eventbot.domain.entities.ClientId
+import ru.spbstu.eventbot.domain.entities.CourseDescription
+import ru.spbstu.eventbot.domain.entities.CourseTitle
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.repository.ClientRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
@@ -19,9 +22,9 @@ class CreateNewCourseUseCase(
 
     context(Permissions)
     operator fun invoke(
-        clientId: Long,
-        title: String,
-        description: String,
+        clientId: ClientId,
+        title: CourseTitle,
+        description: CourseDescription,
         additionalQuestion: AdditionalQuestion,
         expiryDate: Instant
     ): Result {

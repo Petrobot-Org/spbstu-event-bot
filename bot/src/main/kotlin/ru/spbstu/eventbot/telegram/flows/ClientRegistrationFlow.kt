@@ -1,6 +1,8 @@
 package ru.spbstu.eventbot.telegram.flows
 
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
+import ru.spbstu.eventbot.domain.entities.ClientName
+import ru.spbstu.eventbot.domain.entities.Email
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.RegisterClientUseCase
 import ru.spbstu.eventbot.telegram.ChatState
@@ -32,21 +34,15 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
 
     context(TextHandlerEnvironment)
     private fun handleName(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
-        if (!registerClient.isNameValid(text)) {
-            sendReply(Strings.InvalidClientName)
-            return
-        }
-        setState(state.copy(name = text, request = ClientRegistrationRequest.Email))
+        val name = ClientName.valueOf(text) ?: return sendReply(Strings.InvalidClientName)
+        setState(state.copy(name = name, request = ClientRegistrationRequest.Email))
         sendReply(Strings.RequestClientEmail)
     }
 
     context(TextHandlerEnvironment)
     private fun handleEmail(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
-        if (!registerClient.isEmailValid(text)) {
-            sendReply(Strings.InvalidEmail)
-            return
-        }
-        setState(state.copy(email = text, request = ClientRegistrationRequest.UserId))
+        val email = Email.valueOf(text) ?: return sendReply(Strings.InvalidEmail)
+        setState(state.copy(email = email, request = ClientRegistrationRequest.UserId))
         sendReply(Strings.RequestClientUserId)
     }
 
@@ -74,15 +70,10 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
     private fun handleConfirmation(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
-                val result = registerClient(state.name!!, state.email!!, state.userId)
-                when (result) {
+                when (registerClient(state.name!!, state.email!!, state.userId)) {
                     RegisterClientUseCase.Result.OK -> {
                         setState(ChatState.Empty)
                         sendReply(Strings.ClientRegisteredSuccessfully)
-                    }
-                    RegisterClientUseCase.Result.InvalidArguments -> {
-                        sendReply(Strings.RegistrationErrorRetry)
-                        start(setState)
                     }
                     RegisterClientUseCase.Result.Unauthorized -> {
                         setState(ChatState.Empty)

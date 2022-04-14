@@ -1,24 +1,22 @@
 package ru.spbstu.eventbot.data.repository
 
 import ru.spbstu.eventbot.data.source.AppDatabase
-import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
-import ru.spbstu.eventbot.domain.entities.Client
-import ru.spbstu.eventbot.domain.entities.Course
+import ru.spbstu.eventbot.domain.entities.*
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import java.time.Instant
 
 class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository {
     private val map =
-        { id: Long,
-            clientId: Long,
-            title: String,
-            description: String,
+        { id: CourseId,
+            clientId: ClientId,
+            title: CourseTitle,
+            description: CourseDescription,
             additionalQuestion: String?,
             expiryDate: Instant?,
             resultsSent: Boolean?,
-            _: Long,
-            email: String,
-            name: String,
+            _: ClientId,
+            email: Email,
+            name: ClientName,
             userId: Long? ->
             val client = Client(clientId, email, name, userId)
             Course(id, title, description, AdditionalQuestion(additionalQuestion), client, expiryDate!!, resultsSent!!)
@@ -32,14 +30,14 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         return database.courseQueries.getAvailableCoursesByUserId(Instant.now(), userId, map).executeAsList()
     }
 
-    override fun getById(id: Long): Course? {
+    override fun getById(id: CourseId): Course? {
         return database.courseQueries.getById(id, map).executeAsOneOrNull()
     }
 
     override fun insert(
-        clientId: Long,
-        title: String,
-        description: String,
+        clientId: ClientId,
+        title: CourseTitle,
+        description: CourseDescription,
         additionalQuestion: AdditionalQuestion,
         expiryDate: Instant
     ) {

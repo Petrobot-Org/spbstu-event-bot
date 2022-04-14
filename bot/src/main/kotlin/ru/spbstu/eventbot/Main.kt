@@ -1,17 +1,13 @@
 package ru.spbstu.eventbot
 
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ru.spbstu.eventbot.data.adapter.DateAdapter
-import ru.spbstu.eventbot.data.entities.Course
+import ru.spbstu.eventbot.data.createAppDatabase
 import ru.spbstu.eventbot.data.repository.ApplicationRepositoryImpl
 import ru.spbstu.eventbot.data.repository.ClientRepositoryImpl
 import ru.spbstu.eventbot.data.repository.CourseRepositoryImpl
 import ru.spbstu.eventbot.data.repository.StudentRepositoryImpl
-import ru.spbstu.eventbot.data.source.AppDatabase
 import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.ClientRepository
@@ -24,29 +20,12 @@ import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
 import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
 import ru.spbstu.eventbot.telegram.flows.CoursesFlow
 import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
-import java.sql.SQLException
 
 val mainModule = module {
     val appConfig = appConfig()
     single { appConfig.zone }
     single { appConfig.operators }
-    single<SqlDriver> {
-        JdbcSqliteDriver(appConfig.jdbcString).also {
-            try {
-                AppDatabase.Schema.create(it)
-            } catch (e: SQLException) {
-                println("Schema has already been created")
-            }
-        }
-    }
-    single {
-        AppDatabase(
-            driver = get(),
-            CourseAdapter = Course.Adapter(
-                expiry_dateAdapter = DateAdapter()
-            )
-        )
-    }
+    single { createAppDatabase(appConfig.jdbcString) }
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
     single<ClientRepository> { ClientRepositoryImpl(get()) }
@@ -58,7 +37,7 @@ val mainModule = module {
     singleOf(::GetAvailableCoursesUseCase)
     singleOf(::GetCourseByIdUseCase)
     singleOf(::RegisterClientUseCase)
-    singleOf(::GetApplicantsByCourseIdUseCase)
+    singleOf(::GetApplicationsByCourseIdUseCase)
     singleOf(::GetClientCoursesUseCase)
     singleOf(::CreateNewCourseUseCase)
     singleOf(::GetMyClientsUseCase)

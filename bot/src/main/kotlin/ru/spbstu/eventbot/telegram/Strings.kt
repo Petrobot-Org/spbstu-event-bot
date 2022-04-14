@@ -1,7 +1,6 @@
 package ru.spbstu.eventbot.telegram
 
-import ru.spbstu.eventbot.domain.entities.Course
-import ru.spbstu.eventbot.domain.entities.Student
+import ru.spbstu.eventbot.domain.entities.*
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -15,7 +14,6 @@ object Strings {
     const val RequestEmail = "Теперь нужен адрес электронной почты."
     const val RequestGroup = "Номер группы"
     const val RegistrationRetry = "Тогда начинаем заново"
-    const val RegistrationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val RequestYesNo = "Напишите да или нет"
     const val RegisteredSuccessfully = "Успешная регистрация"
 
@@ -77,42 +75,42 @@ object Strings {
         .ofLocalizedDateTime(FormatStyle.LONG)
         .withZone(ZoneId.systemDefault())
 
-    fun registrationConfirmation(name: String, email: String, group: String) =
+    fun registrationConfirmation(name: FullName, email: Email, group: Group) =
         """|Имя: $name
            |Почта: $email
            |Группа: $group
            |Верно?
         """.trimMargin()
 
-    fun clientRegistrationConfirmation(name: String, email: String, userId: Long?) =
+    fun clientRegistrationConfirmation(name: ClientName, email: Email, userId: Long?) =
         """|Имя: $name
            |Почта: $email
-           |id: $userId
+           |id: ${userId ?: "нет"}
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant) =
+    fun newCourseCreationConfirmation(title: CourseTitle, description: CourseDescription, additionalQuestion: String?, expiryDate: Instant) =
         """|Название курса: $title
            |Описание курса: $description
-           |Дополнительный вопрос: $additionalQuestion
+           |Дополнительный вопрос: ${additionalQuestion ?: "нет"}
            |Дэдлайн подачи заявки: ${dateTimeFormatter.format(expiryDate)}
            |Верно?
         """.trimMargin()
 
     fun courseDetails(course: Course) =
-        """|*${course.title}*
+        """|*${course.title}* от _${course.client.name}_
            |
            |🕒 До ${dateTimeFormatter.format(course.expiryDate)}
            |${course.description}
         """.trimMargin()
 
     // TODO: Убрать (заменить на генерацию CSV файла)
-    fun applicantsInfo(applicants: List<Student>): String {
+    fun applicantsInfo(applications: List<Application>): String {
         var listOfApplicants = ""
-        for (applicant in applicants) {
-            listOfApplicants += """|ФИО студента: ${applicant.fullName}
-           |Группа: ${applicant.group}
-           |Почта: ${applicant.email}
+        for (application in applications) {
+            listOfApplicants += """|ФИО студента: ${application.student.fullName}
+           |Группа: ${application.student.group}
+           |Почта: ${application.student.email}
            |-------------------------- 
             """.trimMargin() // Pochernin-style разделитель строк --------------------------
         }
