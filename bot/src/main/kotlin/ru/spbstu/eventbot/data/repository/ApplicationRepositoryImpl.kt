@@ -32,7 +32,10 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
         return database.applicationQueries.getApplicants(courseId, map).executeAsList()
     }
 
-    override fun delete(studentId: StudentId, courseId: CourseId) {
-        database.applicationQueries.delete(studentId = studentId, courseId = courseId)
+    override fun delete(studentId: StudentId, courseId: CourseId): Boolean {
+        return database.transactionWithResult {
+            database.applicationQueries.delete(studentId = studentId, courseId = courseId)
+            database.applicationQueries.rowsAffected().executeAsOne() >= 1L
+        }
     }
 }

@@ -43,6 +43,7 @@ object Strings {
     const val SubmitApplication = "✅ Записаться"
     const val RevokeApplication = "❌ Отозвать запись"
     const val SubmitError = "Не получилось подать заявку"
+    const val RevokeError = "Не получилось отозвать заявку"
 
     const val HelpCommands = "Список доступных команд: \n"
     const val RegisterDescription = " /register - регистрация студентов в боте\n"

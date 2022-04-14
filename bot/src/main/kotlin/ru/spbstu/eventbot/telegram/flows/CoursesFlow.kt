@@ -116,9 +116,12 @@ class CoursesFlow(
     context(Permissions, CallbackQueryHandlerEnvironment)
     fun revoke(courseId: CourseId) {
         when (revokeApplication(courseId)) {
-            is RevokeApplicationUseCase.Result.OK -> {}
+            RevokeApplicationUseCase.Result.OK -> {}
             RevokeApplicationUseCase.Result.NotRegistered -> {
                 sendReply(Strings.NotRegistered)
+            }
+            RevokeApplicationUseCase.Result.Error -> {
+                sendReply(Strings.RevokeError)
             }
         }
         bot.editMessageReplyMarkup(
