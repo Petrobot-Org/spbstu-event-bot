@@ -6,13 +6,13 @@ import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 
 class ApplicationRepositoryImpl(private val database: AppDatabase) : ApplicationRepository {
     private val map = { id: ApplicationId,
-                        courseId: CourseId,
-                        additionalInfo: String?,
-                        studentId: StudentId,
-                        chatId: Long,
-                        email: Email,
-                        fullName: FullName,
-                        group: Group ->
+        courseId: CourseId,
+        additionalInfo: String?,
+        studentId: StudentId,
+        chatId: Long,
+        email: Email,
+        fullName: FullName,
+        group: Group ->
         val student = Student(studentId, chatId, email, fullName, group)
         Application(id, student, courseId, additionalInfo)
     }

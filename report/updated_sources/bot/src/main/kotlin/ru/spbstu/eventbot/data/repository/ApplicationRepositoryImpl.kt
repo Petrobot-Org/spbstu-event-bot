@@ -5,10 +5,10 @@ import ru.spbstu.eventbot.domain.entities.*
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 
 class ApplicationRepositoryImpl(private val database: AppDatabase) : ApplicationRepository {
-    private val map = { id: Long,
-        courseId: Long,
+    private val map = { id: ApplicationId,
+        courseId: CourseId,
         additionalInfo: String?,
-        studentId: Long,
+        studentId: StudentId,
         chatId: Long,
         email: Email,
         fullName: FullName,
@@ -17,19 +17,19 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
         Application(id, student, courseId, additionalInfo)
     }
 
-    override fun insert(studentId: Long, courseId: Long, additionalInfo: String?) {
+    override fun insert(studentId: StudentId, courseId: CourseId, additionalInfo: String?) {
         database.applicationQueries.insert(studentId, courseId, additionalInfo)
     }
 
-    override fun contains(studentId: Long, courseId: Long): Boolean {
+    override fun contains(studentId: StudentId, courseId: CourseId): Boolean {
         return database.applicationQueries.contains(studentId = studentId, courseId = courseId).executeAsOne() >= 1L
     }
 
-    override fun getApplications(courseId: Long): List<Application> {
+    override fun getApplications(courseId: CourseId): List<Application> {
         return database.applicationQueries.getApplicants(courseId, map).executeAsList()
     }
 
-    override fun delete(studentId: Long, courseId: Long) {
+    override fun delete(studentId: StudentId, courseId: CourseId) {
         database.applicationQueries.delete(studentId = studentId, courseId = courseId)
     }
 }
