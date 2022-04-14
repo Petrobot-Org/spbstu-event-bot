@@ -11,9 +11,13 @@ CREATE TABLE Student (
     group_number TEXT AS Group NOT NULL
 );
 
-insert:
-INSERT OR REPLACE INTO Student(chat_id, email, full_name, group_number)
-VALUES (:chatId, :email, :fullName, :group);
+insert {
+    INSERT OR IGNORE INTO Student(chat_id, email, full_name, group_number)
+    VALUES (:chatId, :email, :fullName, :group);
+
+    UPDATE Student SET email = :email, full_name = :fullName, group_number = :group
+    WHERE chat_id = :chatId;
+}
 
 findByChatId:
 SELECT * FROM Student
