@@ -79,6 +79,10 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
                         setState(ChatState.Empty)
                         sendReply(Strings.UnauthorizedError)
                     }
+                    RegisterClientUseCase.Result.Error -> {
+                        sendReply(Strings.ErrorRetry)
+                        start(setState)
+                    }
                 }
             }
             in Strings.NegativeAnswers -> {

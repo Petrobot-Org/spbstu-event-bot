@@ -13,8 +13,11 @@ class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository
             Client(id, email, name, userId)
         }
 
-    override fun insert(name: ClientName, email: Email, userId: Long?) {
-        database.clientQueries.insert(name = name, email = email, userId = userId)
+    override fun insert(name: ClientName, email: Email, userId: Long?): Boolean {
+        return database.transactionWithResult {
+            database.clientQueries.insert(name = name, email = email, userId = userId)
+            database.clientQueries.rowsAffected().executeAsOne() >= 1L
+        }
     }
 
     override fun contains(userId: Long): Boolean {

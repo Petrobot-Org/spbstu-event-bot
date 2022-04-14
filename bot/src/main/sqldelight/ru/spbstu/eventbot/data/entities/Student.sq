@@ -22,3 +22,6 @@ insert {
 findByChatId:
 SELECT * FROM Student
 WHERE chat_id = :chatId;
+
+rowsAffected:
+SELECT changes();

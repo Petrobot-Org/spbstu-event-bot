@@ -17,8 +17,11 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
         Application(id, student, courseId, additionalInfo)
     }
 
-    override fun insert(studentId: StudentId, courseId: CourseId, additionalInfo: String?) {
-        database.applicationQueries.insert(studentId, courseId, additionalInfo)
+    override fun insert(studentId: StudentId, courseId: CourseId, additionalInfo: String?): Boolean {
+        return database.transactionWithResult {
+            database.applicationQueries.insert(studentId, courseId, additionalInfo)
+            database.applicationQueries.rowsAffected().executeAsOne() >= 1L
+        }
     }
 
     override fun contains(studentId: StudentId, courseId: CourseId): Boolean {
@@ -29,7 +32,10 @@ class ApplicationRepositoryImpl(private val database: AppDatabase) : Application
         return database.applicationQueries.getApplicants(courseId, map).executeAsList()
     }
 
-    override fun delete(studentId: StudentId, courseId: CourseId) {
-        database.applicationQueries.delete(studentId = studentId, courseId = courseId)
+    override fun delete(studentId: StudentId, courseId: CourseId): Boolean {
+        return database.transactionWithResult {
+            database.applicationQueries.delete(studentId = studentId, courseId = courseId)
+            database.applicationQueries.rowsAffected().executeAsOne() >= 1L
+        }
     }
 }

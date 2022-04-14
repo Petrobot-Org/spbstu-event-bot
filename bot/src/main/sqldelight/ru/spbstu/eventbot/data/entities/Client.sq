@@ -27,3 +27,6 @@ WHERE id = :id;
 
 getAll:
 SELECT * FROM Client;
+
+rowsAffected:
+SELECT changes();

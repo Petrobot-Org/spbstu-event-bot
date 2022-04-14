@@ -40,7 +40,10 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         description: CourseDescription,
         additionalQuestion: AdditionalQuestion,
         expiryDate: Instant
-    ) {
-        database.courseQueries.insert(clientId, title, description, additionalQuestion.value, expiryDate)
+    ): Boolean {
+        return database.transactionWithResult {
+            database.courseQueries.insert(clientId, title, description, additionalQuestion.value, expiryDate)
+            database.courseQueries.rowsAffected().executeAsOne() >= 1L
+        }
     }
 }

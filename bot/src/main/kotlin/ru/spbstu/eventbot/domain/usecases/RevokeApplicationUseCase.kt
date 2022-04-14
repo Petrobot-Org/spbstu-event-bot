@@ -11,13 +11,14 @@ class RevokeApplicationUseCase(
 ) {
     sealed interface Result {
         object OK : Result
+        object Error : Result
         object NotRegistered : Result
     }
 
     context(Permissions)
     operator fun invoke(courseId: CourseId): Result {
         val student = studentRepository.findByChatId(chatId) ?: return Result.NotRegistered
-        applicationRepository.delete(studentId = student.id, courseId = courseId)
-        return Result.OK
+        val wasDeleted = applicationRepository.delete(student.id, courseId)
+        return if (wasDeleted) Result.OK else Result.Error
     }
 }

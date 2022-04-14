@@ -66,6 +66,9 @@ class CoursesFlow(
                 sendReply(result.question)
                 setState(ChatState.AdditionalInfoRequested(courseId, callbackQuery.message?.messageId))
             }
+            SubmitApplicationUseCase.Result.Error -> {
+                sendReply(Strings.SubmitError)
+            }
         }
         bot.editMessageReplyMarkup(
             chatId = ChatId.fromId(chatId),
@@ -99,6 +102,9 @@ class CoursesFlow(
                 sendReply(result.question)
                 setState(state)
             }
+            SubmitApplicationUseCase.Result.Error -> {
+                sendReply(Strings.SubmitError)
+            }
         }
         bot.editMessageReplyMarkup(
             chatId = ChatId.fromId(chatId),
@@ -110,9 +116,12 @@ class CoursesFlow(
     context(Permissions, CallbackQueryHandlerEnvironment)
     fun revoke(courseId: CourseId) {
         when (revokeApplication(courseId)) {
-            is RevokeApplicationUseCase.Result.OK -> {}
+            RevokeApplicationUseCase.Result.OK -> {}
             RevokeApplicationUseCase.Result.NotRegistered -> {
                 sendReply(Strings.NotRegistered)
+            }
+            RevokeApplicationUseCase.Result.Error -> {
+                sendReply(Strings.RevokeError)
             }
         }
         bot.editMessageReplyMarkup(

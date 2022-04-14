@@ -18,6 +18,7 @@ class SubmitApplicationUseCase(
         object NotRegistered : Result
         object AlreadySubmitted : Result
         object NoSuchCourse : Result
+        object Error : Result
         data class AdditionalInfoRequired(val question: String) : Result
     }
 
@@ -35,7 +36,11 @@ class SubmitApplicationUseCase(
         if (applicationRepository.contains(student.id, courseId)) {
             return Result.AlreadySubmitted
         }
-        applicationRepository.insert(studentId = student.id, courseId = courseId, additionalInfo = additionalInfo)
-        return Result.OK
+        val wasInserted = applicationRepository.insert(
+            studentId = student.id,
+            courseId = courseId,
+            additionalInfo = additionalInfo
+        )
+        return if (wasInserted) Result.OK else Result.Error
     }
 }

@@ -111,8 +111,8 @@ class CourseCreationFlow(
                         setState(ChatState.Empty)
                         sendReply(Strings.CreatedNewCourseSuccessfully)
                     }
-                    CreateNewCourseUseCase.Result.InvalidArguments -> {
-                        sendReply(Strings.CreationErrorRetry)
+                    CreateNewCourseUseCase.Result.Error -> {
+                        sendReply(Strings.ErrorRetry)
                         start()
                     }
                     CreateNewCourseUseCase.Result.Unauthorized -> {
@@ -126,7 +126,7 @@ class CourseCreationFlow(
                 }
             }
             in Strings.NegativeAnswers -> {
-                sendReply(Strings.CreationErrorRetry)
+                sendReply(Strings.ErrorRetry)
                 start()
             }
             else -> {

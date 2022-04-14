@@ -9,8 +9,14 @@ import ru.spbstu.eventbot.domain.repository.StudentRepository
 class RegisterStudentUseCase(
     private val studentRepository: StudentRepository,
 ) {
+    sealed interface Result {
+        object OK : Result
+        object Error : Result
+    }
+
     context(Permissions)
-    operator fun invoke(fullName: FullName, email: Email, group: Group) {
-        studentRepository.insert(chatId, email, fullName, group)
+    operator fun invoke(fullName: FullName, email: Email, group: Group): Result {
+        val wasInserted = studentRepository.insert(chatId, email, fullName, group)
+        return if (wasInserted) Result.OK else Result.Error
     }
 }
