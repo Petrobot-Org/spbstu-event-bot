@@ -12,6 +12,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.email.sendCourseExpiredEmail
@@ -69,10 +70,12 @@ class Bot : KoinComponent {
     private fun collectExpiredCourses(bot: Bot) {
         coroutineScope.launch {
             getExpiredCourses().collect {
-                val byteArray:ByteArray = createApplicantsTable(it.course.client.id)
-                notifyCourseExpired(it.course, bot, byteArray)
-                sendCourseExpiredEmail(it.course, byteArray)
-                it.markAsSent()
+                with(Permissions.App) {
+                    val byteArray: ByteArray = createApplicantsTable(it.course.client.id)
+                    notifyCourseExpired(it.course, bot, byteArray)
+                    sendCourseExpiredEmail(it.course, byteArray)
+                    it.markAsSent()
+                }
             }
         }
     }

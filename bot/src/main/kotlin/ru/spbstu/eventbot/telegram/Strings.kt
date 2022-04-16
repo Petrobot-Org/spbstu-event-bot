@@ -62,7 +62,7 @@ object Strings {
         .withZone(ZoneId.systemDefault())
 
     fun courseExpiredNotification(course: Course) =
-        """время записи на курс \"${course.title}\" истекло""".trimMargin()
+        """время записи на курс "${course.title}" истекло""".trimMargin()
 
 
     fun registrationConfirmation(name: String, email: String, group: String) =

@@ -10,17 +10,20 @@ import javax.mail.util.ByteArrayDataSource
 
 fun sendCourseExpiredEmail(course: Course, byteArray: ByteArray) {
     val email: MultiPartEmail = MultiPartEmail()
-    email.hostName = "smtp.googlemail.com"
-    email.setSmtpPort(465)
-    email.setAuthenticator(DefaultAuthenticator("username", "password"))
+    email.hostName = "smtp.gmail.com"
+    email.sslSmtpPort = "465"
+    email.setAuthenticator(DefaultAuthenticator("login@gmail.com", "password"))
+    //ПРЕДУПРЕЖДЕНИЕ!!! здесь должны быть реальные данные,
+    //а также в почтовом ящике должны быть оключены несколько слоёв безопасности
     email.isSSLOnConnect = true
-    email.setFrom("user@gmail.com")
+
+    email.setFrom("login@gmail.com")
+    //здесь тоже
     email.setSubject(subject(course))
     email.setMsg(subject(course))
     email.addTo(course.client.email)
 
     val dataSource: DataSource = ByteArrayDataSource(byteArray, "text/csv")
     email.attach(dataSource, "список участников", "")
-
     email.send()
 }

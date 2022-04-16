@@ -1,6 +1,15 @@
 package ru.spbstu.eventbot.domain.permissions
 
 sealed interface Permissions {
+
+    object App : Permissions{
+        override val chatId = 0L
+        override val userId = 0L
+        override val canModifyClients = true
+        override val canAccessAnyCourse = true
+        override val canAccessTheirCourse = true
+    }
+
     data class Operator(override val chatId: Long, override val userId: Long) : Permissions {
         override val canModifyClients = true
         override val canAccessAnyCourse = true
@@ -24,4 +33,7 @@ sealed interface Permissions {
     val canModifyClients: Boolean
     val canAccessAnyCourse: Boolean
     val canAccessTheirCourse: Boolean
+
+
 }
+

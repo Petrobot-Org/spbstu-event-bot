@@ -21,6 +21,7 @@ class GetExpiredCoursesFlowUseCase(
         return courseRepository
             .getEarliestUnsent()
             .distinctUntilChanged()
+            .filterNotNull()
             .mapLatest {
                 val untilExpiration = Instant.now().until(it.expiryDate, ChronoUnit.MILLIS)
                 delay(untilExpiration)
