@@ -1,7 +1,6 @@
 package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.*
-import java.io.File
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -108,9 +107,9 @@ object Strings {
         """.trimMargin()
 
     fun <T> csvOf(
-            headers: List<String>,
-            data: List<T>,
-            itemBuilder: (T) -> List<String>
+        headers: List<String>,
+        data: List<T>,
+        itemBuilder: (T) -> List<String>
     ) = buildString {
         append(headers.joinToString(",") { "\"$it\"" })
         append("\n")
@@ -122,12 +121,11 @@ object Strings {
 
     fun applicantsInfo(applications: List<Application>): String {
         val csv = csvOf(
-                listOf("ФИО студента", "Группа", "Почта", "Доп. информация"),
-                applications
+            listOf("ФИО студента", "Группа", "Почта", "Доп. информация"),
+            applications
         ) {
-            listOf(it.student.fullName.toString(), it.student.group.toString(),it.student.email.toString(), it.additionalInfo.toString())
+            listOf(it.student.fullName.toString(), it.student.group.toString(), it.student.email.toString(), it.additionalInfo.toString())
         }
         return csv
     }
-
 }

@@ -1,7 +1,6 @@
 package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.*
-import java.io.File
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -120,14 +119,13 @@ object Strings {
         }
     }
 
-    fun applicantsInfo(applications: List<Application>) {
+    fun applicantsInfo(applications: List<Application>): String {
         val csv = csvOf(
-            listOf("ФИО студента", "Группа", "Почта"),
+            listOf("ФИО студента", "Группа", "Почта", "Доп. информация"),
             applications
         ) {
-            listOf(it.student.fullName.toString(), it.student.group.toString(), it.student.email.toString())
+            listOf(it.student.fullName.toString(), it.student.group.toString(), it.student.email.toString(), it.additionalInfo.toString())
         }
-        val sd = File("bot/src/main/resources/list.csv") // TODO указать правильно путь
-        sd.writeText(csv)
+        return csv
     }
 }
