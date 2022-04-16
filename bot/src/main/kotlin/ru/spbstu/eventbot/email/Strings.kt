@@ -2,7 +2,14 @@ package ru.spbstu.eventbot.email
 
 import ru.spbstu.eventbot.domain.entities.Course
 
-fun subject(course: Course) =
-    """время записи на курс "${course.title}" истекло""".trimMargin()
-fun message(course: Course) =
-    """время записи на курс "${course.title}" истекло""".trimMargin()
+object Strings {
+    const val ApplicantsTableDescription = "Заявки"
+
+    fun courseExpiredSubject(course: Course) =
+        """Сбор заявок на курс "${course.title}" завершён"""
+
+    fun courseExpiredMessage(course: Course) =
+        """Список заявок на "${course.title}" приложен"""
+
+    fun applicantsTableFilename(course: Course) = course.title.filter { it.isLetterOrDigit() || it.isWhitespace() }
+}

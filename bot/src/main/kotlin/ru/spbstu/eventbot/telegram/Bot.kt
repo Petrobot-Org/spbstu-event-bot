@@ -15,7 +15,7 @@ import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
 import ru.spbstu.eventbot.domain.usecases.*
-import ru.spbstu.eventbot.email.sendCourseExpiredEmail
+import ru.spbstu.eventbot.email.EmailSender
 import java.time.ZoneId
 
 class Bot : KoinComponent {
@@ -32,6 +32,7 @@ class Bot : KoinComponent {
     private val getMyClients: GetMyClientsUseCase by inject()
     private val getExpiredCourses: GetExpiredCoursesFlowUseCase by inject()
     private val createApplicantsTable: CreateApplicantsTable by inject()
+    private val emailSender: EmailSender by inject()
     private val zone: ZoneId by inject()
 
     private val states = mutableMapOf<Long, ChatState>()
@@ -71,9 +72,9 @@ class Bot : KoinComponent {
         coroutineScope.launch {
             getExpiredCourses().collect {
                 with(Permissions.App) {
-                    val byteArray: ByteArray = createApplicantsTable(it.course.client.id)
-                    notifyCourseExpired(it.course, bot, byteArray)
-                    sendCourseExpiredEmail(it.course, byteArray)
+                    val applicantsTable = createApplicantsTable(it.course.client.id)
+                    notifyCourseExpired(it.course, bot, applicantsTable)
+                    emailSender.sendCourseExpired(it.course, applicantsTable)
                     it.markAsSent()
                 }
             }
