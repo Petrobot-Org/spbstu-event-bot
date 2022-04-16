@@ -122,10 +122,10 @@ object Strings {
 
     fun applicantsInfo(applications: List<Application>): String {
         val csv = csvOf(
-                listOf("ФИО студента", "Группа", "Почта"),
+                listOf("ФИО студента", "Группа", "Почта", "Доп. информация"),
                 applications
         ) {
-            listOf(it.student.fullName.toString(), it.student.group.toString(),it.student.email.toString())
+            listOf(it.student.fullName.toString(), it.student.group.toString(),it.student.email.toString(), it.additionalInfo.toString())
         }
         return csv
     }
