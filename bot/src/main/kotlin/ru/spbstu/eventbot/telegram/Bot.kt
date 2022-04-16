@@ -16,6 +16,7 @@ import ru.spbstu.eventbot.domain.entities.ClientId
 import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.GetExpiredCoursesFlowUseCase
+import ru.spbstu.eventbot.email.EmailSender
 import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
 import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
 import ru.spbstu.eventbot.telegram.flows.CoursesFlow
@@ -61,7 +62,7 @@ class Bot : KoinComponent {
         coroutineScope.launch {
             getExpiredCourses().collect {
                 with(Permissions.App) {
-                    val applicantsTable = createApplicantsTable(it.course.client.id)
+                    val applicantsTable = createApplicantsTable(it.course)
                     notifyCourseExpired(it.course, bot, applicantsTable)
                     emailSender.sendCourseExpired(it.course, applicantsTable)
                     it.markAsSent()

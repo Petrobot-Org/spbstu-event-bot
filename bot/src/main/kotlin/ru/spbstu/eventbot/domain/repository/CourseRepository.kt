@@ -11,6 +11,6 @@ interface CourseRepository {
     fun getById(id: CourseId): Course?
     fun getAvailableCoursesByUserId(userId: Long): List<Course>
     fun getEarliestUnsent(): Flow<Course?>
-    fun updateResultsSent(id: Long, value: Boolean)
+    fun updateResultsSent(id: CourseId, value: Boolean)
     fun insert(clientId: ClientId, title: CourseTitle, description: CourseDescription, additionalQuestion: AdditionalQuestion, expiryDate: Instant): Boolean
 }

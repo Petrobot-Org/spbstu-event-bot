@@ -1,7 +1,6 @@
 package ru.spbstu.eventbot.domain.permissions
 
 sealed interface Permissions {
-
     object App : Permissions{
         override val chatId = 0L
         override val userId = 0L
@@ -33,7 +32,4 @@ sealed interface Permissions {
     val canModifyClients: Boolean
     val canAccessAnyCourse: Boolean
     val canAccessTheirCourse: Boolean
-
-
 }
-

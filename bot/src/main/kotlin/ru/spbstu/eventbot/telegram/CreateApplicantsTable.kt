@@ -1,12 +1,15 @@
 package ru.spbstu.eventbot.telegram
 
-import ru.spbstu.eventbot.domain.usecases.GetApplicantsByCourseIdUseCase
+import ru.spbstu.eventbot.domain.entities.Course
 import ru.spbstu.eventbot.domain.permissions.Permissions
+import ru.spbstu.eventbot.domain.usecases.GetApplicationsByCourseIdUseCase
 
-class CreateApplicantsTable(getApplicants: GetApplicantsByCourseIdUseCase) {
+class CreateApplicantsTable(private val getApplicants: GetApplicationsByCourseIdUseCase) {
     context(Permissions)
-    operator fun invoke(clientId: Long): ByteArray {
-        val str: String = "Hello, World!" //доработать здесь
-        return str.encodeToByteArray()
+    operator fun invoke(course: Course): ByteArray {
+        return "Здесь таблица"
+            .split("")
+            .joinToString(", ")
+            .encodeToByteArray()
     }
 }

@@ -15,6 +15,9 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
+import ru.spbstu.eventbot.telegram.ProvidePermissions
+import ru.spbstu.eventbot.telegram.CreateApplicantsTable
+import ru.spbstu.eventbot.telegram.flows.*
 
 val mainModule = module {
     val appConfig = appConfig()

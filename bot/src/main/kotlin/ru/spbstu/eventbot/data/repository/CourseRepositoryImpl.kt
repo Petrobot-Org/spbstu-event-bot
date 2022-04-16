@@ -55,7 +55,7 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         }
     }
 
-    override fun updateResultsSent(id: Long, value: Boolean) {
+    override fun updateResultsSent(id: CourseId, value: Boolean) {
         database.courseQueries.updateResultsSent(id = id, resultsSent = value)
     }
 }
