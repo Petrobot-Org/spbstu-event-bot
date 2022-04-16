@@ -21,7 +21,9 @@ dependencies {
     implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.0.6")
     implementation("commons-validator:commons-validator:1.7")
     implementation("org.apache.commons:commons-email:1.5")
-    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("io.insert-koin:koin-test:3.2.0-beta-1")
+    testImplementation("io.insert-koin:koin-test-junit5:3.2.0-beta-1")
 }
 
 tasks.test {

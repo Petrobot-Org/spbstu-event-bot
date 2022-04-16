@@ -1,15 +1,27 @@
+import ru.spbstu.eventbot.domain.entities.Email;
+import ru.spbstu.eventbot.domain.entities.FullName;
+import ru.spbstu.eventbot.domain.entities.Group;
+import ru.spbstu.eventbot.domain.entities.StudentId;
+
 CREATE TABLE Student (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER AS StudentId PRIMARY KEY AUTOINCREMENT,
     chat_id INTEGER NOT NULL UNIQUE,
-    email TEXT NOT NULL,
-    full_name TEXT NOT NULL,
-    group_number TEXT NOT NULL
+    email TEXT AS Email NOT NULL,
+    full_name TEXT AS FullName NOT NULL,
+    group_number TEXT AS Group NOT NULL
 );
 
-insert:
-INSERT OR REPLACE INTO Student(chat_id, email, full_name, group_number)
-VALUES (:chatId, :email, :fullName, :group);
+insert {
+    INSERT OR IGNORE INTO Student(chat_id, email, full_name, group_number)
+    VALUES (:chatId, :email, :fullName, :group);
+
+    UPDATE Student SET email = :email, full_name = :fullName, group_number = :group
+    WHERE chat_id = :chatId;
+}
 
 findByChatId:
 SELECT * FROM Student
 WHERE chat_id = :chatId;
+
+rowsAffected:
+SELECT changes();
