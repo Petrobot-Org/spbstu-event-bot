@@ -108,9 +108,9 @@ object Strings {
         """.trimMargin()
 
     fun <T> csvOf(
-            headers: List<String>,
-            data: List<T>,
-            itemBuilder: (T) -> List<String>
+        headers: List<String>,
+        data: List<T>,
+        itemBuilder: (T) -> List<String>
     ) = buildString {
         append(headers.joinToString(",") { "\"$it\"" })
         append("\n")
@@ -122,13 +122,12 @@ object Strings {
 
     fun applicantsInfo(applications: List<Application>) {
         val csv = csvOf(
-                listOf("ФИО студента", "Группа", "Почта"),
-                applications
+            listOf("ФИО студента", "Группа", "Почта"),
+            applications
         ) {
-            listOf(it.student.fullName.toString(), it.student.group.toString(),it.student.email.toString())
+            listOf(it.student.fullName.toString(), it.student.group.toString(), it.student.email.toString())
         }
-        val sd = File("bot/src/main/resources/list.csv") //TODO указать правильно путь
+        val sd = File("bot/src/main/resources/list.csv") // TODO указать правильно путь
         sd.writeText(csv)
     }
-
 }
