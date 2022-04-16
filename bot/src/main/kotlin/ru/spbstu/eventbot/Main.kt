@@ -16,7 +16,6 @@ import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.email.EmailSender
 import ru.spbstu.eventbot.telegram.Bot
-import ru.spbstu.eventbot.telegram.CreateApplicantsTable
 import ru.spbstu.eventbot.telegram.ProvidePermissions
 import ru.spbstu.eventbot.telegram.flows.*
 
@@ -47,7 +46,6 @@ val mainModule = module {
     singleOf(::ClientRegistrationFlow)
     singleOf(::CoursesFlow)
     singleOf(::ProvidePermissions)
-    singleOf(::CreateApplicantsTable)
     singleOf(::GetExpiredCoursesFlowUseCase)
     singleOf(::ExpiredCoursesCollector)
     single { EmailSender(secrets.emailSecrets) }

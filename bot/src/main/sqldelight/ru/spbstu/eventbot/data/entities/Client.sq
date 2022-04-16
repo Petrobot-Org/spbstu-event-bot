@@ -6,7 +6,7 @@ CREATE TABLE Client (
     id INTEGER AS ClientId PRIMARY KEY AUTOINCREMENT,
     email TEXT AS Email NOT NULL,
     name TEXT AS ClientName NOT NULL,
-    user_id INTEGER
+    user_id INTEGER NOT NULL
 );
 
 getClientsByUserId:

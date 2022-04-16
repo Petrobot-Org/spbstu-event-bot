@@ -15,7 +15,7 @@ class RegisterClientUseCase(
     }
 
     context(Permissions)
-    operator fun invoke(name: ClientName, email: Email, userId: Long?): Result {
+    operator fun invoke(name: ClientName, email: Email, userId: Long): Result {
         if (!canModifyClients) {
             return Result.Unauthorized
         }
