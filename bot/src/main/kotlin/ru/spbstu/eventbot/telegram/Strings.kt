@@ -120,15 +120,14 @@ object Strings {
         }
     }
 
-    fun applicantsInfo(applications: List<Application>) {
+    fun applicantsInfo(applications: List<Application>): String {
         val csv = csvOf(
                 listOf("ФИО студента", "Группа", "Почта"),
                 applications
         ) {
             listOf(it.student.fullName.toString(), it.student.group.toString(),it.student.email.toString())
         }
-        val sd = File("bot/src/main/resources/list.csv") //TODO указать правильно путь
-        sd.writeText(csv)
+        return csv
     }
 
 }

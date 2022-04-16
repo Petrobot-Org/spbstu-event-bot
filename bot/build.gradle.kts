@@ -22,7 +22,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("io.insert-koin:koin-test:3.2.0-beta-1")
     testImplementation("io.insert-koin:koin-test-junit5:3.2.0-beta-1")
-    testImplementation("org.apache.commons:commons-csv:1.5")
 }
 
 tasks.test {
