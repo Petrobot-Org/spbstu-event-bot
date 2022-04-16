@@ -1,6 +1,8 @@
 package ru.spbstu.eventbot
 
 import ru.spbstu.eventbot.domain.permissions.Operators
+import ru.spbstu.eventbot.email.EmailSecrets
+import ru.spbstu.eventbot.email.EmailSender
 import java.time.ZoneId
 import java.util.Properties
 
@@ -8,6 +10,11 @@ data class AppConfig(
     val jdbcString: String,
     val operators: Operators,
     val zone: ZoneId
+)
+
+data class Secrets(
+    val telegramToken: String,
+    val emailSecrets: EmailSecrets
 )
 
 fun appConfig(): AppConfig {
@@ -25,6 +32,30 @@ fun appConfig(): AppConfig {
             jdbcString = jdbcString,
             operators = { it in operatorUserIds },
             zone = zone
+        )
+    }
+}
+
+fun secrets(): Secrets {
+    return Secrets::class.java.getResourceAsStream(
+        "/secrets.properties"
+    ).use { inputStream ->
+        val properties = Properties().apply { load(inputStream) }
+        val telegramToken = properties["telegram_token"].toString()
+        val smtpHostname = properties["smtp_hostname"].toString()
+        val smtpPort = properties["smtp_port"].toString()
+        val smtpUsername = properties["smtp_username"].toString()
+        val smtpPassword = properties["smtp_password"].toString()
+        val smtpFrom = properties["smtp_from"].toString()
+        Secrets(
+            telegramToken = telegramToken,
+            emailSecrets = EmailSecrets(
+                hostname = smtpHostname,
+                port = smtpPort,
+                username = smtpUsername,
+                password = smtpPassword,
+                from = smtpFrom
+            )
         )
     }
 }

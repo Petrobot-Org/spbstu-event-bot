@@ -1,6 +1,5 @@
 package ru.spbstu.eventbot.telegram
 
-import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.callbackQuery
@@ -8,67 +7,45 @@ import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvi
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.entities.ClientId
 import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
-import ru.spbstu.eventbot.domain.usecases.GetExpiredCoursesFlowUseCase
-import ru.spbstu.eventbot.email.EmailSender
 import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
 import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
 import ru.spbstu.eventbot.telegram.flows.CoursesFlow
 import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
 
-class Bot : KoinComponent {
-    private val coroutineScope = CoroutineScope(Job() + Dispatchers.Default)
-    private val providePermissions: ProvidePermissions by inject()
-    private val registrationFlow: RegistrationFlow by inject()
-    private val courseCreationFlow: CourseCreationFlow by inject()
-    private val clientRegistrationFlow: ClientRegistrationFlow by inject()
-    private val coursesFlow: CoursesFlow by inject()
-    private val emailSender: EmailSender by inject()
-    private val createApplicantsTable: CreateApplicantsTable by inject()
-    private val getExpiredCourses: GetExpiredCoursesFlowUseCase by inject()
-
+class Bot(
+    private val telegramToken: String,
+    private val providePermissions: ProvidePermissions,
+    private val registrationFlow: RegistrationFlow,
+    private val courseCreationFlow: CourseCreationFlow,
+    private val clientRegistrationFlow: ClientRegistrationFlow,
+    private val coursesFlow: CoursesFlow
+) {
     private val states = mutableMapOf<Long, ChatState>()
 
-    fun start(telegramToken: String) {
-        val bot = bot {
-            logLevel = LogLevel.Error
-            token = telegramToken
-            dispatch {
-                callbackQuery {
-                    providePermissions {
-                        val (state, setState) = state()
-                        handleCallback(state, setState)
-                    }
+    val bot = bot {
+        logLevel = LogLevel.Error
+        token = telegramToken
+        dispatch {
+            callbackQuery {
+                providePermissions {
+                    val (state, setState) = state()
+                    handleCallback(state, setState)
                 }
-                text {
-                    providePermissions {
-                        val (state, setState) = state()
-                        handleText(state, setState)
-                    }
+            }
+            text {
+                providePermissions {
+                    val (state, setState) = state()
+                    handleText(state, setState)
                 }
             }
         }
-        bot.startPolling()
-        collectExpiredCourses(bot)
     }
 
-    private fun collectExpiredCourses(bot: Bot) {
-        coroutineScope.launch {
-            getExpiredCourses().collect {
-                with(Permissions.App) {
-                    val applicantsTable = createApplicantsTable(it.course)
-                    notifyCourseExpired(it.course, bot, applicantsTable)
-                    emailSender.sendCourseExpired(it.course, applicantsTable)
-                    it.markAsSent()
-                }
-            }
-        }
+    fun start() {
+        bot.startPolling()
     }
 
     context(Permissions)

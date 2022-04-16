@@ -17,7 +17,7 @@ class EmailSender(private val emailSecrets: EmailSecrets) {
 
             subject = Strings.courseExpiredSubject(course)
             setMsg(Strings.courseExpiredMessage(course))
-            addTo(course.client.email)
+            addTo(course.client.email.value)
 
             val dataSource: DataSource = ByteArrayDataSource(applicantsTable, "text/csv")
             attach(
