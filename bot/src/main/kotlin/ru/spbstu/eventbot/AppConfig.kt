@@ -37,25 +37,20 @@ fun appConfig(): AppConfig {
 }
 
 fun secrets(): Secrets {
-    return Secrets::class.java.getResourceAsStream(
-        "/secrets.properties"
-    ).use { inputStream ->
-        val properties = Properties().apply { load(inputStream) }
-        val telegramToken = properties["telegram_token"].toString()
-        val smtpHostname = properties["smtp_hostname"].toString()
-        val smtpPort = properties["smtp_port"].toString()
-        val smtpUsername = properties["smtp_username"].toString()
-        val smtpPassword = properties["smtp_password"].toString()
-        val smtpFrom = properties["smtp_from"].toString()
-        Secrets(
-            telegramToken = telegramToken,
-            emailSecrets = EmailSecrets(
-                hostname = smtpHostname,
-                port = smtpPort,
-                username = smtpUsername,
-                password = smtpPassword,
-                from = smtpFrom
-            )
+    val telegramToken = System.getenv("TELEGRAM_TOKEN")
+    val smtpHostname = System.getenv("SMTP_HOSTNAME")
+    val smtpPort = System.getenv("SMTP_PORT")
+    val smtpUsername = System.getenv("SMTP_USERNAME")
+    val smtpPassword = System.getenv("SMTP_PASSWORD")
+    val smtpFrom = System.getenv("SMTP_FROM")
+    return Secrets(
+        telegramToken = telegramToken,
+        emailSecrets = EmailSecrets(
+            hostname = smtpHostname,
+            port = smtpPort,
+            username = smtpUsername,
+            password = smtpPassword,
+            from = smtpFrom
         )
-    }
+    )
 }

@@ -48,15 +48,18 @@ val mainModule = module {
     singleOf(::CoursesFlow)
     singleOf(::ProvidePermissions)
     singleOf(::CreateApplicantsTable)
+    singleOf(::GetExpiredCoursesFlowUseCase)
     singleOf(::ExpiredCoursesCollector)
     single { EmailSender(secrets.emailSecrets) }
     single { Bot(secrets.telegramToken, get(), get(), get(), get(), get()) }
 }
 
-fun main() = startKoin {
-    modules(mainModule)
-    val bot = koin.get<Bot>()
-    val expiredCoursesCollector = koin.get<ExpiredCoursesCollector>()
-    bot.start()
-    expiredCoursesCollector.start(bot.bot)
+fun main() {
+    startKoin {
+        modules(mainModule)
+        val bot = koin.get<Bot>()
+        val expiredCoursesCollector = koin.get<ExpiredCoursesCollector>()
+        bot.start()
+        expiredCoursesCollector.start(bot.bot)
+    }
 }
