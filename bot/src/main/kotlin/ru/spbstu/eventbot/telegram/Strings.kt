@@ -106,16 +106,26 @@ object Strings {
            |${course.description}
         """.trimMargin()
 
-    // TODO: Убрать (заменить на генерацию CSV файла)
-    fun applicantsInfo(applications: List<Application>): String {
-        var listOfApplicants = ""
-        for (application in applications) {
-            listOfApplicants += """|ФИО студента: ${application.student.fullName}
-           |Группа: ${application.student.group}
-           |Почта: ${application.student.email}
-           |-------------------------- 
-            """.trimMargin() // Pochernin-style разделитель строк --------------------------
+    fun <T> csvOf(
+        headers: List<String>,
+        data: List<T>,
+        itemBuilder: (T) -> List<String>
+    ) = buildString {
+        append(headers.joinToString(",") { "\"$it\"" })
+        append("\n")
+        data.forEach { item ->
+            append(itemBuilder(item).joinToString(",") { "\"$it\"" })
+            append("\n")
         }
-        return listOfApplicants
+    }
+
+    fun applicantsInfo(applications: List<Application>): String {
+        val csv = csvOf(
+            listOf("ФИО студента", "Группа", "Почта", "Доп. информация"),
+            applications
+        ) {
+            listOf(it.student.fullName.toString(), it.student.group.toString(), it.student.email.toString(), it.additionalInfo.toString())
+        }
+        return csv
     }
 }
