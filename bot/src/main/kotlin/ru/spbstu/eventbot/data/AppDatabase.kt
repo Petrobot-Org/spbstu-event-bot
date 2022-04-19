@@ -1,6 +1,7 @@
 package ru.spbstu.eventbot.data
 
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import mu.KotlinLogging
 import ru.spbstu.eventbot.data.adapter.*
 import ru.spbstu.eventbot.data.entities.Application
 import ru.spbstu.eventbot.data.entities.Client
@@ -10,6 +11,8 @@ import ru.spbstu.eventbot.data.source.AppDatabase
 import java.sql.SQLException
 import java.util.*
 
+private val logger = KotlinLogging.logger {  }
+
 fun createAppDatabase(jdbcString: String): AppDatabase {
     val driver = JdbcSqliteDriver(
         jdbcString,
@@ -18,7 +21,7 @@ fun createAppDatabase(jdbcString: String): AppDatabase {
         try {
             AppDatabase.Schema.create(it)
         } catch (e: SQLException) {
-            println("Schema has already been created")
+            logger.info { "Schema has already been created" }
         }
     }
     return AppDatabase(
