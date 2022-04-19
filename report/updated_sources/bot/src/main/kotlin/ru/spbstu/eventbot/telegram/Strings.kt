@@ -1,7 +1,6 @@
 package ru.spbstu.eventbot.telegram
 
-import ru.spbstu.eventbot.domain.entities.Course
-import ru.spbstu.eventbot.domain.entities.Student
+import ru.spbstu.eventbot.domain.entities.*
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -15,7 +14,6 @@ object Strings {
     const val RequestEmail = "Теперь нужен адрес электронной почты."
     const val RequestGroup = "Номер группы"
     const val RegistrationRetry = "Тогда начинаем заново"
-    const val RegistrationErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val RequestYesNo = "Напишите да или нет"
     const val RegisteredSuccessfully = "Успешная регистрация"
 
@@ -33,7 +31,7 @@ object Strings {
         "почты) требуется дополнительная информация, укажите её в форме вопроса. Если нет, то напишите \"нет\"."
     const val RequestExpiryDate = "Дэдлайн подачи заявок на курс (дд.ММ.гггг чч:мм)"
     const val InvalidDate = "Неправильный формат даты"
-    const val CreationErrorRetry = "Что-то пошло не так. Начинаем заново."
+    const val ErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
 
     const val UnknownCommand = "Неизвестная команда"
@@ -44,6 +42,8 @@ object Strings {
     const val NoApplicants = "Никто ещё не подал заявку на этот курс"
     const val SubmitApplication = "✅ Записаться"
     const val RevokeApplication = "❌ Отозвать запись"
+    const val SubmitError = "Не получилось подать заявку"
+    const val RevokeError = "Не получилось отозвать заявку"
 
     const val HelpCommands = "Список доступных команд: \n"
     const val RegisterDescription = " /register - регистрация студентов в боте\n"
@@ -77,45 +77,55 @@ object Strings {
         .ofLocalizedDateTime(FormatStyle.LONG)
         .withZone(ZoneId.systemDefault())
 
-    fun registrationConfirmation(name: String, email: String, group: String) =
+    fun registrationConfirmation(name: FullName, email: Email, group: Group) =
         """|Имя: $name
            |Почта: $email
            |Группа: $group
            |Верно?
         """.trimMargin()
 
-    fun clientRegistrationConfirmation(name: String, email: String, userId: Long?) =
+    fun clientRegistrationConfirmation(name: ClientName, email: Email, userId: Long?) =
         """|Имя: $name
            |Почта: $email
-           |id: $userId
+           |id: ${userId ?: "нет"}
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: String, description: String, additionalQuestion: String?, expiryDate: Instant) =
+    fun newCourseCreationConfirmation(title: CourseTitle, description: CourseDescription, additionalQuestion: String?, expiryDate: Instant) =
         """|Название курса: $title
            |Описание курса: $description
-           |Дополнительный вопрос: $additionalQuestion
+           |Дополнительный вопрос: ${additionalQuestion ?: "нет"}
            |Дэдлайн подачи заявки: ${dateTimeFormatter.format(expiryDate)}
            |Верно?
         """.trimMargin()
 
     fun courseDetails(course: Course) =
-        """|*${course.title}*
+        """|*${course.title}* от _${course.client.name}_
            |
            |🕒 До ${dateTimeFormatter.format(course.expiryDate)}
            |${course.description}
         """.trimMargin()
 
-    // TODO: Убрать (заменить на генерацию CSV файла)
-    fun applicantsInfo(applicants: List<Student>): String {
-        var listOfApplicants = ""
-        for (applicant in applicants) {
-            listOfApplicants += """|ФИО студента: ${applicant.fullName}
-           |Группа: ${applicant.group}
-           |Почта: ${applicant.email}
-           |-------------------------- 
-            """.trimMargin() // Pochernin-style разделитель строк --------------------------
+    fun <T> csvOf(
+        headers: List<String>,
+        data: List<T>,
+        itemBuilder: (T) -> List<String>
+    ) = buildString {
+        append(headers.joinToString(",") { "\"$it\"" })
+        append("\n")
+        data.forEach { item ->
+            append(itemBuilder(item).joinToString(",") { "\"$it\"" })
+            append("\n")
         }
-        return listOfApplicants
+    }
+
+    fun applicantsInfo(applications: List<Application>): String {
+        val csv = csvOf(
+            listOf("ФИО студента", "Группа", "Почта", "Доп. информация"),
+            applications
+        ) {
+            listOf(it.student.fullName.toString(), it.student.group.toString(), it.student.email.toString(), it.additionalInfo.toString())
+        }
+        return csv
     }
 }
