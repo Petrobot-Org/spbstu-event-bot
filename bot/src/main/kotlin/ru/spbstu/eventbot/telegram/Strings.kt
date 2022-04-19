@@ -77,6 +77,9 @@ object Strings {
         .ofLocalizedDateTime(FormatStyle.LONG)
         .withZone(ZoneId.systemDefault())
 
+    fun courseExpiredNotification(course: Course) =
+        """Сбор заявок на курс "${course.title}" завершён"""
+
     fun registrationConfirmation(name: FullName, email: Email, group: Group) =
         """|Имя: $name
            |Почта: $email

@@ -14,14 +14,13 @@ import ru.spbstu.eventbot.domain.repository.ClientRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
-import ru.spbstu.eventbot.email.EmailSender
 import ru.spbstu.eventbot.telegram.Bot
+import ru.spbstu.eventbot.telegram.CreateApplicantsTable
 import ru.spbstu.eventbot.telegram.ProvidePermissions
 import ru.spbstu.eventbot.telegram.flows.*
 
 val mainModule = module {
     val appConfig = appConfig()
-    val secrets = secrets()
     single { appConfig.zone }
     single { appConfig.operators }
     single { createAppDatabase(appConfig.jdbcString) }
@@ -46,18 +45,12 @@ val mainModule = module {
     singleOf(::ClientRegistrationFlow)
     singleOf(::CoursesFlow)
     singleOf(::ProvidePermissions)
-    singleOf(::GetExpiredCoursesFlowUseCase)
-    singleOf(::ExpiredCoursesCollector)
-    single { EmailSender(secrets.emailSecrets) }
-    single { Bot(secrets.telegramToken, get(), get(), get(), get(), get()) }
+    singleOf(::CreateApplicantsTable)
 }
 
-fun main() {
+fun main(args: Array<String>) {
     startKoin {
         modules(mainModule)
-        val bot = koin.get<Bot>()
-        val expiredCoursesCollector = koin.get<ExpiredCoursesCollector>()
-        bot.start()
-        expiredCoursesCollector.start(bot.bot)
     }
+    Bot().start(args[0])
 }

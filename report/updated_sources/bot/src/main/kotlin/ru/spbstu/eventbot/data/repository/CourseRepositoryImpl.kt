@@ -20,7 +20,7 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
             _: ClientId,
             email: Email,
             name: ClientName,
-            userId: Long ->
+            userId: Long? ->
             val client = Client(clientId, email, name, userId)
             Course(id, title, description, AdditionalQuestion(additionalQuestion), client, expiryDate!!, resultsSent!!)
         }

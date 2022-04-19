@@ -7,8 +7,6 @@ import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvi
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import ru.spbstu.eventbot.domain.entities.ClientId
 import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
@@ -17,34 +15,36 @@ import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
 import ru.spbstu.eventbot.telegram.flows.CoursesFlow
 import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
 
-class Bot : KoinComponent {
-    private val providePermissions: ProvidePermissions by inject()
-    private val registrationFlow: RegistrationFlow by inject()
-    private val courseCreationFlow: CourseCreationFlow by inject()
-    private val clientRegistrationFlow: ClientRegistrationFlow by inject()
-    private val coursesFlow: CoursesFlow by inject()
-
+class Bot(
+    private val telegramToken: String,
+    private val providePermissions: ProvidePermissions,
+    private val registrationFlow: RegistrationFlow,
+    private val courseCreationFlow: CourseCreationFlow,
+    private val clientRegistrationFlow: ClientRegistrationFlow,
+    private val coursesFlow: CoursesFlow
+) {
     private val states = mutableMapOf<Long, ChatState>()
 
-    fun start(telegramToken: String) {
-        val bot = bot {
-            logLevel = LogLevel.Error
-            token = telegramToken
-            dispatch {
-                callbackQuery {
-                    providePermissions {
-                        val (state, setState) = state()
-                        handleCallback(state, setState)
-                    }
+    val bot = bot {
+        logLevel = LogLevel.Error
+        token = telegramToken
+        dispatch {
+            callbackQuery {
+                providePermissions {
+                    val (state, setState) = state()
+                    handleCallback(state, setState)
                 }
-                text {
-                    providePermissions {
-                        val (state, setState) = state()
-                        handleText(state, setState)
-                    }
+            }
+            text {
+                providePermissions {
+                    val (state, setState) = state()
+                    handleText(state, setState)
                 }
             }
         }
+    }
+
+    fun start() {
         bot.startPolling()
     }
 

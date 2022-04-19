@@ -46,10 +46,10 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
         sendReply(Strings.RequestClientUserId)
     }
 
-    context(TextHandlerEnvironment)
+    context(Permissions, TextHandlerEnvironment)
     private fun handleUserId(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
         val userId = if (text in Strings.NegativeAnswers) {
-            null
+            userId
         } else {
             text.toLongOrNull() ?: run {
                 sendReply(Strings.InvalidClientUserId)
@@ -70,7 +70,7 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
     private fun handleConfirmation(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
-                when (registerClient(state.name!!, state.email!!, state.userId)) {
+                when (registerClient(state.name!!, state.email!!, state.userId!!)) {
                     RegisterClientUseCase.Result.OK -> {
                         setState(ChatState.Empty)
                         sendReply(Strings.ClientRegisteredSuccessfully)

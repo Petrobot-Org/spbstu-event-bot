@@ -9,11 +9,11 @@ import ru.spbstu.eventbot.domain.repository.ClientRepository
 
 class ClientRepositoryImpl(private val database: AppDatabase) : ClientRepository {
     private val map =
-        { id: ClientId, email: Email, name: ClientName, userId: Long? ->
+        { id: ClientId, email: Email, name: ClientName, userId: Long ->
             Client(id, email, name, userId)
         }
 
-    override fun insert(name: ClientName, email: Email, userId: Long?): Boolean {
+    override fun insert(name: ClientName, email: Email, userId: Long): Boolean {
         return database.transactionWithResult {
             database.clientQueries.insert(name = name, email = email, userId = userId)
             database.clientQueries.rowsAffected().executeAsOne() >= 1L

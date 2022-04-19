@@ -4,7 +4,7 @@ data class Client(
     val id: ClientId,
     val email: Email,
     val name: ClientName,
-    val userId: Long?
+    val userId: Long
 )
 
 @JvmInline
