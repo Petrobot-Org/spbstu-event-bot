@@ -48,6 +48,7 @@ val mainModule = module {
     singleOf(::ProvidePermissions)
     singleOf(::GetExpiredCoursesFlowUseCase)
     singleOf(::ExpiredCoursesCollector)
+    singleOf(::NewCoursesCollector)
     single { EmailSender(secrets.emailSecrets) }
     single { Bot(secrets.telegramToken, get(), get(), get(), get(), get()) }
 }
@@ -57,7 +58,9 @@ fun main() {
         modules(mainModule)
         val bot = koin.get<Bot>()
         val expiredCoursesCollector = koin.get<ExpiredCoursesCollector>()
+        val newCoursesCollector = koin.get<NewCoursesCollector>()
         bot.start()
         expiredCoursesCollector.start(bot.bot)
+        newCoursesCollector.start(bot.bot)
     }
 }
