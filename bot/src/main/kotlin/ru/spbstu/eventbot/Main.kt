@@ -47,6 +47,7 @@ val mainModule = module {
     singleOf(::CoursesFlow)
     singleOf(::ProvidePermissions)
     singleOf(::GetExpiredCoursesFlowUseCase)
+    singleOf(::GetMatchingStudentsUseCase)
     singleOf(::ExpiredCoursesCollector)
     singleOf(::NewCoursesCollector)
     single { EmailSender(secrets.emailSecrets) }

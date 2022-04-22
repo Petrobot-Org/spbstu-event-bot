@@ -24,13 +24,19 @@ class CoursesFlow(
     private val getClientCourses: GetClientCoursesUseCase,
     private val registrationFlow: RegistrationFlow
 ) {
-    context(TextHandlerEnvironment)
+    context(Permissions, TextHandlerEnvironment)
     fun display() {
-        val courses = getAvailableCourses()
-        val buttons = courses.map {
-            listOf(InlineKeyboardButton.CallbackData(it.title.value, "details ${it.id.value}"))
+        when (val result = getAvailableCourses()) {
+            is GetAvailableCoursesUseCase.Result.OK -> {
+                val buttons = result.courses.map {
+                    listOf(InlineKeyboardButton.CallbackData(it.title.value, "details ${it.id.value}"))
+                }
+                sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
+            }
+            GetAvailableCoursesUseCase.Result.NotRegistered -> {
+                sendReply(Strings.NotRegistered)
+            }
         }
-        sendReply(text = Strings.AvailableCoursesHeader, replyMarkup = InlineKeyboardMarkup.create(buttons))
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)

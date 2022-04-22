@@ -30,6 +30,7 @@ object Strings {
     const val RequestAdditionalQuestion = "Если помимо основной информации (номер группы, ФИО, адрес электронной " +
         "почты) требуется дополнительная информация, укажите её в форме вопроса. Если нет, то напишите \"нет\"."
     const val RequestExpiryDate = "Дэдлайн подачи заявок на курс (дд.ММ.гггг чч:мм)"
+    const val RequestGroupMatcher = "Regex группы" // TODO: ...
     const val InvalidDate = "Неправильный формат даты"
     const val ErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
@@ -97,11 +98,12 @@ object Strings {
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: CourseTitle, description: CourseDescription, additionalQuestion: String?, expiryDate: Instant) =
+    fun newCourseCreationConfirmation(title: CourseTitle, description: CourseDescription, additionalQuestion: String?, expiryDate: Instant, groupMatcher: Regex) =
         """|Название курса: $title
            |Описание курса: $description
            |Дополнительный вопрос: ${additionalQuestion ?: "нет"}
            |Дэдлайн подачи заявки: ${dateTimeFormatter.format(expiryDate)}
+           |Regex групп: $groupMatcher
            |Верно?
         """.trimMargin()
 

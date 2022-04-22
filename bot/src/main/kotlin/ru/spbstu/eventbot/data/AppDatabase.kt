@@ -31,7 +31,8 @@ fun createAppDatabase(jdbcString: String): AppDatabase {
             idAdapter = CourseIdAdapter,
             client_idAdapter = ClientIdAdapter,
             titleAdapter = TitleAdapter,
-            descriptionAdapter = DescriptionAdapter
+            descriptionAdapter = DescriptionAdapter,
+            group_matcherAdapter = RegexAdapter
         ),
         ClientAdapter = Client.Adapter(
             emailAdapter = EmailAdapter,

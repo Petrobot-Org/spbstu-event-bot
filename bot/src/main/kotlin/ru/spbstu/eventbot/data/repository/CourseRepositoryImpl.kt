@@ -16,13 +16,14 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
             description: CourseDescription,
             additionalQuestion: String?,
             expiryDate: Instant?,
+            groupMatcher: Regex?,
             resultsSent: Boolean?,
             _: ClientId,
             email: Email,
             name: ClientName,
             userId: Long ->
             val client = Client(clientId, email, name, userId)
-            Course(id, title, description, AdditionalQuestion(additionalQuestion), client, expiryDate!!, resultsSent!!)
+            Course(id, title, description, AdditionalQuestion(additionalQuestion), client, expiryDate!!, groupMatcher!!, resultsSent!!)
         }
 
     override fun getAvailable(): List<Course> {
@@ -46,10 +47,11 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         title: CourseTitle,
         description: CourseDescription,
         additionalQuestion: AdditionalQuestion,
-        expiryDate: Instant
+        expiryDate: Instant,
+        groupMatcher: Regex
     ): CourseId? {
         return database.transactionWithResult {
-            database.courseQueries.insert(clientId, title, description, additionalQuestion.value, expiryDate)
+            database.courseQueries.insert(clientId, title, description, additionalQuestion.value, expiryDate, groupMatcher)
             if (database.courseQueries.rowsAffected().executeAsOne() >= 1L) {
                 CourseId(database.courseQueries.lastInserted().executeAsOne())
             } else {
