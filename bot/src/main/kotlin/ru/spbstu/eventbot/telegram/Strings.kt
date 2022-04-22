@@ -112,7 +112,6 @@ object Strings {
            |${course.description}
         """.trimMargin()
 
-
     fun <T> csvOf(
         headers: List<String>,
         data: List<T>,
