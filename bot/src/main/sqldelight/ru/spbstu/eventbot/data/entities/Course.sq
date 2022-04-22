@@ -47,3 +47,6 @@ WHERE id = :id;
 
 rowsAffected:
 SELECT changes();
+
+lastInserted:
+SELECT last_insert_rowid();

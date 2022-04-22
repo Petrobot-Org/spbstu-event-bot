@@ -8,4 +8,5 @@ import ru.spbstu.eventbot.domain.entities.Student
 interface StudentRepository {
     fun insert(chatId: Long, email: Email, fullName: FullName, group: Group): Boolean
     fun findByChatId(chatId: Long): Student?
+    fun findAll(): List<Student>
 }

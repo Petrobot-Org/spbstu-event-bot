@@ -1,9 +1,8 @@
 package ru.spbstu.eventbot.domain.usecases
 
-import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
-import ru.spbstu.eventbot.domain.entities.ClientId
-import ru.spbstu.eventbot.domain.entities.CourseDescription
-import ru.spbstu.eventbot.domain.entities.CourseTitle
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import ru.spbstu.eventbot.domain.entities.*
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.repository.ClientRepository
 import ru.spbstu.eventbot.domain.repository.CourseRepository
@@ -20,6 +19,9 @@ class CreateNewCourseUseCase(
         object Error : Result
     }
 
+    private val _newCoursesFlow = MutableSharedFlow<Course>(replay = 1)
+    val newCoursesFlow = _newCoursesFlow.asSharedFlow()
+
     context(Permissions)
     operator fun invoke(
         clientId: ClientId,
@@ -33,7 +35,8 @@ class CreateNewCourseUseCase(
         if (!isPermitted) {
             return Result.Unauthorized
         }
-        val wasInserted = courseRepository.insert(clientId, title, description, additionalQuestion, expiryDate)
-        return if (wasInserted) Result.OK else Result.Error
+        val courseId = courseRepository.insert(clientId, title, description, additionalQuestion, expiryDate) ?: return Result.Error
+        courseRepository.getById(courseId)?.let { _newCoursesFlow.tryEmit(it) }
+        return Result.OK
     }
 }

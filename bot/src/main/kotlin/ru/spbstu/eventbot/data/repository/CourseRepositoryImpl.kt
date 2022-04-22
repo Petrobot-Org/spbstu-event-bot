@@ -47,10 +47,14 @@ class CourseRepositoryImpl(private val database: AppDatabase) : CourseRepository
         description: CourseDescription,
         additionalQuestion: AdditionalQuestion,
         expiryDate: Instant
-    ): Boolean {
+    ): CourseId? {
         return database.transactionWithResult {
             database.courseQueries.insert(clientId, title, description, additionalQuestion.value, expiryDate)
-            database.courseQueries.rowsAffected().executeAsOne() >= 1L
+            if (database.courseQueries.rowsAffected().executeAsOne() >= 1L) {
+                CourseId(database.courseQueries.lastInserted().executeAsOne())
+            } else {
+                null
+            }
         }
     }
 
