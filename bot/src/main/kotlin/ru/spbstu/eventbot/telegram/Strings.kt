@@ -80,6 +80,9 @@ object Strings {
     fun courseExpiredNotification(course: Course) =
         """Сбор заявок на курс "${course.title}" завершён"""
 
+    fun notificationAboutNewCourse(course: Course) =
+        """новый курс: ${course.title}"""
+
     fun registrationConfirmation(name: FullName, email: Email, group: Group) =
         """|Имя: $name
            |Почта: $email
@@ -108,9 +111,7 @@ object Strings {
            |🕒 До ${dateTimeFormatter.format(course.expiryDate)}
            |${course.description}
         """.trimMargin()
-    fun notificationAboutNewCourse(course: Course) =
-        """новый курс: ${course.title}
-        """.trimMargin()
+
 
     fun <T> csvOf(
         headers: List<String>,
