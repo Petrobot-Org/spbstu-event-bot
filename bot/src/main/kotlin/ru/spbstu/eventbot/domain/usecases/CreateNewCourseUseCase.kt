@@ -28,14 +28,15 @@ class CreateNewCourseUseCase(
         title: CourseTitle,
         description: CourseDescription,
         additionalQuestion: AdditionalQuestion,
-        expiryDate: Instant
+        expiryDate: Instant,
+        groupMatcher: Regex
     ): Result {
         val client = clientRepository.getById(clientId) ?: return Result.NoSuchClient
         val isPermitted = canAccessAnyCourse || (canAccessTheirCourse && client.userId == userId)
         if (!isPermitted) {
             return Result.Unauthorized
         }
-        val courseId = courseRepository.insert(clientId, title, description, additionalQuestion, expiryDate) ?: return Result.Error
+        val courseId = courseRepository.insert(clientId, title, description, additionalQuestion, expiryDate, groupMatcher) ?: return Result.Error
         courseRepository.getById(courseId)?.let { _newCoursesFlow.tryEmit(it) }
         return Result.OK
     }

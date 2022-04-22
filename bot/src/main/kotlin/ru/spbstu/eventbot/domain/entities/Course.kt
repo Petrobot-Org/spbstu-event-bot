@@ -9,6 +9,7 @@ data class Course(
     val additionalQuestion: AdditionalQuestion,
     val client: Client,
     val expiryDate: Instant,
+    val groupMatcher: Regex,
     val resultsSent: Boolean
 )
 

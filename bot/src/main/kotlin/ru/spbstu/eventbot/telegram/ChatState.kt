@@ -25,7 +25,8 @@ sealed interface ChatState {
         val title: CourseTitle? = null,
         val description: CourseDescription? = null,
         val additionalQuestion: AdditionalQuestion? = null,
-        val expiryDate: Instant? = null
+        val expiryDate: Instant? = null,
+        val groupMatcher: Regex? = null
     ) : ChatState
 
     data class AdditionalInfoRequested(
@@ -53,5 +54,6 @@ sealed interface NewCourseCreationRequest {
     object Description : NewCourseCreationRequest
     object AdditionalQuestion : NewCourseCreationRequest
     object ExpiryDate : NewCourseCreationRequest
+    object GroupMatcher : NewCourseCreationRequest
     object Confirm : NewCourseCreationRequest
 }

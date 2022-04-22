@@ -54,6 +54,7 @@ class CourseCreationFlow(
             NewCourseCreationRequest.Description -> handleDescription(state)
             NewCourseCreationRequest.AdditionalQuestion -> handleAdditionalQuestion(state)
             NewCourseCreationRequest.ExpiryDate -> handleExpiryDate(state)
+            NewCourseCreationRequest.GroupMatcher -> handleGroupMatcher(state)
             NewCourseCreationRequest.Confirm -> {
                 handleConfirmation(state, setState)
                 return
@@ -95,6 +96,12 @@ class CourseCreationFlow(
         return state.copy(expiryDate = date)
     }
 
+    context(TextHandlerEnvironment)
+    private fun handleGroupMatcher(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+        val groupMatcher = Regex(text) // TODO: Показать, какие группы подпадают по regex
+        return state.copy(groupMatcher = groupMatcher)
+    }
+
     context(Permissions, TextHandlerEnvironment)
     private fun handleConfirmation(state: ChatState.NewCourseCreation, setState: (ChatState) -> Unit) {
         when (text.lowercase()) {
@@ -104,7 +111,8 @@ class CourseCreationFlow(
                     state.title!!,
                     state.description!!,
                     state.additionalQuestion!!,
-                    state.expiryDate!!
+                    state.expiryDate!!,
+                    state.groupMatcher!!
                 )
                 when (result) {
                     CreateNewCourseUseCase.Result.OK -> {
@@ -154,13 +162,18 @@ class CourseCreationFlow(
                 sendReply(Strings.RequestExpiryDate)
                 NewCourseCreationRequest.ExpiryDate
             }
+            state.groupMatcher == null -> {
+                sendReply(Strings.RequestGroupMatcher)
+                NewCourseCreationRequest.GroupMatcher
+            }
             else -> {
                 sendReply(
                     Strings.newCourseCreationConfirmation(
                         title = state.title,
                         description = state.description,
                         additionalQuestion = state.additionalQuestion.value,
-                        expiryDate = state.expiryDate
+                        expiryDate = state.expiryDate,
+                        groupMatcher = state.groupMatcher
                     )
                 )
                 NewCourseCreationRequest.Confirm
