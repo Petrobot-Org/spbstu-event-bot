@@ -19,4 +19,8 @@ class StudentRepositoryImpl(private val database: AppDatabase) : StudentReposito
     override fun findByChatId(chatId: Long): Student? {
         return database.studentQueries.findByChatId(chatId, map).executeAsOneOrNull()
     }
+
+    override fun findAll(): List<Student> {
+        return database.studentQueries.findAll(map).executeAsList()
+    }
 }

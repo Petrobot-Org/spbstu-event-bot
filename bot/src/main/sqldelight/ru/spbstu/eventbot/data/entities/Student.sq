@@ -19,6 +19,9 @@ insert {
     WHERE chat_id = :chatId;
 }
 
+findAll:
+SELECT * FROM Student;
+
 findByChatId:
 SELECT * FROM Student
 WHERE chat_id = :chatId;

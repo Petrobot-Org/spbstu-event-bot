@@ -108,6 +108,9 @@ object Strings {
            |🕒 До ${dateTimeFormatter.format(course.expiryDate)}
            |${course.description}
         """.trimMargin()
+    fun notificationAboutNewCourse(course: Course) =
+        """новый курс: ${course.title}
+        """.trimMargin()
 
     fun <T> csvOf(
         headers: List<String>,
