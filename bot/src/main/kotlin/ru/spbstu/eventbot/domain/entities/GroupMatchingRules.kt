@@ -1,8 +1,10 @@
 package ru.spbstu.eventbot.domain.entities
 
+import java.time.LocalDate
+
 data class GroupMatchingRules(
-    val years: Set<Year>,
-    val specialities: Set<Speciality>
+    val years: Set<Year> = emptySet(),
+    val specialities: Set<Speciality> = emptySet()
 ) {
     @JvmInline
     value class Year private constructor(val value: Int) {
@@ -14,11 +16,13 @@ data class GroupMatchingRules(
     @JvmInline
     value class Speciality private constructor(val value: String) {
         companion object {
-            fun valueOf(value: String) = if (true) Speciality(value) else null // TODO: Implement speciality validation
+            fun valueOf(value: String) = if (Regex("\\d{4}").matches(value)) Speciality(value) else null
         }
     }
 
-    fun toRegex(): Regex {
-        return Regex("") // TODO: Implement regex conversion
+    // TODO: Реализовать
+    fun toRegex(date: LocalDate): Regex {
+        // Пустое множество years или specialities означает, что никаких ограничений на них не накладывается
+        return Regex("")
     }
 }
