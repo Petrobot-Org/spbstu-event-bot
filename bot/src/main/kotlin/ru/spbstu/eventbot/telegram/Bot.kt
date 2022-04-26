@@ -9,6 +9,7 @@ import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
 import ru.spbstu.eventbot.domain.entities.ClientId
 import ru.spbstu.eventbot.domain.entities.CourseId
+import ru.spbstu.eventbot.domain.entities.GroupMatchingRules
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
 import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
@@ -69,6 +70,11 @@ class Bot(
             "newcourse" -> require(canAccessAnyCourse || canAccessTheirCourse) {
                 courseCreationFlow.onClientSelected(ClientId(arg.toLong()), setState)
             }
+            "select_year" -> courseCreationFlow.selectYear(GroupMatchingRules.Year.valueOf(arg.toInt())!!, state, setState)
+            "unselect_year" -> courseCreationFlow.unselectYear(GroupMatchingRules.Year.valueOf(arg.toInt())!!, state, setState)
+            "select_speciality" -> courseCreationFlow.selectSpeciality(GroupMatchingRules.Speciality.valueOf(arg)!!, state, setState)
+            "unselect_speciality" -> courseCreationFlow.unselectSpeciality(GroupMatchingRules.Speciality.valueOf(arg)!!, state, setState)
+            "confirm_group_matcher" -> courseCreationFlow.confirmGroupMatcher(arg.toRegex(), state, setState)
         }
     }
 

@@ -23,6 +23,6 @@ data class GroupMatchingRules(
     // TODO: Реализовать
     fun toRegex(date: LocalDate): Regex {
         // Пустое множество years или specialities означает, что никаких ограничений на них не накладывается
-        return Regex("")
+        return Regex("TODO${hashCode()}")
     }
 }

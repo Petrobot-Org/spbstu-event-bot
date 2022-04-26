@@ -30,10 +30,11 @@ object Strings {
     const val RequestAdditionalQuestion = "Если помимо основной информации (номер группы, ФИО, адрес электронной " +
         "почты) требуется дополнительная информация, укажите её в форме вопроса. Если нет, то напишите \"нет\"."
     const val RequestExpiryDate = "Дэдлайн подачи заявок на курс (дд.ММ.гггг чч:мм)"
-    const val RequestGroupMatcher = "Regex группы" // TODO: ...
     const val InvalidDate = "Неправильный формат даты"
     const val ErrorRetry = "Что-то пошло не так. Начинаем заново."
     const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
+    const val ConfirmGroupMatcher = "✅ Подтвердить"
+    const val ExpiredGroupMatcher = "Истёк"
 
     const val UnknownCommand = "Неизвестная команда"
     const val UnauthorizedError = "Недостаточно прав"
@@ -113,6 +114,15 @@ object Strings {
            |🕒 До ${dateTimeFormatter.format(course.expiryDate)}
            |${course.description}
         """.trimMargin()
+
+    fun groupMatcher(regex: Regex) =
+        """|Фильтр групп
+           |Получившийся regex: $regex
+        """.trimMargin()
+
+    fun selectedButton(text: String) = "☑️️ $text"
+
+    fun studyYear(year: GroupMatchingRules.Year) = "${year.value} курс"
 
     fun <T> csvOf(
         headers: List<String>,
