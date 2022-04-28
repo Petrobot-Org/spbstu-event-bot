@@ -26,6 +26,7 @@ sealed interface ChatState {
         val description: CourseDescription? = null,
         val additionalQuestion: AdditionalQuestion? = null,
         val expiryDate: Instant? = null,
+        val groupMatchingRules: GroupMatchingRules = GroupMatchingRules(),
         val groupMatcher: Regex? = null
     ) : ChatState
 
