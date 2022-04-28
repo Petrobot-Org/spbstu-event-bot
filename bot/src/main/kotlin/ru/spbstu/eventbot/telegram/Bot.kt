@@ -49,12 +49,12 @@ class Bot(
     }
 
     context(Permissions)
-            private fun state(): Pair<ChatState, (ChatState) -> Unit> {
+    private fun state(): Pair<ChatState, (ChatState) -> Unit> {
         return (states[chatId] ?: ChatState.Empty) to { newState: ChatState -> states[chatId] = newState }
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-            private fun handleCallback(state: ChatState, setState: (ChatState) -> Unit) {
+    private fun handleCallback(state: ChatState, setState: (ChatState) -> Unit) {
         val tokens = callbackQuery.data.split(' ')
         require(tokens.size == 2)
         val command = tokens[0]
@@ -78,7 +78,7 @@ class Bot(
     }
 
     context(Permissions, TextHandlerEnvironment)
-            private fun handleText(state: ChatState, setState: (ChatState) -> Unit) {
+    private fun handleText(state: ChatState, setState: (ChatState) -> Unit) {
         when (text) {
             "/register", Strings.ButtonRegister -> registrationFlow.start(setState)
             "/help" -> writeHelp()
@@ -98,7 +98,7 @@ class Bot(
     }
 
     context(Permissions, TextHandlerEnvironment)
-            private fun handleFreeText(state: ChatState, setState: (ChatState) -> Unit) {
+    private fun handleFreeText(state: ChatState, setState: (ChatState) -> Unit) {
         when (state) {
             ChatState.Empty -> sendReply(Strings.UnknownCommand)
             is ChatState.Registration -> registrationFlow.handle(state, setState)

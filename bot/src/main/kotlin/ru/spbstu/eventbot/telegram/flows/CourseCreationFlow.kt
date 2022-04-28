@@ -71,25 +71,25 @@ class CourseCreationFlow(
     }
 
     context(TextHandlerEnvironment)
-            private fun handleTitle(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+    private fun handleTitle(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val title = CourseTitle.valueOf(text)
         return state.copy(title = title)
     }
 
     context(TextHandlerEnvironment)
-            private fun handleDescription(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+    private fun handleDescription(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val description = CourseDescription.valueOf(text)
         return state.copy(description = description)
     }
 
     context(TextHandlerEnvironment)
-            private fun handleAdditionalQuestion(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+    private fun handleAdditionalQuestion(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val additionalQuestion = AdditionalQuestion(if (text in Strings.NegativeAnswers) null else text)
         return state.copy(additionalQuestion = additionalQuestion)
     }
 
     context(TextHandlerEnvironment)
-            private fun handleExpiryDate(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+    private fun handleExpiryDate(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val formatter = DateTimeFormatter
             .ofPattern("dd.MM.uuuu HH:mm")
             .withZone(zone)
@@ -103,13 +103,13 @@ class CourseCreationFlow(
     }
 
     context(TextHandlerEnvironment)
-            private fun handleGroupMatcher(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+    private fun handleGroupMatcher(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val groupMatcher = Regex(text) // TODO: Показать, какие группы подпадают по regex
         return state.copy(groupMatcher = groupMatcher)
     }
 
     context(Permissions, TextHandlerEnvironment)
-            private fun handleConfirmation(state: ChatState.NewCourseCreation, setState: (ChatState) -> Unit) {
+    private fun handleConfirmation(state: ChatState.NewCourseCreation, setState: (ChatState) -> Unit) {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
                 val result = createNewCourse(
@@ -150,7 +150,7 @@ class CourseCreationFlow(
     }
 
     context(Permissions)
-            private fun requestInfo(bot: Bot, state: ChatState.NewCourseCreation): NewCourseCreationRequest {
+    private fun requestInfo(bot: Bot, state: ChatState.NewCourseCreation): NewCourseCreationRequest {
         return when {
             state.title == null -> {
                 bot.sendMessage(ChatId.fromId(chatId), Strings.RequestTitle)
@@ -189,7 +189,7 @@ class CourseCreationFlow(
     }
 
     context(Permissions)
-            private fun sendGroupMatcher(bot: Bot, state: ChatState.NewCourseCreation) {
+    private fun sendGroupMatcher(bot: Bot, state: ChatState.NewCourseCreation) {
         bot.sendMessage(
             chatId = ChatId.fromId(chatId),
             text = Strings.groupMatcher(state.groupMatchingRules.toRegex(LocalDate.now())),
@@ -234,7 +234,7 @@ class CourseCreationFlow(
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-            private fun updateGroupMatcher(
+    private fun updateGroupMatcher(
         state: ChatState,
         setState: (ChatState) -> Unit,
         modifyRules: (GroupMatchingRules) -> GroupMatchingRules

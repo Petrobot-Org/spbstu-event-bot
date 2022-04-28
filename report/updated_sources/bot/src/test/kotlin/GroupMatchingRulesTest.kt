@@ -1,11 +1,10 @@
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import ru.spbstu.eventbot.domain.entities.GroupMatchingRules
+import ru.spbstu.eventbot.domain.entities.Speciality
+import ru.spbstu.eventbot.domain.entities.Year
 import java.time.LocalDate
 import java.time.Month
-
-typealias Year = GroupMatchingRules.Year
-typealias Speciality = GroupMatchingRules.Speciality
 
 internal class GroupMatchingRulesTest {
 

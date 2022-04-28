@@ -3,7 +3,6 @@ import org.junit.jupiter.api.Test
 import ru.spbstu.eventbot.domain.entities.GroupMatchingRules
 import ru.spbstu.eventbot.domain.entities.Speciality
 import ru.spbstu.eventbot.domain.entities.Year
-import ru.spbstu.eventbot.domain.validation.GroupFilters
 import java.time.LocalDate
 import java.time.Month
 
