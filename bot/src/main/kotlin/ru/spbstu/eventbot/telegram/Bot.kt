@@ -36,7 +36,6 @@ class Bot(
             }
             text {
                 providePermissions {
-                    println(chatId)
                     val (state, setState) = state()
                     handleText(state, setState)
                 }
