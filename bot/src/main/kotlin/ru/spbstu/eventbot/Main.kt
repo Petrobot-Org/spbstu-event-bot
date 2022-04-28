@@ -24,6 +24,8 @@ val mainModule = module {
     val secrets = secrets()
     single { appConfig.zone }
     single { appConfig.operators }
+    single { appConfig.groupFilters }
+    single { secrets.emailSecrets }
     single { createAppDatabase(appConfig.jdbcString) }
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
@@ -42,7 +44,6 @@ val mainModule = module {
     singleOf(::GetMyClientsUseCase)
     singleOf(::GetPermissionsUseCase)
     singleOf(::RegistrationFlow)
-    singleOf(::CourseCreationFlow)
     singleOf(::ClientRegistrationFlow)
     singleOf(::CoursesFlow)
     singleOf(::ProvidePermissions)
@@ -50,7 +51,8 @@ val mainModule = module {
     singleOf(::GetMatchingStudentsUseCase)
     singleOf(::ExpiredCoursesCollector)
     singleOf(::NewCoursesCollector)
-    single { EmailSender(secrets.emailSecrets) }
+    singleOf(::CourseCreationFlow)
+    singleOf(::EmailSender)
     single { Bot(secrets.telegramToken, get(), get(), get(), get(), get()) }
 }
 

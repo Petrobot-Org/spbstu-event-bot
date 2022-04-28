@@ -122,7 +122,7 @@ object Strings {
 
     fun selectedButton(text: String) = "☑️️ $text"
 
-    fun studyYear(year: GroupMatchingRules.Year) = "${year.value} курс"
+    fun studyYear(year: Year) = "${year.value} курс"
 
     fun <T> csvOf(
         headers: List<String>,

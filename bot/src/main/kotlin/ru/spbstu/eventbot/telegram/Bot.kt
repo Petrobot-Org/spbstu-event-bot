@@ -7,9 +7,7 @@ import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvi
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.logging.LogLevel
-import ru.spbstu.eventbot.domain.entities.ClientId
-import ru.spbstu.eventbot.domain.entities.CourseId
-import ru.spbstu.eventbot.domain.entities.GroupMatchingRules
+import ru.spbstu.eventbot.domain.entities.*
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.telegram.flows.ClientRegistrationFlow
 import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
@@ -38,6 +36,7 @@ class Bot(
             }
             text {
                 providePermissions {
+                    println(chatId)
                     val (state, setState) = state()
                     handleText(state, setState)
                 }
@@ -50,12 +49,12 @@ class Bot(
     }
 
     context(Permissions)
-    private fun state(): Pair<ChatState, (ChatState) -> Unit> {
+            private fun state(): Pair<ChatState, (ChatState) -> Unit> {
         return (states[chatId] ?: ChatState.Empty) to { newState: ChatState -> states[chatId] = newState }
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    private fun handleCallback(state: ChatState, setState: (ChatState) -> Unit) {
+            private fun handleCallback(state: ChatState, setState: (ChatState) -> Unit) {
         val tokens = callbackQuery.data.split(' ')
         require(tokens.size == 2)
         val command = tokens[0]
@@ -70,16 +69,16 @@ class Bot(
             "newcourse" -> require(canAccessAnyCourse || canAccessTheirCourse) {
                 courseCreationFlow.onClientSelected(ClientId(arg.toLong()), setState)
             }
-            "select_year" -> courseCreationFlow.selectYear(GroupMatchingRules.Year.valueOf(arg.toInt())!!, state, setState)
-            "unselect_year" -> courseCreationFlow.unselectYear(GroupMatchingRules.Year.valueOf(arg.toInt())!!, state, setState)
-            "select_speciality" -> courseCreationFlow.selectSpeciality(GroupMatchingRules.Speciality.valueOf(arg)!!, state, setState)
-            "unselect_speciality" -> courseCreationFlow.unselectSpeciality(GroupMatchingRules.Speciality.valueOf(arg)!!, state, setState)
+            "select_year" -> courseCreationFlow.selectYear(Year.valueOf(arg.toInt())!!, state, setState)
+            "unselect_year" -> courseCreationFlow.unselectYear(Year.valueOf(arg.toInt())!!, state, setState)
+            "select_speciality" -> courseCreationFlow.selectSpeciality(Speciality.valueOf(arg)!!, state, setState)
+            "unselect_speciality" -> courseCreationFlow.unselectSpeciality(Speciality.valueOf(arg)!!, state, setState)
             "confirm_group_matcher" -> courseCreationFlow.confirmGroupMatcher(arg.toRegex(), state, setState)
         }
     }
 
     context(Permissions, TextHandlerEnvironment)
-    private fun handleText(state: ChatState, setState: (ChatState) -> Unit) {
+            private fun handleText(state: ChatState, setState: (ChatState) -> Unit) {
         when (text) {
             "/register", Strings.ButtonRegister -> registrationFlow.start(setState)
             "/help" -> writeHelp()
@@ -99,7 +98,7 @@ class Bot(
     }
 
     context(Permissions, TextHandlerEnvironment)
-    private fun handleFreeText(state: ChatState, setState: (ChatState) -> Unit) {
+            private fun handleFreeText(state: ChatState, setState: (ChatState) -> Unit) {
         when (state) {
             ChatState.Empty -> sendReply(Strings.UnknownCommand)
             is ChatState.Registration -> registrationFlow.handle(state, setState)

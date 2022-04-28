@@ -20,10 +20,16 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
+interface GroupFilters {
+    val years: Collection<Year>
+    val specialities: Collection<Speciality>
+}
+
 class CourseCreationFlow(
     private val getMyClients: GetMyClientsUseCase,
     private val createNewCourse: CreateNewCourseUseCase,
-    private val zone: ZoneId
+    private val zone: ZoneId,
+    private val groupFilters: GroupFilters
 ) {
     context(Permissions, TextHandlerEnvironment)
     fun start() {
@@ -65,25 +71,25 @@ class CourseCreationFlow(
     }
 
     context(TextHandlerEnvironment)
-    private fun handleTitle(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+            private fun handleTitle(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val title = CourseTitle.valueOf(text)
         return state.copy(title = title)
     }
 
     context(TextHandlerEnvironment)
-    private fun handleDescription(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+            private fun handleDescription(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val description = CourseDescription.valueOf(text)
         return state.copy(description = description)
     }
 
     context(TextHandlerEnvironment)
-    private fun handleAdditionalQuestion(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+            private fun handleAdditionalQuestion(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val additionalQuestion = AdditionalQuestion(if (text in Strings.NegativeAnswers) null else text)
         return state.copy(additionalQuestion = additionalQuestion)
     }
 
     context(TextHandlerEnvironment)
-    private fun handleExpiryDate(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+            private fun handleExpiryDate(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val formatter = DateTimeFormatter
             .ofPattern("dd.MM.uuuu HH:mm")
             .withZone(zone)
@@ -97,13 +103,13 @@ class CourseCreationFlow(
     }
 
     context(TextHandlerEnvironment)
-    private fun handleGroupMatcher(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
+            private fun handleGroupMatcher(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
         val groupMatcher = Regex(text) // TODO: Показать, какие группы подпадают по regex
         return state.copy(groupMatcher = groupMatcher)
     }
 
     context(Permissions, TextHandlerEnvironment)
-    private fun handleConfirmation(state: ChatState.NewCourseCreation, setState: (ChatState) -> Unit) {
+            private fun handleConfirmation(state: ChatState.NewCourseCreation, setState: (ChatState) -> Unit) {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
                 val result = createNewCourse(
@@ -144,7 +150,7 @@ class CourseCreationFlow(
     }
 
     context(Permissions)
-    private fun requestInfo(bot: Bot, state: ChatState.NewCourseCreation): NewCourseCreationRequest {
+            private fun requestInfo(bot: Bot, state: ChatState.NewCourseCreation): NewCourseCreationRequest {
         return when {
             state.title == null -> {
                 bot.sendMessage(ChatId.fromId(chatId), Strings.RequestTitle)
@@ -183,7 +189,7 @@ class CourseCreationFlow(
     }
 
     context(Permissions)
-    private fun sendGroupMatcher(bot: Bot, state: ChatState.NewCourseCreation) {
+            private fun sendGroupMatcher(bot: Bot, state: ChatState.NewCourseCreation) {
         bot.sendMessage(
             chatId = ChatId.fromId(chatId),
             text = Strings.groupMatcher(state.groupMatchingRules.toRegex(LocalDate.now())),
@@ -192,22 +198,22 @@ class CourseCreationFlow(
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    fun selectYear(year: GroupMatchingRules.Year, state: ChatState, setState: (ChatState) -> Unit) {
+    fun selectYear(year: Year, state: ChatState, setState: (ChatState) -> Unit) {
         updateGroupMatcher(state, setState) { it.copy(years = it.years + year) }
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    fun unselectYear(year: GroupMatchingRules.Year, state: ChatState, setState: (ChatState) -> Unit) {
+    fun unselectYear(year: Year, state: ChatState, setState: (ChatState) -> Unit) {
         updateGroupMatcher(state, setState) { it.copy(years = it.years - year) }
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    fun selectSpeciality(speciality: GroupMatchingRules.Speciality, state: ChatState, setState: (ChatState) -> Unit) {
+    fun selectSpeciality(speciality: Speciality, state: ChatState, setState: (ChatState) -> Unit) {
         updateGroupMatcher(state, setState) { it.copy(specialities = it.specialities + speciality) }
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    fun unselectSpeciality(speciality: GroupMatchingRules.Speciality, state: ChatState, setState: (ChatState) -> Unit) {
+    fun unselectSpeciality(speciality: Speciality, state: ChatState, setState: (ChatState) -> Unit) {
         updateGroupMatcher(state, setState) { it.copy(specialities = it.specialities - speciality) }
     }
 
@@ -228,7 +234,7 @@ class CourseCreationFlow(
     }
 
     context(Permissions, CallbackQueryHandlerEnvironment)
-    private fun updateGroupMatcher(
+            private fun updateGroupMatcher(
         state: ChatState,
         setState: (ChatState) -> Unit,
         modifyRules: (GroupMatchingRules) -> GroupMatchingRules
@@ -253,27 +259,40 @@ class CourseCreationFlow(
     }
 
     private fun groupMatcherReplyMarkup(rules: GroupMatchingRules): InlineKeyboardMarkup {
-        val years = (1..4).map { GroupMatchingRules.Year.valueOf(it)!! }
-        val specialities =
-            listOf(GroupMatchingRules.Speciality.valueOf("0904")!!, GroupMatchingRules.Speciality.valueOf("0202")!!)
         val buttons = listOf(
-            years.map {
-                val text = Strings.studyYear(it)
-                if (it in rules.years) {
-                    InlineKeyboardButton.CallbackData(Strings.selectedButton(text), "unselect_year ${it.value}")
-                } else {
-                    InlineKeyboardButton.CallbackData(text, "select_year ${it.value}")
-                }
-            },
-            specialities.map {
-                if (it in rules.specialities) {
-                    InlineKeyboardButton.CallbackData(Strings.selectedButton(it.value), "unselect_speciality ${it.value}")
-                } else {
-                    InlineKeyboardButton.CallbackData(it.value, "select_speciality ${it.value}")
-                }
-            },
-            listOf(InlineKeyboardButton.CallbackData(Strings.ConfirmGroupMatcher, "confirm_group_matcher ${rules.toRegex(LocalDate.now())}"))
+            yearButtonRow(groupFilters.years, rules.years),
+            specialityButtonRow(groupFilters.specialities, rules.specialities),
+            listOf(
+                InlineKeyboardButton.CallbackData(
+                    Strings.ConfirmGroupMatcher,
+                    "confirm_group_matcher ${rules.toRegex(LocalDate.now())}"
+                )
+            )
         )
         return InlineKeyboardMarkup.create(buttons)
+    }
+
+    private fun yearButtonRow(years: Collection<Year>, selectedYears: Set<Year>): List<InlineKeyboardButton> {
+        return years.map {
+            val text = Strings.studyYear(it)
+            if (it in selectedYears) {
+                InlineKeyboardButton.CallbackData(Strings.selectedButton(text), "unselect_year ${it.value}")
+            } else {
+                InlineKeyboardButton.CallbackData(text, "select_year ${it.value}")
+            }
+        }
+    }
+
+    private fun specialityButtonRow(
+        specialities: Collection<Speciality>,
+        selectedSpecialities: Set<Speciality>
+    ): List<InlineKeyboardButton> {
+        return specialities.map {
+            if (it in selectedSpecialities) {
+                InlineKeyboardButton.CallbackData(Strings.selectedButton(it.value), "unselect_speciality ${it.value}")
+            } else {
+                InlineKeyboardButton.CallbackData(it.value, "select_speciality ${it.value}")
+            }
+        }
     }
 }
