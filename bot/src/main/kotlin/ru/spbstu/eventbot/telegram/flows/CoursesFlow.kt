@@ -9,9 +9,12 @@ import com.github.kotlintelegrambot.entities.ReplyMarkup
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
+import ru.spbstu.eventbot.domain.permissions.Permissions.App.chatId
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.ChatState
 import ru.spbstu.eventbot.telegram.Strings
+import ru.spbstu.eventbot.telegram.Strings.RequestAdditionalInfo
+import ru.spbstu.eventbot.telegram.Strings.RequestAnswer
 import ru.spbstu.eventbot.telegram.sendReply
 
 class CoursesFlow(
@@ -69,7 +72,7 @@ class CoursesFlow(
                 sendReply(Strings.CourseNotFound)
             }
             is SubmitApplicationUseCase.Result.AdditionalInfoRequired -> {
-                sendReply(result.question)
+                sendReply(text=RequestAdditionalInfo + result.question + RequestAnswer)
                 setState(ChatState.AdditionalInfoRequested(courseId, callbackQuery.message?.messageId))
             }
             SubmitApplicationUseCase.Result.Error -> {

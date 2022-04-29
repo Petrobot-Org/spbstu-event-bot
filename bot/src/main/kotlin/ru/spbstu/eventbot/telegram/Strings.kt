@@ -36,6 +36,8 @@ object Strings {
     const val ConfirmGroupMatcher = "✅ Подтвердить"
     const val ExpiredGroupMatcher = "Истёк"
 
+    const val RequestAdditionalInfo = "Для подачи заявки на запись на этот курс необходимо ввести дополнительную информацию\n"
+    const val RequestAnswer = "\nУкажите эту информацию в ответном сообщении."
     const val UnknownCommand = "Введена неизвестная команда."
     const val UnauthorizedError = "У вас недостаточно прав для этой команды.\nСвяжитесь с оператором бота, в случае ошибки."
     const val AvailableCoursesHeader = "Доступные курсы"
