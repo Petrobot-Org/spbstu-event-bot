@@ -156,7 +156,7 @@ class CoursesFlow(
                     return
                 }
                 sendReply(
-                    text = Strings.applicantsInfo(result.applications),
+                    text = TODO(),
                     parseMode = ParseMode.MARKDOWN
                 )
             }

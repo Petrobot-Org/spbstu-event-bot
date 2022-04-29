@@ -1,17 +1,22 @@
 package ru.spbstu.eventbot
 
 import com.github.kotlintelegrambot.Bot
+import io.github.evanrupert.excelkt.Sheet
+import io.github.evanrupert.excelkt.workbook
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import mu.KotlinLogging
 import org.apache.commons.mail.EmailException
+import ru.spbstu.eventbot.domain.entities.Application
 import ru.spbstu.eventbot.domain.entities.Course
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.GetApplicationsByCourseIdUseCase
 import ru.spbstu.eventbot.domain.usecases.GetExpiredCoursesFlowUseCase
 import ru.spbstu.eventbot.email.EmailSender
 import ru.spbstu.eventbot.telegram.Strings
+import ru.spbstu.eventbot.telegram.generateApplicationsTable
 import ru.spbstu.eventbot.telegram.notifyCourseExpired
+import java.io.ByteArrayOutputStream
 
 private val logger = KotlinLogging.logger { }
 
@@ -44,14 +49,8 @@ class ExpiredCoursesCollector(
     }
 
     context(Permissions)
-    private fun createApplicationsTable(course: Course): ByteArray? {
-        return when (val result = getApplicationsByCourseId(course.id)) {
-            GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> null
-            GetApplicationsByCourseIdUseCase.Result.Unauthorized -> throw AssertionError("")
-            is GetApplicationsByCourseIdUseCase.Result.OK -> {
-                val utf8ByteOrderMark = byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
-                utf8ByteOrderMark + Strings.applicantsInfo(result.applications).encodeToByteArray()
-            }
-        }
+            private fun createApplicationsTable(course: Course): ByteArray? {
+        val result = getApplicationsByCourseId(course.id) as? GetApplicationsByCourseIdUseCase.Result.OK ?: return null
+        return generateApplicationsTable(result.applications)
     }
 }

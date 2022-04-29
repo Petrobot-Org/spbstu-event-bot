@@ -9,7 +9,7 @@ import ru.spbstu.eventbot.domain.entities.Student
 import ru.spbstu.eventbot.telegram.Strings.notificationAboutNewCourse
 
 fun notifyCourseExpired(course: Course, bot: Bot, applicantsTable: ByteArray) {
-    val file = TelegramFile.ByByteArray(applicantsTable, "${course.title}.csv")
+    val file = TelegramFile.ByByteArray(applicantsTable, "${course.title}.xlsx")
     val chatId = ChatId.fromId(course.client.userId)
     bot.sendDocument(chatId, file, Strings.courseExpiredNotification(course))
 }

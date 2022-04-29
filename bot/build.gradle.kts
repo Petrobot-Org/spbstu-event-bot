@@ -23,6 +23,7 @@ dependencies {
     implementation("org.apache.commons:commons-email:1.5")
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
     implementation("org.slf4j:slf4j-simple:1.7.36")
+    implementation("io.github.evanrupert:excelkt:1.0.2")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("io.insert-koin:koin-test:3.2.0-beta-1")
     testImplementation("io.insert-koin:koin-test-junit5:3.2.0-beta-1")
