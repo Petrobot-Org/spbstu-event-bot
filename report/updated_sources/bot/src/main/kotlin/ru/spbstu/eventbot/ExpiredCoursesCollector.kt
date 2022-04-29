@@ -10,7 +10,7 @@ import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.GetApplicationsByCourseIdUseCase
 import ru.spbstu.eventbot.domain.usecases.GetExpiredCoursesFlowUseCase
 import ru.spbstu.eventbot.email.EmailSender
-import ru.spbstu.eventbot.telegram.Strings
+import ru.spbstu.eventbot.telegram.generateApplicationsTable
 import ru.spbstu.eventbot.telegram.notifyCourseExpired
 
 private val logger = KotlinLogging.logger { }
@@ -45,11 +45,7 @@ class ExpiredCoursesCollector(
 
     context(Permissions)
     private fun createApplicationsTable(course: Course): ByteArray? {
-        return when (val result = getApplicationsByCourseId(course.id)) {
-            GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> null
-            GetApplicationsByCourseIdUseCase.Result.Unauthorized -> throw AssertionError("")
-            is GetApplicationsByCourseIdUseCase.Result.OK -> Strings.applicantsInfo(result.applications)
-                .encodeToByteArray()
-        }
+        val result = getApplicationsByCourseId(course.id) as? GetApplicationsByCourseIdUseCase.Result.OK ?: return null
+        return generateApplicationsTable(result.applications)
     }
 }
