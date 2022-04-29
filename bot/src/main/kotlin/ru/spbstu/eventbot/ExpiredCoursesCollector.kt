@@ -48,8 +48,10 @@ class ExpiredCoursesCollector(
         return when (val result = getApplicationsByCourseId(course.id)) {
             GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> null
             GetApplicationsByCourseIdUseCase.Result.Unauthorized -> throw AssertionError("")
-            is GetApplicationsByCourseIdUseCase.Result.OK -> Strings.applicantsInfo(result.applications)
-                .encodeToByteArray()
+            is GetApplicationsByCourseIdUseCase.Result.OK -> {
+                val utf8ByteOrderMark = byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
+                utf8ByteOrderMark + Strings.applicantsInfo(result.applications).encodeToByteArray()
+            }
         }
     }
 }
