@@ -58,10 +58,10 @@ class Bot(
             "details" -> coursesFlow.details(CourseId(arg.toLong()))
             "apply" -> coursesFlow.apply(CourseId(arg.toLong()))
             "revoke" -> coursesFlow.revoke(CourseId(arg.toLong()))
-            "applicants" -> require(canAccessAnyCourse || canAccessTheirCourse) {
+            "applicants" -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
                 coursesFlow.applicantsInfo(CourseId(arg.toLong()))
             }
-            "newcourse" -> require(canAccessAnyCourse || canAccessTheirCourse) {
+            "newcourse" -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
                 courseCreationFlow.onClientSelected(ClientId(arg.toLong()))
             }
             "select_year" -> courseCreationFlow.selectYear(Year.valueOf(arg.toInt())!!)
@@ -79,13 +79,13 @@ class Bot(
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses", Strings.ButtonCourses -> coursesFlow.display()
-            "/newclient", Strings.ButtonNewClient -> require(canModifyClients) {
+            "/newclient", Strings.ButtonNewClient -> requirePermissions(canModifyClients) {
                 clientRegistrationFlow.start()
             }
-            "/getapplicants" -> require(canAccessAnyCourse || canAccessTheirCourse) {
+            "/getapplicants" -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
                 coursesFlow.displayApplicants()
             }
-            "/newcourse", Strings.ButtonNewCourse -> require(canAccessAnyCourse || canAccessTheirCourse) {
+            "/newcourse", Strings.ButtonNewCourse -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
                 courseCreationFlow.start()
             }
             else -> handleFreeText()

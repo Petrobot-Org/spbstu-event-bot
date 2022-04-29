@@ -51,7 +51,7 @@ fun sendReply(
 }
 
 context(TextHandlerEnvironment)
-fun require(condition: Boolean, action: () -> Unit) {
+fun requirePermissions(condition: Boolean, action: () -> Unit) {
     if (condition) {
         action()
     } else {
@@ -60,7 +60,7 @@ fun require(condition: Boolean, action: () -> Unit) {
 }
 
 context(CallbackQueryHandlerEnvironment)
-fun require(condition: Boolean, action: () -> Unit) {
+fun requirePermissions(condition: Boolean, action: () -> Unit) {
     if (condition) {
         action()
     } else {
