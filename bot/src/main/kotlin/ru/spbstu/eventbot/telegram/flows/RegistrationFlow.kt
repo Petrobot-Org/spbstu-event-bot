@@ -2,6 +2,7 @@ package ru.spbstu.eventbot.telegram.flows
 
 import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
+import com.github.kotlintelegrambot.entities.ParseMode
 import ru.spbstu.eventbot.domain.entities.Email
 import ru.spbstu.eventbot.domain.entities.FullName
 import ru.spbstu.eventbot.domain.entities.Group
@@ -65,7 +66,7 @@ class RegistrationFlow(
                     }
                     RegisterStudentUseCase.Result.OK -> {
                         setState(ChatState.Empty)
-                        sendReply(Strings.RegisteredSuccessfully)
+                        sendReply(text = Strings.RegisteredSuccessfully, parseMode = ParseMode.MARKDOWN)
                     }
                 }
             }

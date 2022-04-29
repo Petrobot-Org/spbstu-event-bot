@@ -5,6 +5,7 @@ import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvi
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
+import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import ru.spbstu.eventbot.domain.entities.*
 import ru.spbstu.eventbot.domain.permissions.Permissions
@@ -96,7 +97,7 @@ class CourseCreationFlow(
         val date = try {
             formatter.parse(text, Instant::from)
         } catch (e: DateTimeParseException) {
-            sendReply(Strings.InvalidDate)
+            sendReply(text = Strings.InvalidDate, parseMode = ParseMode.MARKDOWN, )
             return state
         }
         return state.copy(expiryDate = date)
@@ -161,11 +162,11 @@ class CourseCreationFlow(
                 NewCourseCreationRequest.Description
             }
             state.additionalQuestion == null -> {
-                bot.sendMessage(ChatId.fromId(chatId), Strings.RequestAdditionalQuestion)
+                bot.sendMessage(ChatId.fromId(chatId), text = Strings.RequestAdditionalQuestion, parseMode = ParseMode.MARKDOWN)
                 NewCourseCreationRequest.AdditionalQuestion
             }
             state.expiryDate == null -> {
-                bot.sendMessage(ChatId.fromId(chatId), Strings.RequestExpiryDate)
+                bot.sendMessage(ChatId.fromId(chatId), text = Strings.RequestExpiryDate, parseMode = ParseMode.MARKDOWN)
                 NewCourseCreationRequest.ExpiryDate
             }
             state.groupMatcher == null -> {
