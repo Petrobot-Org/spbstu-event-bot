@@ -28,7 +28,7 @@ object Strings {
     const val RequestTitle = "Введите название курса"
     const val RequestDescription = "Введите краткую информацию о содержании курса"
     const val RequestAdditionalQuestion = "Если помимо основной информации (номер группы, ФИО, адрес электронной " +
-            "почты) требуется *дополнительная информация*, укажите её в форме вопроса.\nЕсли нет, то напишите \"нет\"."
+        "почты) требуется *дополнительная информация*, укажите её в форме вопроса.\nЕсли нет, то напишите \"нет\"."
     const val RequestExpiryDate = "Введите дату дэдлайна подачи заявок на курс в формате *дд.ММ.гггг чч:мм*"
     const val InvalidDate = "Неправильный формат даты\nТребуемый формат *дд.ММ.гггг чч:мм*"
     const val ErrorRetry = "Что-то пошло не так. Начинаем заново."
@@ -98,7 +98,7 @@ object Strings {
             |
             |В случае, если вы передумаете участвовать в этом курсе, вы можете *отозвать* заявку.
             |Для этого необходимо нажать кнопку «Отозвать запись»
-            """.trimMargin()
+        """.trimMargin()
 
     fun registrationConfirmation(name: FullName, email: Email, group: Group) =
         """|Имя: $name
@@ -130,7 +130,7 @@ object Strings {
            |${course.description}
         """.trimMargin()
 
-    fun requestAdditionalInfo(additionalQuestion: String)=
+    fun requestAdditionalInfo(additionalQuestion: String) =
         """
             |Для подачи заявки на запись на этот курс необходимо ввести дополнительную информацию
             |

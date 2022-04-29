@@ -82,7 +82,7 @@ class CourseCreationFlow(
 
     context(TextHandlerEnvironment)
     private fun handleAdditionalQuestion(state: ChatState.NewCourseCreation): ChatState.NewCourseCreation {
-        val additionalQuestion = AdditionalQuestion(if (text in Strings.NegativeAnswers) null else text)
+        val additionalQuestion = AdditionalQuestion(if (text.lowercase() in Strings.NegativeAnswers) null else text)
         return state.copy(additionalQuestion = additionalQuestion)
     }
 
@@ -94,7 +94,7 @@ class CourseCreationFlow(
         val date = try {
             formatter.parse(text, Instant::from)
         } catch (e: DateTimeParseException) {
-            sendReply(text = Strings.InvalidDate, parseMode = ParseMode.MARKDOWN, )
+            sendReply(text = Strings.InvalidDate, parseMode = ParseMode.MARKDOWN,)
             return state
         }
         return state.copy(expiryDate = date)
