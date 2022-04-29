@@ -20,7 +20,7 @@ object Strings {
     const val RequestClientName = "Введите ФИО заказчика"
     const val RequestClientEmail = "Теперь введите адрес электронной почты заказчика"
     const val RequestClientUserId = "Введите Id телеграма заказчика (напишите \"нет\", если нет)"
-    const val ClientRegisteredSuccessfully = "Новый клиент был успешно создан"
+    const val ClientRegisteredSuccessfully = "Новый заказчик был успешно создан"
     const val InvalidClientName = "Вы ввели некорректное ФИО заказчика. Попробуйте снова."
     const val InvalidClientUserId = "Id заказчика должно быть целым числом. Попробуйте снова."
 
