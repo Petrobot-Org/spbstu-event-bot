@@ -17,6 +17,7 @@ import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.email.EmailSender
 import ru.spbstu.eventbot.telegram.Bot
 import ru.spbstu.eventbot.telegram.ProvidePermissions
+import ru.spbstu.eventbot.telegram.ProvideState
 import ru.spbstu.eventbot.telegram.flows.*
 
 val mainModule = module {
@@ -47,13 +48,14 @@ val mainModule = module {
     singleOf(::ClientRegistrationFlow)
     singleOf(::CoursesFlow)
     singleOf(::ProvidePermissions)
+    singleOf(::ProvideState)
     singleOf(::GetExpiredCoursesFlowUseCase)
     singleOf(::GetMatchingStudentsUseCase)
     singleOf(::ExpiredCoursesCollector)
     singleOf(::NewCoursesCollector)
     singleOf(::CourseCreationFlow)
     singleOf(::EmailSender)
-    single { Bot(secrets.telegramToken, get(), get(), get(), get(), get()) }
+    single { Bot(secrets.telegramToken, get(), get(), get(), get(), get(), get()) }
 }
 
 fun main() {

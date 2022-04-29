@@ -10,10 +10,7 @@ import ru.spbstu.eventbot.domain.entities.*
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.CreateNewCourseUseCase
 import ru.spbstu.eventbot.domain.usecases.GetMyClientsUseCase
-import ru.spbstu.eventbot.telegram.ChatState
-import ru.spbstu.eventbot.telegram.NewCourseCreationRequest
-import ru.spbstu.eventbot.telegram.Strings
-import ru.spbstu.eventbot.telegram.sendReply
+import ru.spbstu.eventbot.telegram.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -47,14 +44,14 @@ class CourseCreationFlow(
         }
     }
 
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    fun onClientSelected(clientId: ClientId, setState: (ChatState) -> Unit) {
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    fun onClientSelected(clientId: ClientId) {
         setState(ChatState.NewCourseCreation(NewCourseCreationRequest.Title, clientId))
         sendReply(Strings.RequestTitle)
     }
 
-    context(Permissions, TextHandlerEnvironment)
-    fun handle(state: ChatState.NewCourseCreation, setState: (ChatState) -> Unit) {
+    context(Permissions, StateEnvironment<ChatState.NewCourseCreation>, TextHandlerEnvironment)
+    fun handle() {
         val newState = when (state.request) {
             NewCourseCreationRequest.Title -> handleTitle(state)
             NewCourseCreationRequest.Description -> handleDescription(state)
@@ -197,29 +194,29 @@ class CourseCreationFlow(
         )
     }
 
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    fun selectYear(year: Year, state: ChatState, setState: (ChatState) -> Unit) {
-        updateGroupMatcher(state, setState) { it.copy(years = it.years + year) }
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    fun selectYear(year: Year) {
+        updateGroupMatcher { it.copy(years = it.years + year) }
     }
 
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    fun unselectYear(year: Year, state: ChatState, setState: (ChatState) -> Unit) {
-        updateGroupMatcher(state, setState) { it.copy(years = it.years - year) }
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    fun unselectYear(year: Year) {
+        updateGroupMatcher { it.copy(years = it.years - year) }
     }
 
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    fun selectSpeciality(speciality: Speciality, state: ChatState, setState: (ChatState) -> Unit) {
-        updateGroupMatcher(state, setState) { it.copy(specialities = it.specialities + speciality) }
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    fun selectSpeciality(speciality: Speciality) {
+        updateGroupMatcher { it.copy(specialities = it.specialities + speciality) }
     }
 
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    fun unselectSpeciality(speciality: Speciality, state: ChatState, setState: (ChatState) -> Unit) {
-        updateGroupMatcher(state, setState) { it.copy(specialities = it.specialities - speciality) }
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    fun unselectSpeciality(speciality: Speciality) {
+        updateGroupMatcher { it.copy(specialities = it.specialities - speciality) }
     }
 
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    fun confirmGroupMatcher(regex: Regex, state: ChatState, setState: (ChatState) -> Unit) {
-        if (state !is ChatState.NewCourseCreation) {
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    fun confirmGroupMatcher(regex: Regex) {
+        val courseCreationState = state as? ChatState.NewCourseCreation ?: run {
             bot.editMessageText(
                 chatId = ChatId.fromId(chatId),
                 messageId = callbackQuery.message?.messageId,
@@ -228,18 +225,14 @@ class CourseCreationFlow(
             )
             return
         }
-        val newState = state.copy(groupMatcher = regex)
+        val newState = courseCreationState.copy(groupMatcher = regex)
         val request = requestInfo(bot, newState)
         setState(newState.copy(request = request))
     }
 
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    private fun updateGroupMatcher(
-        state: ChatState,
-        setState: (ChatState) -> Unit,
-        modifyRules: (GroupMatchingRules) -> GroupMatchingRules
-    ) {
-        if (state !is ChatState.NewCourseCreation) {
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    private fun updateGroupMatcher(modifyRules: (GroupMatchingRules) -> GroupMatchingRules) {
+        val courseCreationState = state as? ChatState.NewCourseCreation ?: run {
             bot.editMessageText(
                 chatId = ChatId.fromId(chatId),
                 messageId = callbackQuery.message?.messageId,
@@ -248,8 +241,8 @@ class CourseCreationFlow(
             )
             return
         }
-        val rules = modifyRules(state.groupMatchingRules)
-        setState(state.copy(groupMatchingRules = rules))
+        val rules = modifyRules(courseCreationState.groupMatchingRules)
+        setState(courseCreationState.copy(groupMatchingRules = rules))
         bot.editMessageText(
             chatId = ChatId.fromId(chatId),
             messageId = callbackQuery.message?.messageId,

@@ -5,49 +5,41 @@ import ru.spbstu.eventbot.domain.entities.ClientName
 import ru.spbstu.eventbot.domain.entities.Email
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.RegisterClientUseCase
-import ru.spbstu.eventbot.telegram.ChatState
-import ru.spbstu.eventbot.telegram.ClientRegistrationRequest
-import ru.spbstu.eventbot.telegram.Strings
-import ru.spbstu.eventbot.telegram.sendReply
+import ru.spbstu.eventbot.telegram.*
 
 class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) {
-    context(TextHandlerEnvironment)
-    fun start(
-        setState: (ChatState) -> Unit
-    ) {
+    context(TextHandlerEnvironment, StateEnvironment<ChatState>)
+    fun start() {
         sendReply(Strings.RequestClientName)
         setState(ChatState.ClientRegistration(ClientRegistrationRequest.Name))
     }
 
-    context(Permissions, TextHandlerEnvironment)
-    fun handle(
-        state: ChatState.ClientRegistration,
-        setState: (ChatState) -> Unit
-    ) {
+    context(Permissions, StateEnvironment<ChatState.ClientRegistration>, TextHandlerEnvironment)
+    fun handle() {
         when (state.request) {
-            ClientRegistrationRequest.Name -> handleName(state, setState)
-            ClientRegistrationRequest.Email -> handleEmail(state, setState)
-            ClientRegistrationRequest.UserId -> handleUserId(state, setState)
-            ClientRegistrationRequest.Confirm -> handleConfirmation(state, setState)
+            ClientRegistrationRequest.Name -> handleName()
+            ClientRegistrationRequest.Email -> handleEmail()
+            ClientRegistrationRequest.UserId -> handleUserId()
+            ClientRegistrationRequest.Confirm -> handleConfirmation()
         }
     }
 
-    context(TextHandlerEnvironment)
-    private fun handleName(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
+    context(StateEnvironment<ChatState.ClientRegistration>, TextHandlerEnvironment)
+    private fun handleName() {
         val name = ClientName.valueOf(text) ?: return sendReply(Strings.InvalidClientName)
         setState(state.copy(name = name, request = ClientRegistrationRequest.Email))
         sendReply(Strings.RequestClientEmail)
     }
 
-    context(TextHandlerEnvironment)
-    private fun handleEmail(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
+    context(StateEnvironment<ChatState.ClientRegistration>, TextHandlerEnvironment)
+    private fun handleEmail() {
         val email = Email.valueOf(text) ?: return sendReply(Strings.InvalidEmail)
         setState(state.copy(email = email, request = ClientRegistrationRequest.UserId))
         sendReply(Strings.RequestClientUserId)
     }
 
-    context(Permissions, TextHandlerEnvironment)
-    private fun handleUserId(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
+    context(Permissions, StateEnvironment<ChatState.ClientRegistration>, TextHandlerEnvironment)
+    private fun handleUserId() {
         val userId = if (text in Strings.NegativeAnswers) {
             userId
         } else {
@@ -66,8 +58,8 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
         )
     }
 
-    context(Permissions, TextHandlerEnvironment)
-    private fun handleConfirmation(state: ChatState.ClientRegistration, setState: (ChatState) -> Unit) {
+    context(Permissions, StateEnvironment<ChatState.ClientRegistration>, TextHandlerEnvironment)
+    private fun handleConfirmation() {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
                 when (registerClient(state.name!!, state.email!!, state.userId!!)) {
@@ -81,13 +73,13 @@ class ClientRegistrationFlow(private val registerClient: RegisterClientUseCase) 
                     }
                     RegisterClientUseCase.Result.Error -> {
                         sendReply(Strings.ErrorRetry)
-                        start(setState)
+                        start()
                     }
                 }
             }
             in Strings.NegativeAnswers -> {
                 sendReply(Strings.RegistrationRetry)
-                start(setState)
+                start()
             }
             else -> {
                 sendReply(Strings.RequestYesNo)

@@ -7,28 +7,25 @@ import ru.spbstu.eventbot.domain.entities.FullName
 import ru.spbstu.eventbot.domain.entities.Group
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.RegisterStudentUseCase
-import ru.spbstu.eventbot.telegram.ChatState
-import ru.spbstu.eventbot.telegram.RegistrationRequest
-import ru.spbstu.eventbot.telegram.Strings
-import ru.spbstu.eventbot.telegram.sendReply
+import ru.spbstu.eventbot.telegram.*
 
 class RegistrationFlow(
     private val registerStudent: RegisterStudentUseCase
 ) {
-    context(TextHandlerEnvironment)
-    fun start(setState: (ChatState) -> Unit) {
+    context(TextHandlerEnvironment, StateEnvironment<ChatState>)
+    fun start() {
         setState(ChatState.Registration(RegistrationRequest.FullName))
         sendReply(Strings.RequestName)
     }
 
-    context(CallbackQueryHandlerEnvironment)
-    fun start(setState: (ChatState) -> Unit) {
+    context(CallbackQueryHandlerEnvironment, StateEnvironment<ChatState>)
+    fun start() {
         setState(ChatState.Registration(RegistrationRequest.FullName))
         sendReply(Strings.RequestName)
     }
 
-    context(Permissions, TextHandlerEnvironment)
-    fun handle(state: ChatState.Registration, setState: (ChatState) -> Unit) {
+    context(Permissions, StateEnvironment<ChatState.Registration>, TextHandlerEnvironment)
+    fun handle() {
         val newState = when (state.request) {
             RegistrationRequest.FullName -> {
                 val fullName = FullName.valueOf(text) ?: return sendReply(Strings.InvalidName)
@@ -43,7 +40,7 @@ class RegistrationFlow(
                 state.copy(group = group)
             }
             RegistrationRequest.Confirm -> {
-                handleConfirmation(state, setState)
+                handleConfirmation()
                 return
             }
         }
@@ -51,16 +48,13 @@ class RegistrationFlow(
         setState(newState.copy(request = request))
     }
 
-    context(Permissions, TextHandlerEnvironment)
-    private fun handleConfirmation(
-        state: ChatState.Registration,
-        setState: (ChatState) -> Unit
-    ) {
+    context(Permissions, StateEnvironment<ChatState.Registration>, TextHandlerEnvironment)
+    private fun handleConfirmation() {
         when (text.lowercase()) {
             in Strings.PositiveAnswers -> {
                 when (registerStudent(state.fullName!!, state.email!!, state.group!!)) {
                     RegisterStudentUseCase.Result.Error -> {
-                        start(setState)
+                        start()
                         sendReply(Strings.ErrorRetry)
                     }
                     RegisterStudentUseCase.Result.OK -> {
@@ -71,7 +65,7 @@ class RegistrationFlow(
             }
             in Strings.NegativeAnswers -> {
                 sendReply(Strings.RegistrationRetry)
-                start(setState)
+                start()
             }
             else -> {
                 sendReply(Strings.RequestYesNo)

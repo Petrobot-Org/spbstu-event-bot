@@ -17,27 +17,28 @@ import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
 class Bot(
     private val telegramToken: String,
     private val providePermissions: ProvidePermissions,
+    private val provideState: ProvideState,
     private val registrationFlow: RegistrationFlow,
     private val courseCreationFlow: CourseCreationFlow,
     private val clientRegistrationFlow: ClientRegistrationFlow,
     private val coursesFlow: CoursesFlow
 ) {
-    private val states = mutableMapOf<Long, ChatState>()
-
     val bot = bot {
         logLevel = LogLevel.Error
         token = telegramToken
         dispatch {
             callbackQuery {
                 providePermissions {
-                    val (state, setState) = state()
-                    handleCallback(state, setState)
+                    provideState {
+                        handleCallback()
+                    }
                 }
             }
             text {
                 providePermissions {
-                    val (state, setState) = state()
-                    handleText(state, setState)
+                    provideState {
+                        handleText()
+                    }
                 }
             }
         }
@@ -47,63 +48,56 @@ class Bot(
         bot.startPolling()
     }
 
-    context(Permissions)
-    private fun state(): Pair<ChatState, (ChatState) -> Unit> {
-        return (states[chatId] ?: ChatState.Empty) to { newState: ChatState -> states[chatId] = newState }
-    }
-
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    private fun handleCallback(state: ChatState, setState: (ChatState) -> Unit) {
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    private fun handleCallback() {
         val tokens = callbackQuery.data.split(' ')
         require(tokens.size == 2)
         val command = tokens[0]
         val arg = tokens[1]
         when (command) {
             "details" -> coursesFlow.details(CourseId(arg.toLong()))
-            "apply" -> coursesFlow.apply(CourseId(arg.toLong()), setState)
+            "apply" -> coursesFlow.apply(CourseId(arg.toLong()))
             "revoke" -> coursesFlow.revoke(CourseId(arg.toLong()))
-            "applicants" -> require(canAccessAnyCourse || canAccessTheirCourse) {
+            "applicants" -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
                 coursesFlow.applicantsInfo(CourseId(arg.toLong()))
             }
-            "newcourse" -> require(canAccessAnyCourse || canAccessTheirCourse) {
-                courseCreationFlow.onClientSelected(ClientId(arg.toLong()), setState)
+            "newcourse" -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
+                courseCreationFlow.onClientSelected(ClientId(arg.toLong()))
             }
-            "select_year" -> courseCreationFlow.selectYear(Year.valueOf(arg.toInt())!!, state, setState)
-            "unselect_year" -> courseCreationFlow.unselectYear(Year.valueOf(arg.toInt())!!, state, setState)
-            "select_speciality" -> courseCreationFlow.selectSpeciality(Speciality.valueOf(arg)!!, state, setState)
-            "unselect_speciality" -> courseCreationFlow.unselectSpeciality(Speciality.valueOf(arg)!!, state, setState)
-            "confirm_group_matcher" -> courseCreationFlow.confirmGroupMatcher(arg.toRegex(), state, setState)
+            "select_year" -> courseCreationFlow.selectYear(Year.valueOf(arg.toInt())!!)
+            "unselect_year" -> courseCreationFlow.unselectYear(Year.valueOf(arg.toInt())!!)
+            "select_speciality" -> courseCreationFlow.selectSpeciality(Speciality.valueOf(arg)!!)
+            "unselect_speciality" -> courseCreationFlow.unselectSpeciality(Speciality.valueOf(arg)!!)
+            "confirm_group_matcher" -> courseCreationFlow.confirmGroupMatcher(arg.toRegex())
         }
     }
 
-    context(Permissions, TextHandlerEnvironment)
-    private fun handleText(state: ChatState, setState: (ChatState) -> Unit) {
+    context(Permissions, StateEnvironment<ChatState>, TextHandlerEnvironment)
+    private fun handleText() {
         when (text) {
-            "/register", Strings.ButtonRegister -> registrationFlow.start(setState)
+            "/register", Strings.ButtonRegister -> registrationFlow.start()
             "/help" -> writeHelp()
             "/start" -> writeStart()
             "/courses", Strings.ButtonCourses -> coursesFlow.display()
-            "/newclient", Strings.ButtonNewClient -> require(canModifyClients) {
-                clientRegistrationFlow.start(setState)
+            "/newclient", Strings.ButtonNewClient -> requirePermissions(canModifyClients) {
+                clientRegistrationFlow.start()
             }
-            "/getapplicants" -> require(canAccessAnyCourse || canAccessTheirCourse) {
+            "/getapplicants" -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
                 coursesFlow.displayApplicants()
             }
-            "/newcourse", Strings.ButtonNewCourse -> require(canAccessAnyCourse || canAccessTheirCourse) {
+            "/newcourse", Strings.ButtonNewCourse -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
                 courseCreationFlow.start()
             }
-            else -> handleFreeText(state, setState)
+            else -> handleFreeText()
         }
     }
 
-    context(Permissions, TextHandlerEnvironment)
-    private fun handleFreeText(state: ChatState, setState: (ChatState) -> Unit) {
-        when (state) {
-            ChatState.Empty -> sendReply(Strings.UnknownCommand)
-            is ChatState.Registration -> registrationFlow.handle(state, setState)
-            is ChatState.ClientRegistration -> clientRegistrationFlow.handle(state, setState)
-            is ChatState.NewCourseCreation -> courseCreationFlow.handle(state, setState)
-            is ChatState.AdditionalInfoRequested -> coursesFlow.handleAdditionalInfo(state, setState)
-        }
+    context(Permissions, StateEnvironment<ChatState>, TextHandlerEnvironment)
+    private fun handleFreeText() {
+        ifState<ChatState.Empty> { sendReply(Strings.UnknownCommand) }
+        ifState<ChatState.Registration> { registrationFlow.handle() }
+        ifState<ChatState.ClientRegistration> { clientRegistrationFlow.handle() }
+        ifState<ChatState.NewCourseCreation> { courseCreationFlow.handle() }
+        ifState<ChatState.AdditionalInfoRequested> { coursesFlow.handleAdditionalInfo() }
     }
 }

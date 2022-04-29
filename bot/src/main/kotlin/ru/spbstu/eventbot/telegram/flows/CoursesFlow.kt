@@ -11,6 +11,7 @@ import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.ChatState
+import ru.spbstu.eventbot.telegram.StateEnvironment
 import ru.spbstu.eventbot.telegram.Strings
 import ru.spbstu.eventbot.telegram.sendReply
 
@@ -49,11 +50,8 @@ class CoursesFlow(
         )
     }
 
-    context(Permissions, CallbackQueryHandlerEnvironment)
-    fun apply(
-        courseId: CourseId,
-        setState: (ChatState) -> Unit
-    ) {
+    context(Permissions, StateEnvironment<ChatState>, CallbackQueryHandlerEnvironment)
+    fun apply(courseId: CourseId) {
         when (val result = submitApplication(courseId)) {
             is SubmitApplicationUseCase.Result.OK -> {}
             is SubmitApplicationUseCase.Result.AlreadySubmitted -> {
@@ -63,7 +61,7 @@ class CoursesFlow(
                 sendReply(Strings.CourseExpired)
             }
             is SubmitApplicationUseCase.Result.NotRegistered -> {
-                registrationFlow.start(setState)
+                registrationFlow.start()
             }
             is SubmitApplicationUseCase.Result.NoSuchCourse -> {
                 sendReply(Strings.CourseNotFound)
@@ -84,11 +82,8 @@ class CoursesFlow(
     }
 
     // TODO: Deal with code duplication
-    context(Permissions, TextHandlerEnvironment)
-    fun handleAdditionalInfo(
-        state: ChatState.AdditionalInfoRequested,
-        setState: (ChatState) -> Unit
-    ) {
+    context(Permissions, StateEnvironment<ChatState.AdditionalInfoRequested>, TextHandlerEnvironment)
+    fun handleAdditionalInfo() {
         setState(ChatState.Empty)
         when (val result = submitApplication(state.courseId, text)) {
             is SubmitApplicationUseCase.Result.OK -> {}
@@ -99,7 +94,7 @@ class CoursesFlow(
                 sendReply(Strings.CourseExpired)
             }
             is SubmitApplicationUseCase.Result.NotRegistered -> {
-                registrationFlow.start(setState)
+                registrationFlow.start()
             }
             is SubmitApplicationUseCase.Result.NoSuchCourse -> {
                 sendReply(Strings.CourseNotFound)
