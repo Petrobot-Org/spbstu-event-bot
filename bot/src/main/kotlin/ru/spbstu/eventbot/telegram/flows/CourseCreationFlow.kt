@@ -94,7 +94,7 @@ class CourseCreationFlow(
         val date = try {
             formatter.parse(text, Instant::from)
         } catch (e: DateTimeParseException) {
-            sendReply(text = Strings.InvalidDate, parseMode = ParseMode.MARKDOWN, )
+            sendReply(text = Strings.InvalidDate, parseMode = ParseMode.MARKDOWN,)
             return state
         }
         return state.copy(expiryDate = date)
