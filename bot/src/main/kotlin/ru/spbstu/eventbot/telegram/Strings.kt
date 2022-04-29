@@ -7,45 +7,45 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 object Strings {
-    const val InvalidName = "Некорректное имя. Попробуйте снова."
-    const val InvalidEmail = "Некорректная почта. Попробуйте снова."
-    const val InvalidGroup = "Некорректная группа. Попробуйте снова."
-    const val RequestName = "Давайте познакомимся. Как вас зовут?"
+    const val InvalidName = "Вы ввели некорректное ФИО. Попробуйте снова."
+    const val InvalidEmail = "Вы ввели некорректную почту. Попробуйте снова."
+    const val InvalidGroup = "Вы ввели некорректный номер группы. Убедитесь, что вы вводите группу ВШПИ и попробуйте снова."
+    const val RequestName = "Давайте познакомимся.\n Ввведите своё ФИО "
     const val RequestEmail = "Теперь нужен адрес электронной почты."
-    const val RequestGroup = "Номер группы"
+    const val RequestGroup = "Укажите номер своей группы"
     const val RegistrationRetry = "Тогда начинаем заново"
     const val RequestYesNo = "Напишите да или нет"
-    const val RegisteredSuccessfully = "Успешная регистрация"
+    const val RegisteredSuccessfully = "Вы *успешно* зарегистрированы.\n Теперь вы можете записываться на курсы."
 
-    const val RequestClientName = "Имя заказчика"
-    const val RequestClientEmail = "Адрес электронной почты заказчика"
-    const val RequestClientUserId = "Id телеграма заказчика (напишите \"нет\", если нет)"
-    const val ClientRegisteredSuccessfully = "Клиент создан"
-    const val InvalidClientName = "Некорректное имя заказчика. Попробуйте снова."
+    const val RequestClientName = "Введите ФИО заказчика"
+    const val RequestClientEmail = "Теперь введите адрес электронной почты заказчика"
+    const val RequestClientUserId = "Введите Id телеграма заказчика (напишите \"нет\", если нет)"
+    const val ClientRegisteredSuccessfully = "Новый клиент был успешно создан"
+    const val InvalidClientName = "Вы ввели некорректное ФИО заказчика. Попробуйте снова."
     const val InvalidClientUserId = "Id заказчика должно быть целым числом. Попробуйте снова."
 
     const val SelectClient = "От кого?"
-    const val RequestTitle = "Название курса"
-    const val RequestDescription = "Описание курса"
+    const val RequestTitle = "Введите название курса"
+    const val RequestDescription = "Введите краткую информацию о содержании курса"
     const val RequestAdditionalQuestion = "Если помимо основной информации (номер группы, ФИО, адрес электронной " +
-        "почты) требуется дополнительная информация, укажите её в форме вопроса. Если нет, то напишите \"нет\"."
-    const val RequestExpiryDate = "Дэдлайн подачи заявок на курс (дд.ММ.гггг чч:мм)"
-    const val InvalidDate = "Неправильный формат даты"
+            "почты) требуется *дополнительная информация*, укажите её в форме вопроса. \n Если нет, то напишите \"нет\"."
+    const val RequestExpiryDate = "Введите дату дэдлайна подачи заявок на курс в формате *дд.ММ.гггг чч:мм*"
+    const val InvalidDate = "Неправильный формат даты \n Требуемый формат *дд.ММ.гггг чч:мм*"
     const val ErrorRetry = "Что-то пошло не так. Начинаем заново."
-    const val CreatedNewCourseSuccessfully = "Курс был успешно создан"
+    const val CreatedNewCourseSuccessfully = "Вы успешно создали курс. \n Теперь студенты получат оповещение о появлении вашего курса и смогут подать на него заявку."
     const val ConfirmGroupMatcher = "✅ Подтвердить"
     const val ExpiredGroupMatcher = "Истёк"
 
-    const val UnknownCommand = "Неизвестная команда"
-    const val UnauthorizedError = "Недостаточно прав"
+    const val UnknownCommand = "Введена неизвестная команда."
+    const val UnauthorizedError = "У вас недостаточно прав для этой команды. \n Свяжитесь с оператором бота, в случае ошибки."
     const val AvailableCoursesHeader = "Доступные курсы"
-    const val NoSuchCourse = "Этого курса не существует"
-    const val NoSuchClient = "Этого клиента не существует"
-    const val NoApplicants = "Никто ещё не подал заявку на этот курс"
+    const val NoSuchCourse = "Этого курса не существует."
+    const val NoSuchClient = "Этого заказчика не существует."
+    const val NoApplicants = "Никто ещё не подал заявку на этот курс."
     const val SubmitApplication = "✅ Записаться"
     const val RevokeApplication = "❌ Отозвать запись"
-    const val SubmitError = "Не получилось подать заявку"
-    const val RevokeError = "Не получилось отозвать заявку"
+    const val SubmitError = "Не удалось подать заявку."
+    const val RevokeError = "Не удалось отозвать заявку."
 
     const val HelpCommands = "Список доступных команд: \n"
     const val RegisterDescription = " /register - регистрация студентов в боте\n"
@@ -57,14 +57,17 @@ object Strings {
 
     val HelpStart = """
         *Приветствую!*
+        
          С помощью этого бота ты можешь подать заявку на участие в дополнительных курсах партнёров ВШПИ, не утруждая себя вводом одних и тех же личных данных каждый раз. 
-         Для этого тебе нужно зарегистрироваться (нажми на кнопку «Регистрация» или введи команду /register.
+        
+         Для этого тебе нужно зарегистрироваться (нажми на кнопку «Регистрация» или введи команду /register).
+         
          Здесь хранится список открытых для записи курсов, а также мы будем оповещать тебя о новых курсах, как только они появятся.
     """.trimIndent()
 
     const val AlreadyApplied = "Заявка уже отправлена"
-    const val CourseExpired = "Время на приём заявок истекло"
-    const val NotRegistered = "Вы не зарегистрированы"
+    const val CourseExpired = "Время подачи заявок для записи на этот курс истекло"
+    const val NotRegistered = "Вы не зарегистрированы. \n Для подачи заявки необходимо зарегистрироваться. Для этого нажми на кнопку «Регистрация» или введи команду /register"
     const val CourseNotFound = "Такого курса нет"
 
     const val ButtonCourses = "Курсы"
@@ -83,7 +86,19 @@ object Strings {
         """Сбор заявок на курс "${course.title}" завершён"""
 
     fun notificationAboutNewCourse(course: Course) =
-        """новый курс: ${course.title}"""
+        """*Внимание!*
+            |Открыта запись на новый курс: ${course.title}
+            |Курс предоставляется ${course.client.name}
+            |Описание курса: ${course.description}
+            |Дэдлайн подачи заявки: ${dateTimeFormatter.format(course.expiryDate)} 
+            |
+            |Если вы получили это оповещение, то вы можете подать *заявку* на этот курс. Ваших навыков и компетенций достаточно по мнению автора курса.
+            |
+            |Для *подачи* заявки необходимо нажать кнопку «Курсы», выбрать этот курс по названию и нажать кнопку «Записаться»
+            |
+            |В случае, если вы передумаете участвовать в этом курсе, вы можете *отозвать* заявку.
+            |Для этого необходимо нажать кнопку «Отозвать запись»
+            """.trimMargin()
 
     fun registrationConfirmation(name: FullName, email: Email, group: Group) =
         """|Имя: $name
