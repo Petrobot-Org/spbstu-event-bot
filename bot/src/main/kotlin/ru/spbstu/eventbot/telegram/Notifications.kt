@@ -16,8 +16,7 @@ fun notifyCourseExpired(course: Course, bot: Bot, applicantsTable: ByteArray) {
 
 fun notifyNewCourse(course: Course, bot: Bot, students: Iterable<Student>) {
     students.forEach { student ->
-        bot.sendMessage(ChatId.fromId(student.chatId), text = notificationAboutNewCourse(course),
-        parseMode = ParseMode.MARKDOWN)
+        bot.sendMessage(ChatId.fromId(student.chatId), text = notificationAboutNewCourse(course), parseMode = ParseMode.MARKDOWN)
     }
 }
 
