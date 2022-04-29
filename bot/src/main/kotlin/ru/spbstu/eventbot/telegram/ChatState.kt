@@ -1,31 +1,38 @@
 package ru.spbstu.eventbot.telegram
 
-import ru.spbstu.eventbot.domain.entities.AdditionalQuestion
+import ru.spbstu.eventbot.domain.entities.*
 import java.time.Instant
 
 sealed interface ChatState {
     object Empty : ChatState
     data class Registration(
         val request: RegistrationRequest,
-        val fullName: String? = null,
-        val email: String? = null,
-        val group: String? = null
+        val fullName: FullName? = null,
+        val email: Email? = null,
+        val group: Group? = null
     ) : ChatState
 
     data class ClientRegistration(
         val request: ClientRegistrationRequest,
-        val name: String? = null,
-        val email: String? = null,
+        val name: ClientName? = null,
+        val email: Email? = null,
         val userId: Long? = null
     ) : ChatState
 
     data class NewCourseCreation(
         val request: NewCourseCreationRequest,
-        val clientId: Long,
-        val title: String? = null,
-        val description: String? = null,
+        val clientId: ClientId,
+        val title: CourseTitle? = null,
+        val description: CourseDescription? = null,
         val additionalQuestion: AdditionalQuestion? = null,
-        val expiryDate: Instant? = null
+        val expiryDate: Instant? = null,
+        val groupMatchingRules: GroupMatchingRules = GroupMatchingRules(),
+        val groupMatcher: Regex? = null
+    ) : ChatState
+
+    data class AdditionalInfoRequested(
+        val courseId: CourseId,
+        val messageId: Long?
     ) : ChatState
 }
 
@@ -48,5 +55,6 @@ sealed interface NewCourseCreationRequest {
     object Description : NewCourseCreationRequest
     object AdditionalQuestion : NewCourseCreationRequest
     object ExpiryDate : NewCourseCreationRequest
+    object GroupMatcher : NewCourseCreationRequest
     object Confirm : NewCourseCreationRequest
 }

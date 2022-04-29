@@ -1,16 +1,13 @@
 package ru.spbstu.eventbot
 
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import org.koin.core.context.startKoin
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ru.spbstu.eventbot.data.adapter.DateAdapter
-import ru.spbstu.eventbot.data.entities.Course
+import ru.spbstu.eventbot.data.createAppDatabase
 import ru.spbstu.eventbot.data.repository.ApplicationRepositoryImpl
 import ru.spbstu.eventbot.data.repository.ClientRepositoryImpl
 import ru.spbstu.eventbot.data.repository.CourseRepositoryImpl
 import ru.spbstu.eventbot.data.repository.StudentRepositoryImpl
-import ru.spbstu.eventbot.data.source.AppDatabase
 import ru.spbstu.eventbot.domain.permissions.GetPermissionsUseCase
 import ru.spbstu.eventbot.domain.repository.ApplicationRepository
 import ru.spbstu.eventbot.domain.repository.ClientRepository
@@ -18,30 +15,37 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 import ru.spbstu.eventbot.domain.repository.StudentRepository
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.Bot
-import java.sql.SQLException
+import ru.spbstu.eventbot.telegram.CreateApplicantsTable
+import ru.spbstu.eventbot.telegram.ProvidePermissions
+import ru.spbstu.eventbot.telegram.flows.*
 
 val mainModule = module {
     val appConfig = appConfig()
-    single<SqlDriver> {
-        JdbcSqliteDriver(appConfig.jdbcString).also {
-            try {
-                AppDatabase.Schema.create(it)
-            } catch (e: SQLException) {
-                println("Schema has already been created")
-            }
-        }
-    }
-    single { AppDatabase(driver = get(), CourseAdapter = Course.Adapter(expiry_dateAdapter = DateAdapter())) }
+    single { appConfig.zone }
+    single { appConfig.operators }
+    single { createAppDatabase(appConfig.jdbcString) }
     single<StudentRepository> { StudentRepositoryImpl(get()) }
     single<ApplicationRepository> { ApplicationRepositoryImpl(get()) }
     single<ClientRepository> { ClientRepositoryImpl(get()) }
     single<CourseRepository> { CourseRepositoryImpl(get()) }
-    single { SubmitApplicationUseCase(get(), get()) }
-    single { RegisterStudentUseCase(get()) }
-    single { GetAvailableCoursesUseCase(get()) }
-    single { GetCourseByIdUseCase(get()) }
-    single { RegisterClientUseCase(get()) }
-    single { GetPermissionsUseCase(appConfig.operators, get()) }
+    singleOf(::SubmitApplicationUseCase)
+    singleOf(::RevokeApplicationUseCase)
+    singleOf(::IsApplicationSubmittedUseCase)
+    singleOf(::RegisterStudentUseCase)
+    singleOf(::GetAvailableCoursesUseCase)
+    singleOf(::GetCourseByIdUseCase)
+    singleOf(::RegisterClientUseCase)
+    singleOf(::GetApplicationsByCourseIdUseCase)
+    singleOf(::GetClientCoursesUseCase)
+    singleOf(::CreateNewCourseUseCase)
+    singleOf(::GetMyClientsUseCase)
+    singleOf(::GetPermissionsUseCase)
+    singleOf(::RegistrationFlow)
+    singleOf(::CourseCreationFlow)
+    singleOf(::ClientRegistrationFlow)
+    singleOf(::CoursesFlow)
+    singleOf(::ProvidePermissions)
+    singleOf(::CreateApplicantsTable)
 }
 
 fun main(args: Array<String>) {

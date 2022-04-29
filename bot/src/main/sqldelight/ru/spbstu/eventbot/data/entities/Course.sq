@@ -1,12 +1,18 @@
 import java.time.Instant;
+import kotlin.text.Regex;
+import ru.spbstu.eventbot.domain.entities.ClientId;
+import ru.spbstu.eventbot.domain.entities.CourseDescription;
+import ru.spbstu.eventbot.domain.entities.CourseId;
+import ru.spbstu.eventbot.domain.entities.CourseTitle;
 
 CREATE TABLE Course (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id INTEGER NOT NULL,
-    title TEXT NOT NULL,
-    description TEXT NOT NULL,
+    id INTEGER AS CourseId PRIMARY KEY AUTOINCREMENT,
+    client_id INTEGER AS ClientId NOT NULL,
+    title TEXT AS CourseTitle NOT NULL,
+    description TEXT AS CourseDescription NOT NULL,
     additional_question TEXT,
     expiry_date INTEGER AS Instant NOT NULL,
+    group_matcher TEXT AS Regex NOT NULL,
     results_sent INTEGER AS Boolean NOT NULL,
     FOREIGN KEY (client_id) REFERENCES Client (id)
 );
@@ -26,6 +32,23 @@ SELECT * FROM Course
 JOIN Client ON Course.client_id = Client.id
 WHERE (expiry_date > :now) AND (Client.user_id = :userId);
 
+getEarliestUnsent:
+SELECT * FROM Course
+JOIN Client ON Course.client_id = Client.id
+WHERE results_sent = 0
+ORDER BY expiry_date ASC
+LIMIT 1;
+
 insert:
-INSERT INTO Course(client_id, title, description, additional_question, expiry_date, results_sent)
-VALUES ( :clientId, :title, :description, :additionalQuestion, :expiryDate, 0);
+INSERT INTO Course(client_id, title, description, additional_question, expiry_date, group_matcher, results_sent)
+VALUES ( :clientId, :title, :description, :additionalQuestion, :expiryDate, :groupMatcher, 0);
+
+updateResultsSent:
+UPDATE Course SET results_sent = :resultsSent
+WHERE id = :id;
+
+rowsAffected:
+SELECT changes();
+
+lastInserted:
+SELECT last_insert_rowid();
