@@ -13,8 +13,6 @@ import ru.spbstu.eventbot.domain.permissions.Permissions.App.chatId
 import ru.spbstu.eventbot.domain.usecases.*
 import ru.spbstu.eventbot.telegram.ChatState
 import ru.spbstu.eventbot.telegram.Strings
-import ru.spbstu.eventbot.telegram.Strings.RequestAdditionalInfo
-import ru.spbstu.eventbot.telegram.Strings.RequestAnswer
 import ru.spbstu.eventbot.telegram.Strings.requestAdditionalInfo
 import ru.spbstu.eventbot.telegram.sendReply
 

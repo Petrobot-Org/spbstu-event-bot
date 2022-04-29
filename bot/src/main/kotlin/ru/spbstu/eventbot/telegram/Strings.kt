@@ -1,7 +1,6 @@
 package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.*
-import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
