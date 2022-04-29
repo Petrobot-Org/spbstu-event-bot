@@ -1,6 +1,7 @@
 package ru.spbstu.eventbot.telegram
 
 import ru.spbstu.eventbot.domain.entities.*
+import ru.spbstu.eventbot.domain.usecases.SubmitApplicationUseCase
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -36,8 +37,6 @@ object Strings {
     const val ConfirmGroupMatcher = "✅ Подтвердить"
     const val ExpiredGroupMatcher = "Истёк"
 
-    const val RequestAdditionalInfo = "Для подачи заявки на запись на этот курс необходимо ввести дополнительную информацию\n"
-    const val RequestAnswer = "\nУкажите эту информацию в ответном сообщении."
     const val UnknownCommand = "Введена неизвестная команда."
     const val UnauthorizedError = "У вас недостаточно прав для этой команды.\nСвяжитесь с оператором бота, в случае ошибки."
     const val AvailableCoursesHeader = "Доступные курсы"
@@ -130,6 +129,15 @@ object Strings {
            |
            |🕒 До ${dateTimeFormatter.format(course.expiryDate)}
            |${course.description}
+        """.trimMargin()
+
+    fun requestAdditionalInfo(additionalQuestion: String)=
+        """
+            |Для подачи заявки на запись на этот курс необходимо ввести дополнительную информацию
+            |
+            | $additionalQuestion
+            | 
+            |Укажите эту информацию в ответном сообщении.          
         """.trimMargin()
 
     fun groupMatcher(regex: Regex) =
