@@ -67,3 +67,9 @@ fun requirePermissions(condition: Boolean, action: () -> Unit) {
         sendReply(Strings.UnauthorizedError)
     }
 }
+
+fun String.sanitizedFilename(): String {
+    return filter {
+        it.isLetterOrDigit() || it.isWhitespace()
+    }
+}

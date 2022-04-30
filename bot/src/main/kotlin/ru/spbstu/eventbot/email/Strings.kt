@@ -10,7 +10,4 @@ object Strings {
 
     fun courseExpiredMessage(course: Course) =
         """Список заявок на "${course.title}" приложен"""
-
-    fun applicantsTableFilename(course: Course) = course.title.value
-        .filter { it.isLetterOrDigit() || it.isWhitespace() }
 }

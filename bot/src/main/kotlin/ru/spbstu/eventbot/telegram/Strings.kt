@@ -75,6 +75,11 @@ object Strings {
     const val ButtonNewClient = "Новый заказчик"
     const val ButtonNewCourse = "Новый курс"
 
+    const val FullNameTableHeader = "ФИО студента"
+    const val GroupTableHeader = "Группа"
+    const val EmailTableHeader = "Почта"
+    const val AdditionalInfoTableHeader = "Доп. информация"
+
     val PositiveAnswers = setOf("да", "ага", "угу", "д", "yes", "ye", "yeah", "y")
     val NegativeAnswers = setOf("no", "net", "n", "нет", "не", "н")
 
@@ -147,27 +152,4 @@ object Strings {
     fun selectedButton(text: String) = "☑️️ $text"
 
     fun studyYear(year: Year) = "${year.value} курс"
-
-    fun <T> csvOf(
-        headers: List<String>,
-        data: List<T>,
-        itemBuilder: (T) -> List<String>
-    ) = buildString {
-        append(headers.joinToString(",") { "\"$it\"" })
-        append("\n")
-        data.forEach { item ->
-            append(itemBuilder(item).joinToString(",") { "\"$it\"" })
-            append("\n")
-        }
-    }
-
-    fun applicantsInfo(applications: List<Application>): String {
-        val csv = csvOf(
-            listOf("ФИО студента", "Группа", "Почта", "Доп. информация"),
-            applications
-        ) {
-            listOf(it.student.fullName.toString(), it.student.group.toString(), it.student.email.toString(), it.additionalInfo.toString())
-        }
-        return csv
-    }
 }

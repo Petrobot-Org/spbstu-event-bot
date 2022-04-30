@@ -6,6 +6,8 @@ import ru.spbstu.eventbot.domain.entities.Course
 import javax.activation.DataSource
 import javax.mail.util.ByteArrayDataSource
 
+private const val XLSX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
 class EmailSender(private val emailSecrets: EmailSecrets) {
     fun sendCourseExpired(course: Course, applicantsTable: ByteArray) {
         val email = MultiPartEmail().apply {
@@ -19,10 +21,10 @@ class EmailSender(private val emailSecrets: EmailSecrets) {
             setMsg(Strings.courseExpiredMessage(course))
             addTo(course.client.email.value)
 
-            val dataSource: DataSource = ByteArrayDataSource(applicantsTable, "text/csv")
+            val dataSource: DataSource = ByteArrayDataSource(applicantsTable, XLSX_MIME_TYPE)
             attach(
                 dataSource,
-                "${Strings.applicantsTableFilename(course)}.csv",
+                "${course.title}.xlsx",
                 Strings.ApplicantsTableDescription
             )
         }
