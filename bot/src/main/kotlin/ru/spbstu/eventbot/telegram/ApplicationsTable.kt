@@ -6,7 +6,7 @@ import io.github.evanrupert.excelkt.workbook
 import ru.spbstu.eventbot.domain.entities.Application
 import java.io.ByteArrayOutputStream
 
-fun generateApplicationsTable(applications: List<Application>): ByteArray {
+fun createApplicationsXlsx(applications: List<Application>): ByteArray {
     val outputStream = ByteArrayOutputStream()
     workbook(applications).xssfWorkbook.write(outputStream)
     return outputStream.toByteArray()

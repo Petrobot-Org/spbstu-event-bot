@@ -24,7 +24,7 @@ class EmailSender(private val emailSecrets: EmailSecrets) {
             val dataSource: DataSource = ByteArrayDataSource(applicantsTable, XLSX_MIME_TYPE)
             attach(
                 dataSource,
-                "${Strings.applicantsTableFilename(course)}.xlsx",
+                "${course.title}.xlsx",
                 Strings.ApplicantsTableDescription
             )
         }

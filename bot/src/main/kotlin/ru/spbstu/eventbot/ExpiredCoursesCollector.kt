@@ -10,7 +10,7 @@ import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.usecases.GetApplicationsByCourseIdUseCase
 import ru.spbstu.eventbot.domain.usecases.GetExpiredCoursesFlowUseCase
 import ru.spbstu.eventbot.email.EmailSender
-import ru.spbstu.eventbot.telegram.generateApplicationsTable
+import ru.spbstu.eventbot.telegram.createApplicationsXlsx
 import ru.spbstu.eventbot.telegram.notifyCourseExpired
 
 private val logger = KotlinLogging.logger { }
@@ -46,6 +46,6 @@ class ExpiredCoursesCollector(
     context(Permissions)
     private fun createApplicationsTable(course: Course): ByteArray? {
         val result = getApplicationsByCourseId(course.id) as? GetApplicationsByCourseIdUseCase.Result.OK ?: return null
-        return generateApplicationsTable(result.applications)
+        return createApplicationsXlsx(result.applications)
     }
 }
