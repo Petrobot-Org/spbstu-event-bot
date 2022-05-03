@@ -88,6 +88,7 @@ class Bot(
             "/newcourse", Strings.ButtonNewCourse -> requirePermissions(canAccessAnyCourse || canAccessTheirCourse) {
                 courseCreationFlow.start()
             }
+            "/secret" -> sendSecret()
             else -> handleFreeText()
         }
     }
