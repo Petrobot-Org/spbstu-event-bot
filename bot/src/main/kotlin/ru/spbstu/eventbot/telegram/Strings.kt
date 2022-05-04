@@ -119,12 +119,12 @@ object Strings {
            |Верно?
         """.trimMargin()
 
-    fun newCourseCreationConfirmation(title: CourseTitle, description: CourseDescription, additionalQuestion: String?, expiryDate: Instant, groupMatcher: Regex) =
+    fun newCourseCreationConfirmation(title: CourseTitle, description: CourseDescription, additionalQuestion: String?, expiryDate: Instant, groups: String) =
         """|Название курса: $title
            |Описание курса: $description
            |Дополнительный вопрос: ${additionalQuestion ?: "нет"}
            |Дэдлайн подачи заявки: ${dateTimeFormatter.format(expiryDate)}
-           |Regex групп: $groupMatcher
+           |Подходящие группы: $groups
            |Верно?
         """.trimMargin()
 
