@@ -32,19 +32,25 @@ data class GroupMatchingRules(
         if (!specialities.isEmpty() && !years.isEmpty()) {
 
             var yearsDate: String = ""
-            for (index in years.indices) {
-                yearsDate += years.elementAt(index).value
+            val itterator = years.iterator()
+            while (itterator.hasNext()) {
+                yearsDate += abs(year - itterator.next().value)
+                if (itterator.hasNext()) {
+                    yearsDate += "|"
+                }
             }
-
             var specialitiesDate: String = ""
             val itt = specialities.iterator()
             while (itt.hasNext()) {
                 specialitiesDate += itt.next().value
+                if (itt.hasNext()) {
+                    specialitiesDate += "|"
+                }
             }
             println(yearsDate)
             println(specialitiesDate)
             re = Regex(
-                pattern = "[взВЗ]?353[" + specialitiesDate + "]/[" + yearsDate + "][0-9]{4}"
+                pattern = "[взВЗ]?353(" + specialitiesDate + ")/(" + yearsDate + ")[0-9]{4}"
             )
         }
 
