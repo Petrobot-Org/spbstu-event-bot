@@ -1,5 +1,6 @@
 package ru.spbstu.eventbot
 
+import ru.spbstu.eventbot.domain.entities.Group
 import ru.spbstu.eventbot.domain.entities.Speciality
 import ru.spbstu.eventbot.domain.entities.Year
 import ru.spbstu.eventbot.domain.permissions.Operators
@@ -36,6 +37,10 @@ fun appConfig(): AppConfig {
             .split(',')
             .map { Speciality.valueOf(it.trim())!! }
             .toSet()
+        val numbers = properties["group_numbers"].toString()
+            .split(',')
+            .map { Group.valueOf(it.trim())!! }
+            .toSet()
         val years = (1..maxYear).map { Year.valueOf(it)!! }
         AppConfig(
             jdbcString = jdbcString,
@@ -44,6 +49,7 @@ fun appConfig(): AppConfig {
             groupFilters = object : GroupFilters {
                 override val years = years
                 override val specialities = specialities
+                override val numbers = numbers
             }
         )
     }

@@ -21,6 +21,7 @@ import java.time.format.DateTimeParseException
 interface GroupFilters {
     val years: Collection<Year>
     val specialities: Collection<Speciality>
+    val numbers: Collection<Group>
 }
 
 class CourseCreationFlow(
@@ -171,6 +172,7 @@ class CourseCreationFlow(
                 NewCourseCreationRequest.GroupMatcher
             }
             else -> {
+                val groups = groupFilters.numbers.stream().filter{state.groupMatcher.matches(it.toString())}.toList()
                 bot.sendMessage(
                     ChatId.fromId(chatId),
                     Strings.newCourseCreationConfirmation(
@@ -178,7 +180,7 @@ class CourseCreationFlow(
                         description = state.description,
                         additionalQuestion = state.additionalQuestion.value,
                         expiryDate = state.expiryDate,
-                        groupMatcher = state.groupMatcher
+                        groups = groups.joinToString { it.toString() }
                     )
                 )
                 NewCourseCreationRequest.Confirm
