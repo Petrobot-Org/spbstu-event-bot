@@ -172,7 +172,7 @@ class CourseCreationFlow(
                 NewCourseCreationRequest.GroupMatcher
             }
             else -> {
-                val groups = groupFilters.numbers.filter{state.groupMatcher.matches(it.toString())}.toList()
+                val groups = groupFilters.numbers.filter { state.groupMatcher.matches(it.toString()) }.toList()
                 bot.sendMessage(
                     ChatId.fromId(chatId),
                     Strings.newCourseCreationConfirmation(
