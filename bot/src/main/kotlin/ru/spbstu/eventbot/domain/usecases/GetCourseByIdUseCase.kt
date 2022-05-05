@@ -8,6 +8,6 @@ class GetCourseByIdUseCase(
     private val courseRepository: CourseRepository
 ) {
     operator fun invoke(id: CourseId): Course? {
-       return courseRepository.getById(id)
+        return courseRepository.getById(id)
     }
 }
