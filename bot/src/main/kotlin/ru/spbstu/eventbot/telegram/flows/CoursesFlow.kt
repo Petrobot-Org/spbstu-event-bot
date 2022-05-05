@@ -2,20 +2,14 @@ package ru.spbstu.eventbot.telegram.flows
 
 import com.github.kotlintelegrambot.dispatcher.handlers.CallbackQueryHandlerEnvironment
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
-import com.github.kotlintelegrambot.entities.ChatId
-import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
-import com.github.kotlintelegrambot.entities.ParseMode
-import com.github.kotlintelegrambot.entities.ReplyMarkup
+import com.github.kotlintelegrambot.entities.*
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.permissions.Permissions
 import ru.spbstu.eventbot.domain.permissions.Permissions.App.chatId
 import ru.spbstu.eventbot.domain.usecases.*
-import ru.spbstu.eventbot.telegram.ChatState
-import ru.spbstu.eventbot.telegram.StateEnvironment
-import ru.spbstu.eventbot.telegram.Strings
+import ru.spbstu.eventbot.telegram.*
 import ru.spbstu.eventbot.telegram.Strings.requestAdditionalInfo
-import ru.spbstu.eventbot.telegram.sendReply
 
 class CoursesFlow(
     private val getAvailableCourses: GetAvailableCoursesUseCase,
@@ -155,14 +149,18 @@ class CoursesFlow(
                     sendReply(Strings.NoApplicants)
                     return
                 }
-                sendReply(
-                    text = TODO(),
-                    parseMode = ParseMode.MARKDOWN
+                val courseResult = getCourseById(courseId) as? GetCourseByIdUseCase.Result.OK ?: return
+                val applicantsTable = createApplicationsXlsx(result.applications)
+                val file = TelegramFile.ByByteArray(
+                    applicantsTable,
+                    "${courseResult.course.title.value.sanitizedFilename()}.xlsx"
                 )
+                val chatId = ChatId.fromId(chatId)
+                bot.sendDocument(chatId, file, Strings.courseCurrentApplicants(courseResult.course))
             }
-            GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> sendReply(Strings.NoSuchCourse)
-            GetApplicationsByCourseIdUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
         }
+        GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> sendReply(Strings.NoSuchCourse)
+        GetApplicationsByCourseIdUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
     }
 
     context(Permissions)
