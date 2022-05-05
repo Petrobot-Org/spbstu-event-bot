@@ -149,14 +149,14 @@ class CoursesFlow(
                     sendReply(Strings.NoApplicants)
                     return
                 }
-                val courseResult = getCourseById(courseId) as? GetCourseByIdUseCase.Result.OK ?: return
+                val course = getCourseById(courseId) ?: sendReply(Strings.NoSuchCourse)
                 val applicantsTable = createApplicationsXlsx(result.applications)
                 val file = TelegramFile.ByByteArray(
                     applicantsTable,
-                    "${courseResult.course.title.value.sanitizedFilename()}.xlsx"
+                    "${course.title.value.sanitizedFilename()}.xlsx"
                 )
                 val chatId = ChatId.fromId(chatId)
-                bot.sendDocument(chatId, file, Strings.courseCurrentApplicants(courseResult.course))
+                bot.sendDocument(chatId, file, Strings.courseCurrentApplicants(course))
             }
             GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> sendReply(Strings.NoSuchCourse)
             GetApplicationsByCourseIdUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
