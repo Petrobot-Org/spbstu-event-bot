@@ -158,9 +158,9 @@ class CoursesFlow(
                 val chatId = ChatId.fromId(chatId)
                 bot.sendDocument(chatId, file, Strings.courseCurrentApplicants(courseResult.course))
             }
+            GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> sendReply(Strings.NoSuchCourse)
+            GetApplicationsByCourseIdUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
         }
-        GetApplicationsByCourseIdUseCase.Result.NoSuchCourse -> sendReply(Strings.NoSuchCourse)
-        GetApplicationsByCourseIdUseCase.Result.Unauthorized -> sendReply(Strings.UnauthorizedError)
     }
 
     context(Permissions)
