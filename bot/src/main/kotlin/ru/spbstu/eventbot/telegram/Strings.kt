@@ -90,6 +90,9 @@ object Strings {
     fun courseExpiredNotification(course: Course) =
         """Сбор заявок на курс "${course.title}" завершён"""
 
+    fun courseCurrentApplicants(course: Course) =
+        """Текущий список заявок на курс "${course.title}" """
+
     fun notificationAboutNewCourse(course: Course) =
         """*Внимание!*
             |Открыта запись на новый курс: ${course.title}
