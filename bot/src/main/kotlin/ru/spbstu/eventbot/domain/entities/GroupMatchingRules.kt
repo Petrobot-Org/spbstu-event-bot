@@ -19,31 +19,19 @@ data class GroupMatchingRules(
             re = Regex(pattern = "[взВЗ]?353[0-9]{4}/" + abs(year - years.elementAt(0).value) + "[0-9]{4}")
         }
         if (!specialities.isEmpty() && years.isEmpty()) {
-            re = Regex(
-                pattern = "[взВЗ]?353" + specialities.elementAt(0).value + "/[0-9]{5}"
-            )
+            re = Regex(pattern = "[взВЗ]?353" + specialities.elementAt(0).value + "/[0-9]{5}")
         }
         if (!specialities.isEmpty() && !years.isEmpty()) {
+            val yearAdmission: String =
+                years
+                    .map { y -> abs(year - y.value) }
+                        .joinToString(prefix = "(", separator = "|", postfix = ")")
+            var specialitie: String =
+                specialities
+                    .map { sp -> sp.value }
+                        .joinToString(prefix = "(", separator = "|", postfix = ")")
 
-            var yearsDate: String = ""
-            val itterator = years.iterator()
-            while (itterator.hasNext()) {
-                yearsDate += abs(year - itterator.next().value)
-                if (itterator.hasNext()) {
-                    yearsDate += "|"
-                }
-            }
-            var specialitiesDate: String = ""
-            val itt = specialities.iterator()
-            while (itt.hasNext()) {
-                specialitiesDate += itt.next().value
-                if (itt.hasNext()) {
-                    specialitiesDate += "|"
-                }
-            }
-            re = Regex(
-                pattern = "[взВЗ]?353(" + specialitiesDate + ")/(" + yearsDate + ")[0-9]{4}"
-            )
+            re = Regex(pattern = "[взВЗ]?353" + specialitie + "/" + yearAdmission + "[0-9]{4}")
         }
 
         return re
