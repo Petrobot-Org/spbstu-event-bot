@@ -7,7 +7,6 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 class GetCourseByIdUseCase(
     private val courseRepository: CourseRepository
 ) {
-
     operator fun invoke(id: CourseId): Course? {
        return courseRepository.getById(id)
     }
