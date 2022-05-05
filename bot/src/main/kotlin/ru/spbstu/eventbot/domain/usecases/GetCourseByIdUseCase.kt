@@ -1,6 +1,5 @@
 package ru.spbstu.eventbot.domain.usecases
 
-import ru.spbstu.eventbot.domain.entities.Application
 import ru.spbstu.eventbot.domain.entities.Course
 import ru.spbstu.eventbot.domain.entities.CourseId
 import ru.spbstu.eventbot.domain.repository.CourseRepository
@@ -14,6 +13,6 @@ class GetCourseByIdUseCase(
     }
     operator fun invoke(id: CourseId):Result {
         val course = courseRepository.getById(id)?: return Result.NoSuchCourse
-        return Result.OK(course);
+        return Result.OK(course)
     }
 }
