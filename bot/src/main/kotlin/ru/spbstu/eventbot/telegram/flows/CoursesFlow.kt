@@ -149,7 +149,7 @@ class CoursesFlow(
                     sendReply(Strings.NoApplicants)
                     return
                 }
-                val course = getCourseById(courseId) ?: sendReply(Strings.NoSuchCourse)
+                val course = getCourseById(courseId) ?: return sendReply(Strings.NoSuchCourse)
                 val applicantsTable = createApplicationsXlsx(result.applications)
                 val file = TelegramFile.ByByteArray(
                     applicantsTable,
