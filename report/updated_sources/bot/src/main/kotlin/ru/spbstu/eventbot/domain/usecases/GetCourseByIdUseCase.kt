@@ -7,12 +7,8 @@ import ru.spbstu.eventbot.domain.repository.CourseRepository
 class GetCourseByIdUseCase(
     private val courseRepository: CourseRepository
 ) {
-    sealed interface Result {
-        data class OK(val course: Course) : Result
-        object NoSuchCourse : Result
-    }
-    operator fun invoke(id: CourseId): Result {
-        val course = courseRepository.getById(id) ?: return Result.NoSuchCourse
-        return Result.OK(course)
+
+    operator fun invoke(id: CourseId): Course? {
+        return courseRepository.getById(id)
     }
 }
