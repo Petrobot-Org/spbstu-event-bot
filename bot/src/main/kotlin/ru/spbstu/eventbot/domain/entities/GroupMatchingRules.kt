@@ -8,19 +8,13 @@ data class GroupMatchingRules(
     val specialities: Set<Speciality> = emptySet()
 ) {
     fun toRegex(date: LocalDate): Regex {
-        var re: Regex = Regex("0")
+        var re: Regex = Regex(pattern = "[взВЗ]?353[0-9]{4}/[0-9]{5}")
         var year: Int = date.year.mod(10)
 
         // 2ой семестр закончивается в июле
         if (date.monthValue > 6) {
             year++
         }
-
-        // Пустое множество years или specialities означает, что никаких ограничений на них не накладывается
-        if (specialities.isEmpty() && years.isEmpty()) {
-            re = Regex(pattern = "[взВЗ]?353[0-9]{4}/[0-9]{5}")
-        }
-
         if (!years.isEmpty() && specialities.isEmpty()) {
             re = Regex(pattern = "[взВЗ]?353[0-9]{4}/" + abs(year - years.elementAt(0).value) + "[0-9]{4}")
         }
@@ -47,8 +41,6 @@ data class GroupMatchingRules(
                     specialitiesDate += "|"
                 }
             }
-            println(yearsDate)
-            println(specialitiesDate)
             re = Regex(
                 pattern = "[взВЗ]?353(" + specialitiesDate + ")/(" + yearsDate + ")[0-9]{4}"
             )
