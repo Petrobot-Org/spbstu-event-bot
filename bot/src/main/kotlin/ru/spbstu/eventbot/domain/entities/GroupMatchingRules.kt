@@ -13,5 +13,6 @@ data class GroupMatchingRules(
         val YearPattern = enrollYears.joinToString("|")
         val SpecialitiesPattern = specialities.joinToString("|")
         return Regex(".*($SpecialitiesPattern)/($YearPattern).*")
+
     }
 }
