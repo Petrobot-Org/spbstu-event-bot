@@ -29,7 +29,7 @@ fun appConfig(): AppConfig {
         val operatorUserIds = properties["operator_ids"].toString()
             .split(',')
             .filter { it.isNotEmpty() }
-            .map { it.toLong() }
+            .map { it.trim().toLong() }
         val jdbcString = properties["jdbc"].toString()
         val zone = ZoneId.of(properties["timezone"].toString())
         val maxYear = properties["max_year"].toString().toInt()
