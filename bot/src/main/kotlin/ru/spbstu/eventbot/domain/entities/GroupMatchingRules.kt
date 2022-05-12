@@ -10,9 +10,9 @@ data class GroupMatchingRules(
     fun toRegex(date: LocalDate): Regex {
         val year = date.plusMonths(6).year
         val enrollYears = years.map { (year - it.value).mod(10) }
-        val YearPattern = enrollYears.joinToString("|")
-        val SpecialitiesPattern = specialities.joinToString("|")
-        return Regex(".*($SpecialitiesPattern)/($YearPattern).*")
+        val yearPattern = enrollYears.joinToString("|")
+        val specialitiesPattern = specialities.joinToString("|")
+        return Regex(".*($specialitiesPattern)/($yearPattern).*")
 
     }
 }
