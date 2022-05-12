@@ -16,7 +16,7 @@ private val logger = KotlinLogging.logger { }
 fun createAppDatabase(jdbcString: String): AppDatabase {
     val driver = JdbcSqliteDriver(
         jdbcString,
-        Properties(1).apply { put("foreign_keys", "true") }
+        Properties().apply { put("foreign_keys", "true") }
     ).also {
         try {
             AppDatabase.Schema.create(it)
