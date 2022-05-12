@@ -1,7 +1,6 @@
 package ru.spbstu.eventbot.domain.entities
 
 import java.time.LocalDate
-import kotlin.math.abs
 
 data class GroupMatchingRules(
     val years: Set<Year> = emptySet(),
@@ -13,6 +12,5 @@ data class GroupMatchingRules(
         val yearPattern = enrollYears.joinToString("|")
         val specialitiesPattern = specialities.joinToString("|")
         return Regex(".*($specialitiesPattern)/($yearPattern).*")
-
     }
 }
