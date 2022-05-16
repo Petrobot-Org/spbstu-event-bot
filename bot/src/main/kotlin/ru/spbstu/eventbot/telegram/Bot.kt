@@ -14,8 +14,11 @@ import ru.spbstu.eventbot.telegram.flows.CourseCreationFlow
 import ru.spbstu.eventbot.telegram.flows.CoursesFlow
 import ru.spbstu.eventbot.telegram.flows.RegistrationFlow
 
+@JvmInline
+value class TelegramToken(val value: String)
+
 class Bot(
-    private val telegramToken: String,
+    private val telegramToken: TelegramToken,
     private val providePermissions: ProvidePermissions,
     private val provideState: ProvideState,
     private val registrationFlow: RegistrationFlow,
@@ -25,7 +28,7 @@ class Bot(
 ) {
     val bot = bot {
         logLevel = LogLevel.Error
-        token = telegramToken
+        token = telegramToken.value
         dispatch {
             callbackQuery {
                 providePermissions {
