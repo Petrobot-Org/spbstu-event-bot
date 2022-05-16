@@ -5,6 +5,7 @@ import ru.spbstu.eventbot.domain.entities.Speciality
 import ru.spbstu.eventbot.domain.entities.Year
 import ru.spbstu.eventbot.domain.permissions.Operators
 import ru.spbstu.eventbot.email.EmailSecrets
+import ru.spbstu.eventbot.telegram.TelegramToken
 import ru.spbstu.eventbot.telegram.flows.GroupFilters
 import java.time.ZoneId
 import java.util.Properties
@@ -17,7 +18,7 @@ data class AppConfig(
 )
 
 data class Secrets(
-    val telegramToken: String,
+    val telegramToken: TelegramToken,
     val emailSecrets: EmailSecrets
 )
 
@@ -63,7 +64,7 @@ fun secrets(): Secrets {
     val smtpPassword = System.getenv("SMTP_PASSWORD")
     val smtpFrom = System.getenv("SMTP_FROM")
     return Secrets(
-        telegramToken = telegramToken,
+        telegramToken = TelegramToken(telegramToken),
         emailSecrets = EmailSecrets(
             hostname = smtpHostname,
             port = smtpPort,
